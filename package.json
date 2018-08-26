@@ -1,0 +1,33 @@
+{
+  "name": "overnight",
+  "version": "1.0.0",
+  "description": "TypeScript decorators for the ExpressJs Server.",
+  "main": "None, this is the master repo.",
+  "scripts": {
+    "test": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seanpmaxwell/overnight.git"
+  },
+  "keywords": [
+    "overnight",
+    "overnightjs",
+    "express",
+    "expressjs",
+    "typescript",
+    "decorators",
+    "router",
+    "routes",
+    "http",
+    "route",
+    "controller",
+    "server"
+  ],
+  "author": "Sean Maxwell",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/seanpmaxwell/overnight/issues"
+  },
+  "homepage": "https://github.com/seanpmaxwell/overnight#readme"
+}

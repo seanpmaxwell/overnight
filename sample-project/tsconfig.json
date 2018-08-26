@@ -1,0 +1,12 @@
+{
+  "extends": "../baseTs.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "src/",
+    "outDir": "built/",
+    "lib": [ "es2015" ]
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

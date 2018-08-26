@@ -1,5 +1,5 @@
 {
-  "extends": "../../baseTs.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": "./",
     "rootDir": "src/",
@@ -11,10 +11,6 @@
     "strictNullChecks": true,
     "importHelpers": true,
     "declaration": true,
-    "lib": [
-      "es6",
-      "dom"
-    ],
     "typeRoots": [
       "./node_modules/@types"
     ]

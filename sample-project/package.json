@@ -1,0 +1,34 @@
+{
+  "name": "sample-project",
+  "version": "1.0.0",
+  "description": "Show usuage for the OvernightJs library",
+  "main": "none",
+  "dependencies": {
+    "simple-color-print": "^1.0.1"
+  },
+  "devDependencies": {
+    "tsconfig-paths": "^3.5.0"
+  },
+  "scripts": {
+    "test": "none",
+    "start": "node -r tsconfig-paths/register built/Server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seanpmaxwell/overnight/sample-project"
+  },
+  "keywords": [
+    "overnight",
+    "overnightjs",
+    "sample-project",
+    "typescript",
+    "express-ts",
+    "decorators",
+    "routes",
+    "router",
+    "example",
+    "usuage"
+  ],
+  "author": "Sean Maxwell",
+  "license": "GPL-3.0-or-later"
+}

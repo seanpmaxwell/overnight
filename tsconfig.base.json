@@ -1,11 +1,13 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "baseUrl": "./",
     "module": "commonjs",
     "target": "es5",
     "sourceMap": true,
     "removeComments": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "lib": [ "es2015" ]
   },
   "exclude": [
     "node_modules"

@@ -1,10 +1,13 @@
 {
-  "extends": "../baseTs.json",
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "rootDir": "src/",
     "outDir": "built/",
-    "lib": [ "es2015" ]
+    "moduleResolution": "node",
+    "paths": {
+      "@overnight/core": ["../src/core"]
+    }
   },
   "include": [
     "./src/**/*"

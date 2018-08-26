@@ -4,19 +4,19 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { cinfo, cerr, cwarn, cimp } from 'simple-color-print'
+import { oServer }     from '@overnight/core'
+import { cinfo, cerr } from 'simple-color-print'
 
 
-class Server
+class Server extends oServer
 {
     constructor()
     {
-        cinfo('slim');
-        cerr('chicken');
-        cwarn('pig');
-        cimp({cheets: 'cheeta'})
+        super()
+        super.addControllers()
+        cinfo('Sample server has been called')
     }
 
 }
 
-new Server();
+new Server()

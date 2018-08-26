@@ -1,5 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
 
-src/core/tsconfig.json
+
 .gitignore
+
+**/node_modules
+**/**/*.js.map
+
+src/**/src
 

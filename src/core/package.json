@@ -1,0 +1,38 @@
+{
+  "name": "@overnight/core",
+  "version": "1.0.0",
+  "description": "TypeScript decorators for the Express web server.",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "simple-color-print": "^1.0.1",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seanpmaxwell/overnight/src/core"
+  },
+  "keywords": [
+    "overnight",
+    "core",
+    "overnightjs",
+    "typescript",
+    "decorator",
+    "decorators",
+    "routes",
+    "route",
+    "router",
+    "express",
+    "express-ts",
+    "expressjs"
+  ],
+  "author": "Sean Maxwell",
+  "license": "GPL-3.0-or-later"
+}

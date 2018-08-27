@@ -1,7 +1,7 @@
 {
   "name": "overnight",
   "version": "1.0.0",
-  "description": "TypeScript decorators for the ExpressJs Server.",
+  "description": "TypeScript decorators for the ExpressJS Server.",
   "main": "None, this is the master repo.",
   "scripts": {
     "test": "none"

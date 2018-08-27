@@ -4,7 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { oController, Controller } from '@overnight/core'
+import { oController, Controller, Get } from '@overnight/core'
 import { cinfo, cerr }             from 'simple-color-print'
 
 
@@ -16,8 +16,9 @@ export default class UserController extends oController
         super()
     }
 
-    private getOne(): void
+    @Get('/:id')
+    private getOne(): string
     {
-
+        return 'fart'
     }
 }

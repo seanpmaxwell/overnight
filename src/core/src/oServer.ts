@@ -16,15 +16,18 @@ export class oServer
 
     protected addControllers(controllers: Array<oController>): void
     {
-        // loop the array
-        // within each loop call this.app.use(controller.basePath, controller.getRouter())
-        controllers.forEach(controller => {
-            // let methods = this.getMethods(controller)
+        controllers.forEach(ctrl => {
+
             let router = Router()
 
-            for (let member in controller) {  // For each member of the dictionary
-                if (typeof (<any>controller)[member] == 'function') {
-                    cinfo(member);// Is it a function?
+            for(let member in ctrl) {
+
+                if(typeof (<any>ctrl)[member] == 'object') {
+
+                    if(member === 'getOne') {
+                        cinfo((<any>ctrl)[member])
+                    }
+
                     // Do some kind of check to make sure that's the specialPrototype, change function to object
                 }
             }
@@ -41,14 +44,9 @@ export class oServer
             //     // Do the same here for all other route types
             // })
 
-            this.app_.use(controller.getBasePath(), router)
+            this.app_.use(ctrl.getBasePath(), router)
         })
 
         cinfo(controllers.length + ' controllers configured.')
-    }
-
-    private getMethods(instance: any): Array<string>
-    {
-        return Object.getOwnPropertyNames(instance)
     }
 }

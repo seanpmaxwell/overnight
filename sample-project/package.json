@@ -4,6 +4,7 @@
   "description": "Show usuage for the OvernightJs library",
   "main": "none",
   "dependencies": {
+    "mail-promise": "^1.1.1",
     "simple-color-print": "^1.0.1"
   },
   "devDependencies": {

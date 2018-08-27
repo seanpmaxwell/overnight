@@ -8,5 +8,9 @@ export class oConstructor
 {
     constructor() {}
 
+    getRoutes()
+    {
+        return Router // pick up here
+    }
 
 }

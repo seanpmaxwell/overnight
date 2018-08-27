@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "none",
-    "start": "node -r tsconfig-paths/register built/Server.js"
+    "start": "node -r tsconfig-paths/register start.js"
   },
   "repository": {
     "type": "git",

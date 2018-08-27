@@ -5,6 +5,7 @@
     "rootDir": "src/",
     "outDir": "built/",
     "moduleResolution": "node",
+    "experimentalDecorators": true,
     "paths": {
       "@overnight/core": ["../src/core"]
     }

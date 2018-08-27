@@ -8,6 +8,8 @@
     "lib": "lib"
   },
   "dependencies": {
+    "@types/express": "^4.16.0",
+    "express": "^4.16.3",
     "simple-color-print": "^1.0.1",
     "tslib": "^1.9.3"
   },

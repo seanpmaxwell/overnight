@@ -2,7 +2,7 @@
   "name": "overnight",
   "version": "1.0.0",
   "description": "TypeScript decorators for the ExpressJS Server.",
-  "main": "None, this is the master repo.",
+  "main": "None, this is the master repo. Look to @overnignt/core for and @overnight/superadmin.",
   "scripts": {
     "test": "none"
   },
@@ -22,7 +22,14 @@
     "http",
     "route",
     "controller",
-    "server"
+    "server",
+    "decorate",
+    "api",
+    "rest",
+    "framework",
+    "restful",
+    "server",
+    "middlewares"
   ],
   "author": "Sean Maxwell",
   "license": "GPL-3.0-or-later",

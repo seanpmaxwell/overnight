@@ -27,7 +27,6 @@ export class SampleServer extends Server
 
     private setupExpress(): void
     {
-        // To access req.body as JSON
         this.app_.use(bodyParser.json())
         this.app_.use(bodyParser.urlencoded({extended: true}))
     }

@@ -4,10 +4,15 @@
   "description": "Show usuage for the OvernightJs library",
   "main": "none",
   "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
     "mail-promise": "^1.1.1",
     "simple-color-print": "^1.0.1"
   },
   "devDependencies": {
+    "@types/express": "^4.16.0",
+    "@types/express-jwt": "0.0.40",
+    "express-jwt": "^5.3.1",
     "tsconfig-paths": "^3.5.0"
   },
   "scripts": {

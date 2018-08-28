@@ -12,13 +12,13 @@ interface Controller {
     overnightBasePath: string
 }
 
-interface ControllerRoute {
-    isOvernightRoute: boolean
-    call: string
-    path: string
-    options: any
-    method: RequestHandler
-}
+// interface ControllerRoute {
+//     isOvernightRoute: boolean
+//     call: string
+//     path: string
+//     options: any
+//     method: RequestHandler
+// }
 
 export class Server
 {
@@ -29,23 +29,77 @@ export class Server
         this.app_ = express()
     }
 
-    protected addControllers<T>(controllers: T | Array<T>): void
+    protected addControllers<T> (controller: any)// (controllers: T | Array<T>): void
     {
         // Create array if only a single value is passed
-        let ctlrs = (controllers instanceof Array) ? controllers : [controllers]
-        let count = 0
+        // let ctlrs = (controllers instanceof Array) ? controllers : [controllers]
+        // let count = 0
+        //
+        // ctlrs.forEach(ctlr => {
+        //
+        //     let ctrlPath = (<Controller><any>ctlr).overnightBasePath
+        //     if(ctrlPath) {
+        //         let router = this.getRouter(ctlr)
+        //         count++
+        //         this.app_.use(ctrlPath, router)
+        //     }
+        // })
+        //
+        // cinfo(count + ` controller${count === 1 ? '' : 's'} configured.`)
 
-        ctlrs.forEach(ctlr => {
+        let router = Router()
 
-            let ctrlPath = (<Controller><any>ctlr).overnightBasePath
-            if(ctrlPath) {
-                let router = this.getRouter(ctlr)
-                count++
-                this.app_.use(ctrlPath, router)
+        for(let member in controller) {
+
+
+            if(controller[member].hasOwnProperty('overnightProperties')) {
+                let callback = <any>controller[member]
+                let params = (<any>controller[member]).overnightProperties
+
+                switch (params.call)
+                {
+                    case 'GET':
+                        if(params.options) {
+                            router.get(params.path, params.options, callback)
+                        }
+                        else {
+                            router.get(params.path, (req, res, next) => {
+                                controller[member](req, res, next)
+                            })
+                        }
+                        break
+
+                    case 'POST':
+                        if(params.options) {
+                            router.post(params.path, params.options, callback)
+                        }
+                        else {
+                            router.post(params.path, callback)
+                        }
+                        break
+
+                    case 'PUT':
+                        if(params.options) {
+                            router.put(params.path, params.options, callback)
+                        }
+                        else {
+                            router.put(params.path, callback)
+                        }
+                        break
+
+                    case 'DELETE':
+                        if(params.options) {
+                            router.delete(params.path, params.options, callback)
+                        }
+                        else {
+                            router.delete(params.path, callback)
+                        }
+                        break
+                }
             }
-        })
+        }
 
-        cinfo(count + ` controller${count === 1 ? '' : 's'} configured.`)
+        this.app_.use(controller.overnightBasePath, router)
     }
 
     private getRouter<T>(ctlr: T): Router
@@ -53,37 +107,49 @@ export class Server
         let router = Router()
 
         for(let member in ctlr) {
-            
-            let classAttr = <ControllerRoute><any>ctlr[member]; cerr(classAttr)
 
-            if(classAttr.isOvernightRoute) { cerr(classAttr)
-                switch (classAttr.call) {
+
+            if(ctlr[member].hasOwnProperty('overnightProperties')) {
+                let callback = <any>ctlr[member]
+                let params = (<any>ctlr[member]).overnightProperties
+
+                switch (params.call)
+                {
                     case 'GET':
-                        if(classAttr.options) {
-                            router.get(classAttr.path, classAttr.options, classAttr.method)
-                        } else {
-                            router.get(classAttr.path, classAttr.method)
+                        if(params.options) {
+                            router.get(params.path, params.options, callback)
+                        }
+                        else {
+                            router.get(params.path, function (req, res, next) {
+                                callback(req, res, next)
+                            })
                         }
                         break
+
                     case 'POST':
-                        if(classAttr.options) {
-                            router.post(classAttr.path, classAttr.options, classAttr.method)
-                        } else {
-                            router.post(classAttr.path, classAttr.method)
+                        if(params.options) {
+                            router.post(params.path, params.options, callback)
+                        }
+                        else {
+                            router.post(params.path, callback)
                         }
                         break
+
                     case 'PUT':
-                        if(classAttr.options) {
-                            router.put(classAttr.path, classAttr.options, classAttr.method)
-                        } else {
-                            router.put(classAttr.path, classAttr.method)
+                        if(params.options) {
+                            router.put(params.path, params.options, callback)
+                        }
+                        else {
+                            router.put(params.path, callback)
                         }
                         break
+
                     case 'DELETE':
-                        if(classAttr.options) {
-                            router.delete(classAttr.path, classAttr.options, classAttr.method)
-                        } else {
-                            router.delete(classAttr.path, classAttr.method)
+                        if(params.options) {
+                            router.delete(params.path, params.options, callback)
+                        }
+                        else {
+                            router.delete(params.path, callback)
                         }
                         break
                 }

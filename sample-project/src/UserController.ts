@@ -18,6 +18,7 @@ export default class UserController
     private get(req: Request, res: Response): void
     {
         cinfo(req.params)
+        cinfo(this.getCustomMsg(req.params.id))
         res.status(200).json({msg: 'get_called'})
     }
 
@@ -47,5 +48,10 @@ export default class UserController
     {
         cinfo(req.params)
         res.status(200).json({msg: 'delete_called'})
+    }
+
+    private getCustomMsg(id: string): string
+    {
+        return 'here\'s a private custom message for user with id:' + id
     }
 }

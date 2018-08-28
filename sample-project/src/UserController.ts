@@ -15,11 +15,10 @@ export default class UserController
 {
 
     @Get(':id')
-    get(req: Request, res: Response): String
+    get(req: Request, res: Response): any
     {
-        // cinfo(req.params)
-        res.status(200).json({msg: 'get_called'})
-        return this.getCustomMsg(5)
+        this.printUrl(req)
+        return res.status(200).json({msg: 'get_called'})
     }
 
     @Get('', getJwtMiddleware())
@@ -50,8 +49,8 @@ export default class UserController
         res.status(200).json({msg: 'delete_called'})
     }
 
-    private getCustomMsg(id: number): string
+    private printUrl(req: Request): void
     {
-        return 'here\'s a private custom message for user with id:' + id
+        cinfo(req.originalUrl + ' called')
     }
 }

@@ -22,7 +22,7 @@ export class SampleServer extends Server
         super()
         this.setupExpress()
         let ctrls = this.setupControllers()
-        // super.addControllers(ctrls)
+        super.addControllers(ctrls)
     }
 
     private setupExpress(): void
@@ -32,12 +32,10 @@ export class SampleServer extends Server
         this.app_.use(bodyParser.urlencoded({extended: true}))
     }
 
-    private setupControllers()// : Array<SampleController>
+    private setupControllers(): Array<SampleController>
     {
         let userController = new UserController()
-        // userController.get(null, null)
-        // return [userController]
-        super.addControllers(userController)
+        return [userController]
     }
 
     public start(port?: number)

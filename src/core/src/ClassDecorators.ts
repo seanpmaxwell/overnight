@@ -11,7 +11,7 @@ export function Controller<T extends {new (...args: any[]): any}>(path: string)
     {
         return class extends constr
         {
-            overnightBasePath = '/' + path
+            onBasePath = '/' + path
         }
     }
 }

@@ -48,7 +48,7 @@ $ npm install --save @overnightjs/core express @types/express
 
 ```typescript
 import { Request, Response, NextFunction }    from 'express'
-import { Controller, Get, Post, Put, Delete } from '@overnight/core'
+import { Controller, Get, Post, Put, Delete } from '@overnightjs/core'
 import { someMiddlewareFuntion }              from './Middlware'
 
 @Controller('api/users')
@@ -122,7 +122,7 @@ you could use something like _require-all_ to import them all at once.
 
 ```typescript
 import * as bodyParser  from 'body-parser'
-import { Server }       from '@overnight/core'
+import { Server }       from '@overnightjs/core'
 import { cinfo, cimp }  from 'simple-color-print'
 
 import UserController   from './UserController'

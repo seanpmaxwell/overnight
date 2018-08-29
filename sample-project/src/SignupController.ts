@@ -5,7 +5,7 @@
  */
 
 import { Request, Response } from 'express'
-import { Controller, Post  } from '@overnight/core'
+import { Controller, Post  } from '@overnightjs/core'
 import { cinfo, cerr, }      from 'simple-color-print'
 import SampleController      from './SampleController'
 

@@ -7,7 +7,7 @@
 const secrets = require('../secrets')
 
 import * as bodyParser  from 'body-parser'
-import { Server }       from '@overnight/core'
+import { Server }       from '@overnightjs/core'
 import { cinfo, cimp }  from 'simple-color-print'
 
 import MailPromise      from 'mail-promise'

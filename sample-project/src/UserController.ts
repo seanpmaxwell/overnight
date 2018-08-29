@@ -6,7 +6,7 @@
 
 import { Request, Response }                  from 'express'
 import { cinfo, cerr }                        from 'simple-color-print'
-import { Controller, Get, Post, Put, Delete } from '@overnight/core'
+import { Controller, Get, Post, Put, Delete } from '@overnightjs/core'
 import { getJwtMiddleware }                   from './Middlware'
 import SampleController                       from './SampleController'
 

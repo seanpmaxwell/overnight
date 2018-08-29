@@ -116,7 +116,9 @@ setup for you automatically is the server is meant to be a place where you hook 
 that you want to add the same database connection instance to several of your controllers at once. This setup let's you
 do that before initializing all of your controller routes. `super.addControllers_(ctrlsArr)` must be called to enable
 all of the routes in your controller. If you don't want to have to import each of your controller objects individually,
-you could use something like _require-all_ to import them all at once.
+you could do something like `import * as controllers from './controllers/export.ts` and export all your classes at once
+in that file. Then you could loop through all your controllers in the server file and make the same modifications to
+each controller.
 
 <br>
 

@@ -1,7 +1,7 @@
 {
   "name": "@overnight/core",
   "version": "1.0.0",
-  "description": "TypeScript decorators for the Express web server.",
+  "description": "TypeScript decorators for the Express web server. Part of the OvernightJS project.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "directories": {
@@ -33,7 +33,21 @@
     "router",
     "express",
     "express-ts",
-    "expressjs"
+    "expressjs",
+    "rest",
+    "restful",
+    "simple",
+    "server",
+    "middlware",
+    "options",
+    "controller",
+    "controllers",
+    "api",
+    "framework",
+    "web",
+    "service",
+    "webserver",
+    "services"
   ],
   "author": "Sean Maxwell",
   "license": "GPL-3.0-or-later"

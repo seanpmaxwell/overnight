@@ -177,7 +177,7 @@ export class SampleServer extends Server
 
 #### See how awesome this is!
 
-Without the above decorators we would have to wrap each controller method with some something like:
+Without the above decorators we would have to wrap each controller method with something like:
 
 ```typescript
 

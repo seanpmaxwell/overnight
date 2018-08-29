@@ -5,10 +5,7 @@
     "rootDir": "src/",
     "outDir": "built/",
     "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "paths": {
-      "@overnightjs/core": ["../src/core"]
-    }
+    "experimentalDecorators": true
   },
   "include": [
     "./src/**/*"

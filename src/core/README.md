@@ -2,14 +2,13 @@
 
 > TypeScript decorators for the ExpressJS Web Server! (Beta Version)
 
-![alt text](overnight.png)
-
+![alt text](overnightjs.png)
+ 
 
 ## What is it
 
-OvernightJS is a clean simple library to add TypeScript decorators for methods meant to call Express routes. This is
-the core package which provides the decorators. Link to the master package with sample application is here
-https://github.com/seanpmaxwell/overnight. 
+OvernightJS is a clean simple library to add TypeScript decorators for methods meant to call Express routes. Link to the 
+master package with sample application is here https://github.com/seanpmaxwell/overnight. 
 
 
 ## Features
@@ -204,5 +203,4 @@ this.app.use('/api/users', userController.getRoutes())
 
 ```
 
-This would get really tedious overtime and lead to a lot of boiler plate code. If you enjoy my work please consider making
-a donation via paypal.
+This would get really tedious overtime and lead to a lot of boiler plate code.

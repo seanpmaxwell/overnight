@@ -150,13 +150,13 @@ export class SampleServer extends Server
     private setupControllers(): Array<CustomController>
     {
         let userController = new UserController()
-        let loginController = new SignupController()
+        let signupController = new SignupController()
         
         let dbConnObj = new SomeDbConnClass('credentials')
-        loginController.setDbConn(dbConnObj)
+        signupController.setDbConn(dbConnObj)
         userController.setDbConn(dbConnObj)
 
-        return [userController, loginController]
+        return [userController, signupController]
     }
 
     public start(port: number)

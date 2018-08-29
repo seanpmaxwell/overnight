@@ -202,5 +202,4 @@ this.app.use('/api/users', userController.getRoutes())
 
 ```
 
-This would get really tedious overtime and lead to a lot of boiler plate code. If you enjoy my work please consider making
-a donation via paypal.
+This would get really tedious overtime and lead to a lot of boiler plate code.

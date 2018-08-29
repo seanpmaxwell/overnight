@@ -23,7 +23,7 @@ export class SampleServer extends Server
         super()
         this.setupExpress()
         let ctrls = this.setupControllers()
-        super.addControllers(ctrls)
+        super.addControllers_(ctrls)
     }
 
     private setupExpress(): void

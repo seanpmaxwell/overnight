@@ -18,7 +18,7 @@ export class Server
         this.app_ = express()
     }
 
-    protected addControllers<T>(controllers: T | Array<T>): void
+    protected addControllers_<T>(controllers: T | Array<T>): void
     {
         // Create array if only a single value is passed
         let ctlrs = (controllers instanceof Array) ? controllers : [controllers]

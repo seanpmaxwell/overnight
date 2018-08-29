@@ -2,7 +2,7 @@
 
 > TypeScript decorators for the ExpressJS Web Server! (Beta Version)
 
-<img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/blob/master/overnightjs.png' border='0'>
+<img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/overnightjs.png' border='0'>
  
 
 ## What is it

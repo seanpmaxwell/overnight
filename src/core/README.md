@@ -2,7 +2,7 @@
 
 > TypeScript decorators for the ExpressJS Web Server! (Beta Version)
 
-![alt text](overnightjs.png)
+<img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/blob/master/overnightjs.png' border='0'>
  
 
 ## What is it
@@ -32,7 +32,7 @@ application.
 You can get the latest release using npm:
 
 ```batch
-$ npm install --save @overnight/core express @types/express
+$ npm install --save @overnightjs/core express @types/express
 ```
 
 > **Important!** OvernightJS requires Node >= 6, Express >= 4, TypeScript >= 2.0 and the `experimentalDecorators`, 

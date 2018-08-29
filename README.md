@@ -2,8 +2,8 @@
 
 > TypeScript decorators for the ExpressJS Web Server! (Beta Version)
 
-![alt text](overnight.png)
-
+![alt text](overnightjs.png)
+ 
 
 ## What is it
 

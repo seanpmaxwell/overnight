@@ -2,6 +2,8 @@
 
 > TypeScript decorators for the ExpressJS Web Server! (Beta Version)
 
+![alt text](overnight.png)
+
 
 ## What is it
 
@@ -21,7 +23,7 @@ OvernightJS isn't meant to be a replacement for Express. If you're already somew
 learn Overnight in about 10 minutes. There are some other frameworks which do add decorators for Express such as NestJS
 and TsExpressDecorators, but these are massive frameworks with entire websites dedicated to their documentation. OvernightJS
 is clean, simple, and aside from the decorators, you can interact with ExpressJS in the same way you would any other Node
-application. 
+application.
 
 
 ## Installation

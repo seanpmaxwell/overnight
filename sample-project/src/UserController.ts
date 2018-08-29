@@ -8,16 +8,17 @@ import { Request, Response }                  from 'express'
 import { cinfo, cerr }                        from 'simple-color-print'
 import { Controller, Get, Post, Put, Delete } from '@overnight/core'
 import { getJwtMiddleware }                   from './Middlware'
+import SampleController                       from './SampleController'
 
 
 @Controller('api/users')
-export default class UserController
+export default class UserController extends SampleController
 {
 
     @Get(':id')
     get(req: Request, res: Response): any
     {
-        this.printUrl(req)
+        cinfo(req.params.id)
         return res.status(200).json({msg: 'get_called'})
     }
 
@@ -49,8 +50,26 @@ export default class UserController
         res.status(200).json({msg: 'delete_called'})
     }
 
-    private printUrl(req: Request): void
+    @Get('practice/async')
+    private async getWithAsync(req: Request, res: Response): Promise<void>
     {
-        cinfo(req.originalUrl + ' called')
+        let msg
+
+        try {
+            msg = await this.asyncMethod(req)
+        }
+        catch(err) {
+            msg = err
+        }
+        finally {
+            res.status(200).json({msg: msg})
+        }
+    }
+
+    private asyncMethod(req: Request): Promise<string>
+    {
+        return new Promise((resolve, reject) => {
+            resolve(req.originalUrl + ' called')
+        })
     }
 }

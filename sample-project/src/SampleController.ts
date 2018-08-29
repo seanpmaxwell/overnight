@@ -4,8 +4,15 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
+import MailPromise from 'mail-promise'
+
 
 export default class SampleController
 {
-    constructor() {}
+    protected mailer_: MailPromise
+
+    setMailer(mailer: MailPromise): void
+    {
+        this.mailer_ = mailer
+    }
 }

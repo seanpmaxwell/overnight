@@ -6,7 +6,7 @@
   "dependencies": {
     "ejs": "^2.6.1",
     "express": "^4.16.3",
-    "mail-promise": "^1.1.1",
+    "mail-promise": "^1.1.2",
     "simple-color-print": "^1.0.1"
   },
   "devDependencies": {

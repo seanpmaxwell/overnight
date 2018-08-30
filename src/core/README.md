@@ -32,7 +32,8 @@ application.
 You can get the latest release using npm:
 
 ```batch
-$ npm install --save @overnightjs/core express @types/express
+$ npm install --save @overnightjs/core express 
+$ npm install --save-dev @types/express
 ```
 
 > **Important!** OvernightJS requires Node >= 6, Express >= 4, TypeScript >= 2.0 and the `experimentalDecorators`, 

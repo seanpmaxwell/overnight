@@ -11,7 +11,7 @@ import SampleController      from './SampleController'
 
 
 @Controller('api/signup')
-export default class SignupController extends SampleController
+export class SignupController extends SampleController
 {
     @Post()
     private async signup(req: Request, res: Response): Promise<void>

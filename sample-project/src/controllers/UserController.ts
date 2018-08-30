@@ -12,7 +12,7 @@ import SampleController                       from './SampleController'
 
 
 @Controller('api/users')
-export default class UserController extends SampleController
+export class UserController extends SampleController
 {
 
     @Get(':id')

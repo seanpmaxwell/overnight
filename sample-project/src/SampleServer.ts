@@ -11,9 +11,8 @@ import { Server }       from '@overnightjs/core'
 import { cinfo, cimp }  from 'simple-color-print'
 
 import MailPromise      from 'mail-promise'
-import UserController   from './UserController'
-import SampleController from './SampleController'
-import SignupController from './SignupController'
+import SampleController from './controllers/SampleController'
+import * as controllers from './controllers/controllers'
 
 
 export class SampleServer extends Server
@@ -36,14 +35,19 @@ export class SampleServer extends Server
 
     private setupControllers(): Array<SampleController>
     {
-        let mailer = new MailPromise(secrets.service, secrets.username,
-            secrets.password)
+        let mailer = new MailPromise(secrets.service,
+            secrets.username, secrets.password)
 
-        let userController = new UserController()
-        let loginController = new SignupController()
-        loginController.setMailer(mailer)
+        let ctlrs = []
+        for(let name in controllers) {
+            let Controller = (<any>controllers)[name]
+            let controller: SampleController = new Controller()
 
-        return [userController, loginController]
+            controller.setMailer(mailer)
+            ctlrs.push(controller)
+        }
+
+        return ctlrs
     }
 
     public start(port?: number)

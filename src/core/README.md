@@ -7,8 +7,7 @@
 
 ## What is it
 
-OvernightJS is a clean simple library to add TypeScript decorators for methods meant to call Express routes. Link to the 
-master package with sample application is here https://github.com/seanpmaxwell/overnight. 
+OvernightJS is a clean simple library to add TypeScript decorators for methods meant to call Express routes.
 
 
 ## Features

@@ -36,7 +36,7 @@ $ npm install --save-dev @types/express
 ```
 
 > **Important!** OvernightJS requires Node >= 6, Express >= 4, TypeScript >= 2.0 and the `experimentalDecorators`, 
-`emitDecoratorMetadata`, `lib` compilation options in your `tsconfig.json` file.
+`lib` compilation options in your `tsconfig.json` file.
 
 
 <br>

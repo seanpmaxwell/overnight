@@ -9,7 +9,6 @@
 # Misc
 **/node_modules
 **/package-lock.json
-sample-project/secrets.json
 
 # Transpiled files
 **/lib

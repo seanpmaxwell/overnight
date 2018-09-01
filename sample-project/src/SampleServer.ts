@@ -4,8 +4,6 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-const secrets = require('../secrets')
-
 import * as bodyParser  from 'body-parser'
 import { Server }       from '@overnightjs/core'
 import { cinfo, cimp }  from 'simple-color-print'
@@ -35,8 +33,8 @@ export class SampleServer extends Server
 
     private setupControllers(): Array<SampleController>
     {
-        let mailer = new MailPromise(secrets.service,
-            secrets.username, secrets.password)
+        let mailer = new MailPromise('Gmail', process.env.EMAILUSER,
+            process.env.EMAILPWD)
 
         let ctlrs = []
         for(let name in controllers) {

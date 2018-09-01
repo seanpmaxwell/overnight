@@ -49,7 +49,7 @@ $ npm install --save-dev @types/express
 ```typescript
 import { Request, Response, NextFunction }    from 'express'
 import { Controller, Get, Post, Put, Delete } from '@overnightjs/core'
-import { someMiddlewareFuntion }              from './Middlware'
+import { someMiddlewareFunction }              from './Middlware'
 
 @Controller('api/users')
 export default class UserController
@@ -63,7 +63,7 @@ export default class UserController
     }
 
     // add whatever options you want as the second parameter
-    @Get('', someMiddlewareFuntion())
+    @Get('', someMiddlewareFunction())
     private getAll(req: Request, res: Response): void
     {
         res.status(200).json({msg: 'get_all_called'})

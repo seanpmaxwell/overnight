@@ -7,7 +7,7 @@
 import { Request, Response } from 'express'
 import { Controller, Post  } from '@overnightjs/core'
 import { cinfo, cerr, }      from 'simple-color-print'
-import SampleController      from './SampleController'
+import { SampleController }  from './SampleController'
 
 
 @Controller('api/signup')
@@ -18,7 +18,7 @@ export class SignupController extends SampleController
     {
         try {
             let info = await this.mailer_.send(req.body.email, 'Overnight Developers',
-                'Thanks for signing up', 'foo')
+                'Thanks for signing up', null, '<h1>You are awesome</h1>')
             cinfo(info)
             res.status(200).json({msg: 'email_sent_to_' + req.body.email})
         }

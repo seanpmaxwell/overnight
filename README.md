@@ -49,10 +49,10 @@ $ npm install --save-dev @types/express
 ```typescript
 import { Request, Response, NextFunction }    from 'express'
 import { Controller, Get, Post, Put, Delete } from '@overnightjs/core'
-import { someMiddlewareFunction }              from './Middlware'
+import { someMiddlewareFunction }             from './Middlware'
 
 @Controller('api/users')
-export default class UserController
+export class UserController
 {
 
     @Get(':id')
@@ -123,12 +123,11 @@ each controller.
 <br>
 
 ```typescript
-import * as bodyParser  from 'body-parser'
-import { Server }       from '@overnightjs/core'
-import { cinfo, cimp }  from 'simple-color-print'
-
-import UserController   from './UserController'
-import SignupController from './SignupController'
+import * as bodyParser      from 'body-parser'
+import { Server }           from '@overnightjs/core'
+import { cinfo, cimp }      from 'simple-color-print'
+import { UserController }   from './UserController'
+import { SignupController } from './SignupController'
 
 
 export class SampleServer extends Server

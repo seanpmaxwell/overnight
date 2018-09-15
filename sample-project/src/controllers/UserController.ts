@@ -8,7 +8,7 @@ import { Request, Response }                  from 'express'
 import { cinfo, cerr }                        from 'simple-color-print'
 import { Controller, Get, Post, Put, Delete } from '@overnightjs/core'
 import { getJwtMiddleware }                   from './Middlware'
-import SampleController                       from './SampleController'
+import { SampleController }                   from './SampleController'
 
 
 @Controller('api/users')

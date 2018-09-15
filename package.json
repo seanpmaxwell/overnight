@@ -1,6 +1,6 @@
 {
   "name": "overnight",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "TypeScript decorators for the ExpressJS Server.",
   "main": "None, this is the master repo. Look to @overnignt/core for and @overnight/superadmin.",
   "scripts": {

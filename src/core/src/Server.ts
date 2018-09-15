@@ -5,7 +5,6 @@
  */
 
 import * as express            from 'express'
-import { cinfo, cerr }         from 'simple-color-print'
 import { Application, Router } from 'express'
 
 
@@ -33,7 +32,7 @@ export class Server
             }
         })
 
-        cinfo(count + ` controller${count === 1 ? '' : 's'} configured.`)
+        console.log(count + ` controller${count === 1 ? '' : 's'} configured.`)
     }
 
     private getRouter(controller: any): Router

@@ -4,10 +4,10 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import MailPromise from 'mail-promise'
+import { MailPromise } from 'mail-promise'
 
 
-export default class SampleController
+export class SampleController
 {
     protected mailer_: MailPromise
 

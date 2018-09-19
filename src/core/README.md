@@ -15,6 +15,7 @@ OvernightJS is a clean simple library to add TypeScript decorators for methods m
 * Define routes on GET, POST, PUT, and DELETE verbs for methods in the controller.
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Master repo includes sample application if you want to practice with an API calling tool such as Postman.
+* Allows for adding your own custom Router classes if you don't want to use the standard express Router
 
 
 ## Why OvernightJS
@@ -104,21 +105,24 @@ export class UserController
             res.status(200).json({msg: msg})
         }
     }
+   
 }
 ```
 
 #### Import your controller into the server
 
-OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express object is accessed
-using `this.app_`, which is a protected, readonly class variable. You can interact with this variable like you would
-any normal express Application created with `require('express')()`. The reason the controllers are not imported and
-setup for you automatically is the server is meant to be a place where you hook everything together. Suppose for example
-that you want to add the same database connection instance to several of your controllers at once. This setup let's you
-do that before initializing all of your controller routes. `super.addControllers_(ctrlsArr)` must be called to enable
-all of the routes in your controller. If you don't want to have to import each of your controller objects individually,
-you could do something like `import * as controllers from './controllers/export.ts` and export all your classes at once
-in that file. Then you could loop through all your controllers in the server file and make the same modifications to
-each controller.
+OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
+object is accessed using `this.app_`, which is a protected, readonly class variable. You can interact 
+with this variable like you would any normal express Application created with `require('express')()`. 
+The reason the controllers are not imported and setup for you automatically is the server is meant to 
+be a place where you hook everything together. Suppose for example that you want to add the same database 
+connection instance to several of your controllers at once. This setup let's you do that before 
+initializing all of your controller routes. `super.addControllers_(ctrlsArr)` must be called to enable 
+all of the routes in your controller. If you don't want to have to import each of your controller objects 
+individually, you could do something like `import * as controllers from './controllers/export.ts` and 
+export all your classes at once in that file. Then you could loop through all your controllers in the 
+server file and make the same modifications to each controller. The sample application of the main
+master repository contains an example of this. 
 
 <br>
 
@@ -140,7 +144,9 @@ export class SampleServer extends Server
         
         // This must be called, and can be 
         // passed a single controller or an 
-        // array of controllers.
+        // array of controllers. Optional router
+        // object can also be passed as second 
+        // argument.
         super.addControllers_(ctrlsArr)
     }
 
@@ -205,3 +211,97 @@ this.app.use('/api/users', userController.getRoutes())
 ```
 
 This would get really tedious overtime and lead to a lot of boiler plate code.
+
+
+
+## Using a Custom Router
+
+Suppose you don't want to use the built in "Router" object which is provided by express. Maybe you
+don't like using async/await or having to call `.catch()` if you're not using try/catch blocks. Maybe
+you're using a library like _express-promise-router_ to handle the route callbacks. OvernightJS allows
+you to pass in a custom router object in the `super.addControllers_()` method. Simply pass in your
+custom router object as the second argument after the controller/s. When you don't specify a custom
+router, the default express.Router() object is used. 
+
+
+- Controller using _express-promise-router_:
+
+```typescript
+import { Request, Response }    from 'express'
+import { Controller, Get, Put } from '@overnightjs/core'
+
+
+@Controller('api/posts')
+export class PostController
+{
+
+    @Get(':id')
+    private get(req: Request, res: Response): Promise<Response>
+    {
+        return this.someAsyncFunction(req.params.id)
+                    .then(ret => res.status(200).json({msg: ret}))
+    }
+
+    private someAsyncFunction(id: number): Promise<string>
+    {
+        return new Promise((resolve, reject) => {
+
+            if(isNaN(id)) {
+                reject('You entered an invalid post id: ' + id)
+            }
+            else {
+                resolve('You entered the post id: ' + id)
+            }
+        })
+    }
+
+    @Put(':id')
+    private add(req: Request, res: Response): Promise<string>
+    {
+        return Promise.resolve('next')
+    }
+
+    @Put('foo')
+    private add2(req: Request, res: Response): void
+    {
+        res.status(200).json({msg: 'Route used: ' + req.url})
+    }
+}
+```
+
+- Add _express-promise-router_ in the `super.addControllers_()` method:
+
+
+```typescript
+/**
+ * Example with custom router for the Overnight web-framework.
+ *
+ * created by Sean Maxwell Aug 26, 2018
+ */
+
+import * as customRouter  from 'express-promise-router'
+import { Server }         from '@overnightjs/core'
+import { PostController } from './controllers/PostController'
+
+
+export class CustomRouterServer extends Server
+{
+    constructor()
+    {
+        super()
+
+        // Setup the controller
+        let postController = new PostController()
+
+        // Pass in controller and router library
+        super.addControllers_(postController, customRouter)
+    }
+
+    public start(port: number)
+    {
+        this.app_.listen(port, () => {
+            console.log('overnightjs with custom router started on port:' + port)
+        })
+    }
+}
+```

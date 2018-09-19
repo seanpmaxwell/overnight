@@ -1,5 +1,5 @@
 /**
- * Example Login for the Overnight web-framework.
+ * Example Sending Email for the OvernightJS web library.
  *
  * created by Sean Maxwell Aug 28, 2018
  */

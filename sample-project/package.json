@@ -6,8 +6,9 @@
   "dependencies": {
     "ejs": "^2.6.1",
     "express": "^4.16.3",
-    "mail-promise": "^1.1.4",
-    "simple-color-print": "^1.0.1"
+    "express-promise-router": "^3.0.3",
+    "mail-promise": "^1.1.5",
+    "simple-color-print": "^1.0.4"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",
@@ -17,7 +18,8 @@
   },
   "scripts": {
     "test": "none",
-    "start": "node -r tsconfig-paths/register start.js"
+    "start": "node -r tsconfig-paths/register start.js",
+    "start2": "node -r tsconfig-paths/register start.js customRouter"
   },
   "repository": {
     "type": "git",
@@ -36,5 +38,5 @@
     "usuage"
   ],
   "author": "Sean Maxwell",
-  "license": "GPL-3.0-or-later"
+  "license": "MIT"
 }

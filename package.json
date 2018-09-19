@@ -32,7 +32,7 @@
     "middlewares"
   ],
   "author": "Sean Maxwell",
-  "license": "GPL-3.0-or-later",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/seanpmaxwell/overnight/issues"
   },

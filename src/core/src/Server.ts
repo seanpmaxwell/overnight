@@ -4,8 +4,8 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as express            from 'express'
-import { Application, Router } from 'express'
+import * as express    from 'express'
+import { Application } from 'express'
 
 
 export class Server
@@ -17,16 +17,25 @@ export class Server
         this.app_ = express()
     }
 
-    protected addControllers_<T>(controllers: T | Array<T>): void
+    protected addControllers_<T>(controllers: T | Array<T>, customRouterLib?: any): void
     {
         // Create array if only a single value is passed
         let ctlrs = (controllers instanceof Array) ? controllers : [controllers]
         let count = 0
 
         ctlrs.forEach(ctlr => {
+            if((<any>ctlr).onBasePath)
+            {
+                let router
 
-            if((<any>ctlr).onBasePath) {
-                let router = this.getRouter(ctlr)
+                if(customRouterLib) {
+                    console.info('custom router added.')
+                    router = this.getRouter(ctlr, customRouterLib)
+                }
+                else {
+                    router = this.getRouter(ctlr, express.Router)
+                }
+
                 this.app_.use((<any>ctlr).onBasePath, router)
                 count++
             }
@@ -35,12 +44,12 @@ export class Server
         console.log(count + ` controller${count === 1 ? '' : 's'} configured.`)
     }
 
-    private getRouter(controller: any): Router
+    private getRouter(controller: any, RouterLib: any): any
     {
-        let router = Router()
+        let router = RouterLib()
 
-        for(let member in controller) {
-
+        for(let member in controller)
+        {
             if(controller[member].hasOwnProperty('onProperties')) {
                 let params = controller[member].onProperties
 

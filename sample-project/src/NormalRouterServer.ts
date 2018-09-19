@@ -16,7 +16,7 @@ declare interface Controllers {
     [name: string]: typeof SampleController,
 }
 
-export class SampleServer extends Server
+export class NormalRouterServer extends Server
 {
     constructor()
     {
@@ -56,11 +56,11 @@ export class SampleServer extends Server
         port = port ? port : 3000
 
         this.app_.get('/home', (req, res) => {
-            res.send('hello overnight sample app')
+            res.send('overnightjs with standard express router started')
         })
 
         this.app_.listen(port, () => {
-            cimp('Server listening on port:' + port)
+            cimp('overnightjs with standard express router started on port:' + port)
         })
     }
 }

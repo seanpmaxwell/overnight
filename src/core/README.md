@@ -50,7 +50,6 @@ $ npm install --save-dev @types/express
 ```typescript
 import { Request, Response, NextFunction }    from 'express'
 import { Controller, Get, Post, Put, Delete } from '@overnightjs/core'
-import { someMiddlewareFunction }             from './Middlware'
 
 @Controller('api/users')
 export class UserController
@@ -64,7 +63,7 @@ export class UserController
     }
 
     // add whatever options you want as the second parameter
-    @Get('', someMiddlewareFunction())
+    @Get('', middleware1)
     private getAll(req: Request, res: Response): void
     {
         res.status(200).json({msg: 'get_all_called'})
@@ -76,7 +75,7 @@ export class UserController
         res.status(200).json({msg: 'add_called'})
     }
 
-    @Put('update-user')
+    @Put('update-user', [middleware1, middleware2])
     private update(req: Request, res: Response): void
     {
         res.status(200).json({msg: 'update_called'})
@@ -212,6 +211,7 @@ this.app.use('/api/users', userController.getRoutes())
 
 This would get really tedious overtime and lead to a lot of boiler plate code.
 
+<br>
 
 
 ## Using a Custom Router

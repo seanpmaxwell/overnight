@@ -1,7 +1,7 @@
 {
-  "name": "@overnightjs/core",
-  "version": "1.2.2",
-  "description": "TypeScript decorators for the Express web server. Part of the OvernightJS project.",
+  "name": "@overnightjs/jwt",
+  "version": "1.0.0",
+  "description": "",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "directories": {
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/seanpmaxwell/overnight/tree/master/src/core"
+    "url": "https://github.com/seanpmaxwell/overnight/tree/master/src/jwt"
   },
   "keywords": [
     "overnight",
@@ -50,7 +50,10 @@
     "services",
     "back-end",
     "node",
-    "nodejs"
+    "nodejs",
+    "jwt",
+    "jsonwebtoken",
+    "json-web-token"
   ],
   "author": "Sean Maxwell",
   "license": "MIT",

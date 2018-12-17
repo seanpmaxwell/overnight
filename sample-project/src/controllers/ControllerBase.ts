@@ -7,7 +7,7 @@
 import { MailPromise } from 'mail-promise'
 
 
-export class SampleController
+export class ControllerBase
 {
     protected mailer_: MailPromise
 

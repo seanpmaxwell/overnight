@@ -6,15 +6,14 @@
 
 import * as bodyParser      from 'body-parser'
 import * as controllers     from './controllers/controllers'
+import * as daos            from './daos/daos'
 
-import { Server }           from '@overnightjs/core'
-import { cinfo, cimp }      from 'simple-color-print'
-import { MailPromise }      from 'mail-promise'
-import { SampleController } from './controllers/SampleController'
+import { Server }         from '@overnightjs/core'
+import { cinfo, cimp }    from 'simple-color-print'
+import { MailPromise }    from 'mail-promise'
+import { DaoBase }        from './daos/DaoBase'
+import { ControllerBase } from './controllers/ControllerBase'
 
-declare interface Controllers {
-    [name: string]: typeof SampleController,
-}
 
 export class NormalRouterServer extends Server
 {
@@ -22,8 +21,8 @@ export class NormalRouterServer extends Server
     {
         super()
         this.setupExpress()
-        let ctrls = this.setupControllers()
-        super.addControllers_(ctrls)
+        this.setupDaos()
+        // this.setupControllers()
     }
 
     private setupExpress(): void
@@ -34,21 +33,49 @@ export class NormalRouterServer extends Server
         this.app_.use(bodyParser.urlencoded({extended: true}))
     }
 
-    private setupControllers(): Array<SampleController>
+    setupDaos(): void
     {
+        type Daos = {
+            [daoName: string]: typeof DaoBase
+        }
+
+        let daoInstances = []
+
+        for(let daoName in daos)
+        {
+            if(daos.hasOwnProperty(daoName)) {
+                let Dao = (<Daos>daos)[daoName]
+                let dao = new Dao('pg-promise')
+                daoInstances.push(dao)
+            }
+        }
+
+        super.addDaos_(daoInstances)
+    }
+
+    private setupControllers(): void
+    {
+        type Controllers = {
+            [ctrlName: string]: typeof ControllerBase
+        }
+
         let mailer = new MailPromise('Gmail', process.env.EMAILUSER,
             process.env.EMAILPWD)
 
-        let ctlrs = []
-        for(let name in controllers) {
-            let Controller = (<Controllers>controllers)[name]
-            let controller = new Controller()
+        let ctlrInstances = []
 
-            controller.setMailer(mailer)
-            ctlrs.push(controller)
+        for(let ctrlName in controllers)
+        {
+            if(controllers.hasOwnProperty(ctrlName)) {
+                let Controller = (<Controllers>controllers)[ctrlName]
+                let controller = new Controller()
+
+                controller.setMailer(mailer)
+                ctlrInstances.push(controller)
+            }
         }
 
-        return ctlrs
+        super.addControllers_(ctlrInstances)
     }
 
     public start(port?: number)

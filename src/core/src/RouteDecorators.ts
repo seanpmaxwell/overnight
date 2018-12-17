@@ -4,30 +4,34 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-export function Get(path?: string, options?: any): MethodDecorator
+
+
+/***********************************************************************************************
+ *                                            Routes
+ **********************************************************************************************/
+
+export function Get(path?: string): MethodDecorator
 {
-    return helperDec('GET', path, options)
+    return helperForRoutes('GET', path)
 }
 
-export function Post(path?: string, options?: any): MethodDecorator
+export function Post(path?: string): MethodDecorator
 {
-    return helperDec('POST', path, options)
+    return helperForRoutes('POST', path)
 }
 
-export function Put(path?: string, options?: any): MethodDecorator
+export function Put(path?: string): MethodDecorator
 {
-    return helperDec('PUT', path, options)
+    return helperForRoutes('PUT', path)
 }
 
-export function Delete(path?: string, options?: any): MethodDecorator
+export function Delete(path?: string): MethodDecorator
 {
-    return helperDec('DELETE', path, options)
+    return helperForRoutes('DELETE', path)
 }
 
-function helperDec(call: string, path?: string, options?: any): MethodDecorator
+function helperForRoutes(call: string, path?: string): MethodDecorator
 {
-    path = path ? ('/' + path) : ''
-
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
     {
         const originalMethod = descriptor.value
@@ -37,10 +41,45 @@ function helperDec(call: string, path?: string, options?: any): MethodDecorator
             return originalMethod.apply(this, args)
         }
 
+        // Set the HTTP call type and Path
         descriptor.value.onProperties = {
             call: call,
-            path: path,
-            options: options
+            path: path ? ('/' + path) : ''
+        }
+
+        return descriptor
+    }
+}
+
+
+/***********************************************************************************************
+ *                                         Middleware
+ **********************************************************************************************/
+
+// pick up here, get rid of options keyword, options is the middleware,
+export function Middleware(middleware: Function): MethodDecorator
+{
+    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
+    {
+        // Middleware must be a function
+        if(!(middleware instanceof Function)) {
+            throw Error('middle must be an instance of function')
+            return descriptor.value
+        }
+
+        // Save the scope
+        const originalMethod = descriptor.value
+
+        descriptor.value = function(...args: any[]) {
+            return originalMethod.apply(this, args)
+        }
+
+        // Set the middleware
+        if(descriptor.value.onProperties) {
+            descriptor.value.onProperties.middleware = middleware
+        }
+        else {
+            throw new Error('Middleware passed without route being defined')
         }
 
         return descriptor

@@ -7,15 +7,38 @@
 import * as express    from 'express'
 import { Application } from 'express'
 
+interface Dao {
+    daoAttrName?: string
+}
+
 
 export class Server
 {
     protected readonly app_: Application
+    private _daos: Array<{}>
 
     constructor()
     {
         this.app_ = express()
     }
+
+    /***********************************************************************************************
+     *                                      Setup Daos
+     **********************************************************************************************/
+
+    protected addDaos_<T>(daos: T | Array<T>): void
+    {
+        if(daos instanceof Array) {
+            this._daos = daos
+        }
+        else {
+            this._daos = [daos]
+        }
+    }
+
+    /***********************************************************************************************
+     *                                      Setup Controllers
+     **********************************************************************************************/
 
     protected addControllers_<T>(controllers: T | Array<T>, customRouterLib?: any): void
     {
@@ -24,8 +47,17 @@ export class Server
         let count = 0
 
         ctlrs.forEach(ctlr => {
-            if((<any>ctlr).onBasePath)
+            if(ctlr.onBasePath)
             {
+                // Add Daos
+                this._daos.forEach(dao => {
+                    let convertedName = (<Dao>dao).daoAttrName
+                    if(convertedName) {
+                        ctlr[convertedName] = dao
+                    }
+                })
+
+                // Add router
                 let router
 
                 if(customRouterLib) {
@@ -36,7 +68,7 @@ export class Server
                     router = this.getRouter(ctlr, express.Router)
                 }
 
-                this.app_.use((<any>ctlr).onBasePath, router)
+                this.app_.use(ctlr.onBasePath, router)
                 count++
             }
         })
@@ -56,8 +88,8 @@ export class Server
                 switch (params.call)
                 {
                     case 'GET':
-                        if(params.options) {
-                            router.get(params.path, params.options, (req, res, next) => {
+                        if(params.middleware) {
+                            router.get(params.path, params.middleware, (req, res, next) => {
                                 return controller[member](req, res, next)
                             })
                         }
@@ -69,8 +101,8 @@ export class Server
                         break
 
                     case 'POST':
-                        if(params.options) {
-                            router.post(params.path, params.options, (req, res, next) => {
+                        if(params.middleware) {
+                            router.post(params.path, params.middleware, (req, res, next) => {
                                 return controller[member](req, res, next)
                             })
                         }
@@ -82,8 +114,8 @@ export class Server
                         break
 
                     case 'PUT':
-                        if(params.options) {
-                            router.put(params.path, params.options, (req, res, next) => {
+                        if(params.middleware) {
+                            router.put(params.path, params.middleware, (req, res, next) => {
                                 return controller[member](req, res, next)
                             })
                         }
@@ -95,8 +127,8 @@ export class Server
                         break
 
                     case 'DELETE':
-                        if(params.options) {
-                            router.delete(params.path, params.options, (req, res, next) => {
+                        if(params.middleware) {
+                            router.delete(params.path, params.middleware, (req, res, next) => {
                                 return controller[member](req, res, next)
                             })
                         }

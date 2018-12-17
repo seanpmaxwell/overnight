@@ -22,7 +22,7 @@ export class NormalRouterServer extends Server
         super()
         this.setupExpress()
         this.setupDaos()
-        // this.setupControllers()
+        this.setupControllers()
     }
 
     private setupExpress(): void
@@ -35,6 +35,7 @@ export class NormalRouterServer extends Server
 
     setupDaos(): void
     {
+        // create a type for 'daos.ts' file
         type Daos = {
             [daoName: string]: typeof DaoBase
         }
@@ -50,17 +51,21 @@ export class NormalRouterServer extends Server
             }
         }
 
+        // Initialize Daos with OvernightJS
         super.addDaos_(daoInstances)
     }
 
     private setupControllers(): void
     {
+        // Setup mailer object
+        let user = process.env.EMAILUSER
+        let pwd = process.env.EMAILPWD
+        let mailer = new MailPromise('Gmail', user, pwd)
+
+        // Create a type for the 'controllers.ts' file
         type Controllers = {
             [ctrlName: string]: typeof ControllerBase
         }
-
-        let mailer = new MailPromise('Gmail', process.env.EMAILUSER,
-            process.env.EMAILPWD)
 
         let ctlrInstances = []
 
@@ -69,13 +74,13 @@ export class NormalRouterServer extends Server
             if(controllers.hasOwnProperty(ctrlName)) {
                 let Controller = (<Controllers>controllers)[ctrlName]
                 let controller = new Controller()
-
                 controller.setMailer(mailer)
                 ctlrInstances.push(controller)
             }
         }
 
-        super.addControllers_(ctlrInstances)
+        // Initialize controllers with OvernightJS
+        super.addControllers_('')
     }
 
     public start(port?: number)

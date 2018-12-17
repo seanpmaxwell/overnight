@@ -7,10 +7,6 @@
 import * as express    from 'express'
 import { Application } from 'express'
 
-interface Dao {
-    daoAttrName?: string
-}
-
 
 export class Server
 {
@@ -26,7 +22,7 @@ export class Server
      *                                      Setup Daos
      **********************************************************************************************/
 
-    protected addDaos_<T>(daos: T | Array<T>): void
+    protected addDaos_<T extends {}>(daos: T | Array<T>): void
     {
         if(daos instanceof Array) {
             this._daos = daos
@@ -40,18 +36,23 @@ export class Server
      *                                      Setup Controllers
      **********************************************************************************************/
 
-    protected addControllers_<T>(controllers: T | Array<T>, customRouterLib?: any): void
+    protected addControllers_<T extends {}>(controllers: T | Array<T>, customRouterLib?: any): void
     {
         // Create array if only a single value is passed
         let ctlrs = (controllers instanceof Array) ? controllers : [controllers]
         let count = 0
 
+        interface Controller {onBasePath?: string}
+
         ctlrs.forEach(ctlr => {
-            if(ctlr.onBasePath)
-            {
+
+            let basePath = (<Controller>ctlr).onBasePath
+
+            if(basePath) {
+
                 // Add Daos
                 this._daos.forEach(dao => {
-                    let convertedName = (<Dao>dao).daoAttrName
+                    let convertedName = (<{daoAttrName: string}>dao).daoAttrName
                     if(convertedName) {
                         ctlr[convertedName] = dao
                     }
@@ -68,7 +69,7 @@ export class Server
                     router = this.getRouter(ctlr, express.Router)
                 }
 
-                this.app_.use(ctlr.onBasePath, router)
+                this.app_.use(basePath, router)
                 count++
             }
         })

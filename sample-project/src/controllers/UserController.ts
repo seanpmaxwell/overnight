@@ -4,11 +4,11 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { Request, Response }                  from 'express'
-import { cinfo, cerr }                        from 'simple-color-print'
-import { Controller, Get, Post, Put, Delete } from '@overnightjs/core'
-import { getJwtMiddleware }                   from './Middlware'
-import { ControllerBase }                     from './ControllerBase'
+import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core'
+import { Request, Response } from 'express'
+import { cinfo, cerr }       from 'simple-color-print'
+import { getJwtMiddleware }  from './Middlware'
+import { ControllerBase }    from './ControllerBase'
 
 
 @Controller('api/users')
@@ -22,7 +22,8 @@ export class UserController extends ControllerBase
         return res.status(200).json({msg: 'get_called'})
     }
 
-    @Get('', getJwtMiddleware())
+    @Get('')
+    @Middleware(getJwtMiddleware())
     private getAll(req: Request, res: Response): void
     {
         cinfo(req)

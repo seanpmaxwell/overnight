@@ -4,15 +4,16 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as bodyParser      from 'body-parser'
-import * as controllers     from './controllers/controllers'
-import * as daos            from './daos/daos'
+import * as bodyParser    from 'body-parser'
+import * as controllers   from './controllers/controllers'
+import * as daos          from './daos/daos'
 
 import { Server }         from '@overnightjs/core'
 import { cinfo, cimp }    from 'simple-color-print'
 import { MailPromise }    from 'mail-promise'
 import { Dao }            from './daos/Dao'
 import { ControllerBase } from './controllers/ControllerBase'
+import { UserDao }        from './daos/daos'
 
 
 export class NormalRouterServer extends Server
@@ -21,6 +22,7 @@ export class NormalRouterServer extends Server
     {
         super()
         this.setupExpress()
+
         let daos = this.setupDaos()
         let controllers = this.setupControllers(daos)
         super.addControllers_(controllers)
@@ -58,9 +60,8 @@ export class NormalRouterServer extends Server
     private setupControllers(daos: Array<Dao>): Array<ControllerBase>
     {
         // Setup mailer object
-        let user = process.env.EMAILUSER
-        let pwd = process.env.EMAILPWD
-        let mailer = new MailPromise('Gmail', user, pwd)
+        let mailer = new MailPromise('Gmail', process.env.EMAILUSER,
+        process.env.EMAILPWD)
 
         // Create a type for the 'controllers.ts' file
         type Controllers = {
@@ -76,7 +77,7 @@ export class NormalRouterServer extends Server
                 let controller = new Controller()
 
                 controller.setMailer(mailer)
-                // controller Daos have to be set manually for there to be protected variable
+                controller.setUserDao(<UserDao>daos[0])
                 ctlrInstances.push(controller)
             }
         }

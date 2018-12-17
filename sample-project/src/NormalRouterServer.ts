@@ -11,7 +11,7 @@ import * as daos            from './daos/daos'
 import { Server }         from '@overnightjs/core'
 import { cinfo, cimp }    from 'simple-color-print'
 import { MailPromise }    from 'mail-promise'
-import { DaoBase }        from './daos/DaoBase'
+import { Dao }            from './daos/Dao'
 import { ControllerBase } from './controllers/ControllerBase'
 
 
@@ -21,8 +21,9 @@ export class NormalRouterServer extends Server
     {
         super()
         this.setupExpress()
-        this.setupDaos()
-        this.setupControllers()
+        let daos = this.setupDaos()
+        let controllers = this.setupControllers(daos)
+        super.addControllers_(controllers)
     }
 
     private setupExpress(): void
@@ -33,11 +34,11 @@ export class NormalRouterServer extends Server
         this.app_.use(bodyParser.urlencoded({extended: true}))
     }
 
-    setupDaos(): void
+    setupDaos(): Array<Dao>
     {
         // create a type for 'daos.ts' file
         type Daos = {
-            [daoName: string]: typeof DaoBase
+            [daoName: string]: typeof Dao
         }
 
         let daoInstances = []
@@ -51,11 +52,10 @@ export class NormalRouterServer extends Server
             }
         }
 
-        // Initialize Daos with OvernightJS
-        super.addDaos_(daoInstances)
+        return daoInstances
     }
 
-    private setupControllers(): void
+    private setupControllers(daos: Array<Dao>): Array<ControllerBase>
     {
         // Setup mailer object
         let user = process.env.EMAILUSER
@@ -74,13 +74,14 @@ export class NormalRouterServer extends Server
             if(controllers.hasOwnProperty(ctrlName)) {
                 let Controller = (<Controllers>controllers)[ctrlName]
                 let controller = new Controller()
+
                 controller.setMailer(mailer)
+                // controller Daos have to be set manually for there to be protected variable
                 ctlrInstances.push(controller)
             }
         }
 
-        // Initialize controllers with OvernightJS
-        super.addControllers_('')
+        return ctlrInstances
     }
 
     public start(port?: number)

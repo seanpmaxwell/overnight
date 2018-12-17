@@ -4,12 +4,10 @@
  * created by Sean Maxwell Dec 16, 2018
  */
 
-import { Dao }     from '@overnightjs/core'
-import { DaoBase } from './DaoBase'
+import { Dao } from './Dao'
 
 
-@Dao
-export class UserDao extends DaoBase
+export class UserDao extends Dao
 {
     fetchUser(): void
     {

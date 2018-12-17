@@ -1,5 +1,5 @@
 
-export class DaoBase
+export class Dao
 {
     protected db_: string
 

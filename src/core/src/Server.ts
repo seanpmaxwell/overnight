@@ -11,25 +11,10 @@ import { Application } from 'express'
 export class Server
 {
     protected readonly app_: Application
-    private _daos: Array<{}>
 
     constructor()
     {
         this.app_ = express()
-    }
-
-    /***********************************************************************************************
-     *                                      Setup Daos
-     **********************************************************************************************/
-
-    protected addDaos_<T extends {}>(daos: T | Array<T>): void
-    {
-        if(daos instanceof Array) {
-            this._daos = daos
-        }
-        else {
-            this._daos = [daos]
-        }
     }
 
     /***********************************************************************************************
@@ -50,15 +35,6 @@ export class Server
 
             if(basePath) {
 
-                // Add Daos
-                this._daos.forEach(dao => {
-                    let convertedName = (<{daoAttrName: string}>dao).daoAttrName
-                    if(convertedName) {
-                        ctlr[convertedName] = dao
-                    }
-                })
-
-                // Add router
                 let router
 
                 if(customRouterLib) {

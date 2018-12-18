@@ -5,7 +5,7 @@
  */
 
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core'
-import { jwt, jwtmiddleware, jwthandler }                 from '@overnightjs/jwt'
+import { jwt, jwtmiddleware, JwtHandler }                 from '@overnightjs/jwt'
 
 import { Request, Response } from 'express'
 import { cinfo, cerr }       from 'simple-color-print'

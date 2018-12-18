@@ -8,13 +8,12 @@ import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/cor
 import { Request, Response } from 'express'
 import { cinfo, cerr }       from 'simple-color-print'
 import { getJwtMiddleware }  from './Middlware'
-import { ControllerBase }    from './ControllerBase'
+import { ParentController }  from './ParentController'
 
 
 @Controller('api/users')
-export class UserController extends ControllerBase
+export class UserController extends ParentController
 {
-
     @Get(':id')
     get(req: Request, res: Response): any
     {
@@ -69,7 +68,7 @@ export class UserController extends ControllerBase
 
     private asyncMethod(req: Request): Promise<string>
     {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             resolve(req.originalUrl + ' called')
         })
     }

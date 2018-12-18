@@ -4,7 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as customRouter  from 'express-promise-router'
+import customRouter       from 'express-promise-router'
 import { Server }         from '@overnightjs/core'
 import { cimp }           from 'simple-color-print'
 import { PostController } from './controllers/PostController'

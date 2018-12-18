@@ -8,11 +8,11 @@
 
 import { Request, Response }    from 'express'
 import { Controller, Get, Put } from '@overnightjs/core'
-import { SampleController }     from './SampleController'
+import { ParentController }     from './ParentController'
 
 
 @Controller('api/posts')
-export class PostController extends SampleController
+export class PostController extends ParentController
 {
 
     @Get(':id')

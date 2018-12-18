@@ -4,16 +4,17 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as bodyParser    from 'body-parser'
-import * as controllers   from './controllers/controllers'
-import * as daos          from './daos/daos'
+import * as bodyParser      from 'body-parser'
+import * as controllers     from './controllers/controllers'
+import * as daos            from './daos/daos'
 
-import { Server }         from '@overnightjs/core'
-import { cinfo, cimp }    from 'simple-color-print'
-import { MailPromise }    from 'mail-promise'
-import { Dao }            from './daos/Dao'
-import { ControllerBase } from './controllers/ControllerBase'
-import { UserDao }        from './daos/daos'
+import { Server }           from '@overnightjs/core'
+import { cinfo, cimp }      from 'simple-color-print'
+import { MailPromise }      from 'mail-promise'
+import { Dao }              from './daos/Dao'
+import { ParentController } from './controllers/ParentController'
+import { UserDao }          from './daos/daos'
+import {UserController} from "./controllers/controllers";
 
 
 export class NormalRouterServer extends Server
@@ -25,6 +26,7 @@ export class NormalRouterServer extends Server
 
         let daos = this.setupDaos()
         let controllers = this.setupControllers(daos)
+
         super.addControllers_(controllers)
     }
 
@@ -57,7 +59,7 @@ export class NormalRouterServer extends Server
         return daoInstances
     }
 
-    private setupControllers(daos: Array<Dao>): Array<ControllerBase>
+    private setupControllers(daos: Array<Dao>): Array<ParentController>
     {
         // Setup mailer object
         let mailer = new MailPromise('Gmail', process.env.EMAILUSER,
@@ -65,19 +67,21 @@ export class NormalRouterServer extends Server
 
         // Create a type for the 'controllers.ts' file
         type Controllers = {
-            [ctrlName: string]: typeof ControllerBase
+            [ctrlName: string]: typeof ParentController
         }
 
-        let ctlrInstances = []
+        let ctlrInstances: any = []
 
         for(let ctrlName in controllers)
         {
-            if(controllers.hasOwnProperty(ctrlName)) {
+            if(controllers.hasOwnProperty(ctrlName))
+            {
                 let Controller = (<Controllers>controllers)[ctrlName]
                 let controller = new Controller()
 
                 controller.setMailer(mailer)
                 controller.setUserDao(<UserDao>daos[0])
+
                 ctlrInstances.push(controller)
             }
         }

@@ -8,7 +8,7 @@ import { MailPromise } from 'mail-promise'
 import { UserDao }     from '../daos/UserDao'
 
 
-export class ControllerBase
+export class ParentController
 {
     protected mailer_: MailPromise
     protected userDao_: UserDao

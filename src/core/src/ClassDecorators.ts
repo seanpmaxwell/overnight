@@ -5,13 +5,13 @@
  */
 
 
-export function Controller<T extends {new (...args: any[]): any}>(path: string)
+export function Controller(path: string)
 {
-    return function(constr: T)
+    return function<T extends {new (...args: any[]): {}}>(constructor: T)
     {
-        return class extends constr
+        return class extends constructor
         {
-            onBasePath = '/' + path
+            controllerBasePath = '/' + path
         }
     }
 }

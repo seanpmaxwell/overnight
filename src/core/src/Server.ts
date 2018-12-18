@@ -7,6 +7,10 @@
 import * as express    from 'express'
 import { Application } from 'express'
 
+interface Controller {
+    controllerBasePath?: string
+}
+
 
 export class Server
 {
@@ -21,101 +25,61 @@ export class Server
      *                                      Setup Controllers
      **********************************************************************************************/
 
-    protected addControllers_<T extends {}>(controllers: T | Array<T>, customRouterLib?: any): void
+    protected addControllers_<T extends {}>(controllers: T | Array<T>, customRouterLib?: Function): void
     {
         // Create array if only a single value is passed
         let ctlrs = (controllers instanceof Array) ? controllers : [controllers]
         let count = 0
 
-        interface Controller {onBasePath?: string}
-
         ctlrs.forEach(ctlr => {
 
-            let basePath = (<Controller>ctlr).onBasePath
+            // Make Sure Value passed is a controller
+            let basePath = (<Controller>ctlr).controllerBasePath
 
-            if(basePath) {
-
-                let router
-
-                if(customRouterLib) {
-                    console.info('custom router added.')
-                    router = this.getRouter(ctlr, customRouterLib)
-                }
-                else {
-                    router = this.getRouter(ctlr, express.Router)
-                }
-
-                this.app_.use(basePath, router)
-                count++
+            if(!basePath) {
+                throw Error('Value passed was not a Controller')
+                return
             }
+
+            // Use custom Router if one has been passed
+            let router
+            if(customRouterLib) {
+                console.info('custom router added.')
+                router = this.getRouter(ctlr, customRouterLib)
+            }
+            else {
+                router = this.getRouter(ctlr, express.Router)
+            }
+
+            this.app_.use(basePath, router)
+            count++
         })
 
         console.log(count + ` controller${count === 1 ? '' : 's'} configured.`)
     }
 
-    private getRouter(controller: any, RouterLib: any): any
+    private getRouter(controller: Controller, RouterLib: Function): Function
     {
         let router = RouterLib()
 
-        for(let member in controller)
-        {
-            if(controller[member].hasOwnProperty('onProperties')) {
-                let params = controller[member].onProperties
+        for(let member in controller) {
 
-                switch (params.call)
-                {
-                    case 'GET':
-                        if(params.middleware) {
-                            router.get(params.path, params.middleware, (req, res, next) => {
-                                return controller[member](req, res, next)
-                            })
-                        }
-                        else {
-                            router.get(params.path, (req, res, next) => {
-                                return controller[member](req, res, next)
-                            })
-                        }
-                        break
+            // Make sure route has been decorated
+            let routeProperties = controller[member].overnightRouteProperties
+            if(!routeProperties) continue
 
-                    case 'POST':
-                        if(params.middleware) {
-                            router.post(params.path, params.middleware, (req, res, next) => {
-                                return controller[member](req, res, next)
-                            })
-                        }
-                        else {
-                            router.post(params.path, (req, res, next) => {
-                                return controller[member](req, res, next)
-                            })
-                        }
-                        break
+            // Get, Put, Post, Delete
+            let call = routeProperties.call.toLowerCase()
 
-                    case 'PUT':
-                        if(params.middleware) {
-                            router.put(params.path, params.middleware, (req, res, next) => {
-                                return controller[member](req, res, next)
-                            })
-                        }
-                        else {
-                            router.put(params.path, (req, res, next) => {
-                                return controller[member](req, res, next)
-                            })
-                        }
-                        break
-
-                    case 'DELETE':
-                        if(params.middleware) {
-                            router.delete(params.path, params.middleware, (req, res, next) => {
-                                return controller[member](req, res, next)
-                            })
-                        }
-                        else {
-                            router.delete(params.path, (req, res, next) => {
-                                return controller[member](req, res, next)
-                            })
-                        }
-                        break
-                }
+            if(routeProperties.middleware) {
+                router[call](routeProperties.path, routeProperties.middleware, (req, res, next) => {
+                    return controller[member](req, res, next)
+                })
+            }
+            else {
+                router[call](routeProperties.path, (req, res, next) => {
+                    return controller[member](req, res, next)
+                })
             }
         }
 

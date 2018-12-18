@@ -35,6 +35,7 @@ function helperForRoutes(call: string, path?: string): MethodDecorator
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
     {
         const originalMethod = descriptor.value
+        const middleware = originalMethod.middleware || null
 
         descriptor.value = function(...args: any[])
         {
@@ -42,10 +43,13 @@ function helperForRoutes(call: string, path?: string): MethodDecorator
         }
 
         // Set the HTTP call type and Path
-        descriptor.value.onProperties = {
+        let properties = {
             call: call,
-            path: path ? ('/' + path) : ''
+            path: path ? ('/' + path) : '',
+            middleware: middleware
         }
+
+        descriptor.value.overnightRouteProperties = properties
 
         return descriptor
     }
@@ -75,12 +79,7 @@ export function Middleware(middleware: Function): MethodDecorator
         }
 
         // Set the middleware
-        if(descriptor.value.onProperties) {
-            descriptor.value.onProperties.middleware = middleware
-        }
-        else {
-            throw new Error('Middleware passed without route being defined')
-        }
+        descriptor.value.middleware = middleware
 
         return descriptor
     }

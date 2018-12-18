@@ -7,11 +7,11 @@
 import { Request, Response } from 'express'
 import { Controller, Post  } from '@overnightjs/core'
 import { cinfo, cerr, }      from 'simple-color-print'
-import { ControllerBase }    from './ControllerBase'
+import { ParentController }  from './ParentController'
 
 
 @Controller('api/signup')
-export class SignupController extends ControllerBase
+export class SignupController extends ParentController
 {
     @Post()
     private async signup(req: Request, res: Response): Promise<void>

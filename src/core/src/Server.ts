@@ -7,6 +7,7 @@
 import * as express    from 'express'
 import { Application } from 'express'
 
+
 interface Controller {
     controllerBasePath?: string
 }
@@ -14,6 +15,9 @@ interface Controller {
 
 export class Server
 {
+    private readonly _NOT_CTLR_ERR = 'Value passed was not a controller. Please make sure to use ' +
+        'a TypeScript class with the @Controller decorator'
+
     protected readonly app_: Application
 
     constructor()
@@ -37,7 +41,7 @@ export class Server
             let basePath = (<Controller>ctlr).controllerBasePath
 
             if(!basePath) {
-                throw Error('Value passed was not a Controller')
+                throw Error(this._NOT_CTLR_ERR)
                 return
             }
 

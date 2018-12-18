@@ -4,6 +4,7 @@
  * created by Sean Maxwell Dec 17, 2018
  */
 
+import * as randomstring  from 'randomstring'
 import * as expressJwt    from 'express-jwt'
 import * as jsonwebtoken  from 'jsonwebtoken'
 import { RequestHandler } from 'express-jwt'
@@ -11,9 +12,8 @@ import { Request }        from 'express'
 
 
 // Pull in environment variables
-const SECRET = process.env.OVERNIGHTJWTSECRET
-const EXP = process.env.OVERNIGHTJWTEXP
-
+const SECRET = process.env.OVERNIGHTJWTSECRET || randomstring.generate(80)
+const EXP = process.env.OVERNIGHTJWTEXP || '3 days'
 
 
 
@@ -31,7 +31,7 @@ function setupMiddlware(secret: string): RequestHandler
     return expressJwt(opts) // pick up here
 }
 
-export let middleware: string = setupMiddlware(SECRET || '')
+export let middleware: string = setupMiddlware(SECRET)
 
 
 
@@ -55,7 +55,7 @@ function setupJwt(dataToEcrypt: any, secret: string, expirationTime: string | nu
 
 export function jwt(dataToEcrypt: any)
 {
-    return setupJwt(dataToEcrypt, SECRET || '', EXP || '3 days')
+    return setupJwt(dataToEcrypt, SECRET, EXP)
 }
 
 
@@ -67,9 +67,9 @@ export function jwt(dataToEcrypt: any)
 
 export class jwtHandler
 {
-    getJwt(dataToEcrypt: any, secret: string, expirationTime: string | number): void
+    getJwt(dataToEcrypt: any, secret: string, expirationTime: string | number): string
     {
-        setupJwt(dataToEcrypt, secret, expirationTime)
+        return setupJwt(dataToEcrypt, secret, expirationTime)
     }
 
     getMiddleware(secret: string): void

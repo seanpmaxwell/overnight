@@ -61,7 +61,7 @@ function helperForRoutes(call: string, path?: string): MethodDecorator
  **********************************************************************************************/
 
 // pick up here, get rid of options keyword, options is the middleware,
-export function Middleware(middleware: Function): MethodDecorator
+export function Middleware(middleware: Function | Function[]): MethodDecorator
 {
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
     {

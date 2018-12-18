@@ -13,9 +13,11 @@ OvernightJS is a clean simple library to add TypeScript decorators for methods m
 ## Features
 * Define a base route using a @Controller decorator.
 * Define routes on GET, POST, PUT, and DELETE verbs for methods in the controller.
+* Decorator for Express Router Middleware 
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Master repo includes sample application if you want to practice with an API calling tool such as Postman.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router
+* Fully type safe :)
 
 
 ## Why OvernightJS

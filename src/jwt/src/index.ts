@@ -23,15 +23,15 @@ const EXP = process.env.OVERNIGHTJWTEXP || '3 days'
 
 function setupMiddlware(secret: string): RequestHandler
 {
-    let opts = {
+    let options = {
         secret: secret,
         userProperty: 'payload'
     }
 
-    return expressJwt(opts) // pick up here
+    return expressJwt(options)
 }
 
-export let middleware: string = setupMiddlware(SECRET)
+export let jwtmiddleware: string = setupMiddlware(SECRET)
 
 
 
@@ -44,10 +44,10 @@ export let middleware: string = setupMiddlware(SECRET)
 //     Eg: 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count.
 //     If you use a string be sure you provide the time units (days, hours, etc), otherwise
 //     milliseconds unit is used by default ("120" is equal to "120ms").
-function setupJwt(dataToEcrypt: {[key: string]: any}, secret: string, expirationTime: string | number): string
+function setupJwt(dataToEcrypt: {[key: string]: any}, secret: string, expires: string | number): string
 {
     let exp = {
-        expiresIn: expirationTime
+        expiresIn: expires
     }
 
     return jsonwebtoken.sign(dataToEcrypt, secret, exp)
@@ -68,17 +68,17 @@ export function jwt(dataToEcrypt: any): string
 export class JwtHandler
 {
     private readonly _secret: string
-    private readonly _expirationTime: string | number
+    private readonly _expires: string | number
 
-    constructor(secret: string, expirationTime: string | number)
+    constructor(secret: string, expires: string | number)
     {
         this._secret = secret
-        this._expirationTime = expirationTime
+        this._expires = expires
     }
 
     getJwt(dataToEcrypt: {[key: string]: any}): string
     {
-        return setupJwt(dataToEcrypt, this._secret, this._expirationTime)
+        return setupJwt(dataToEcrypt, this._secret, this._expires)
     }
 
     getMiddleware(): void
@@ -88,8 +88,16 @@ export class JwtHandler
 }
 
 
-// For routes pass with Jwt Middleware
-// export interface SecureRequest extends Request {
-//     payload: any
-// }
+
+
+/***********************************************************************************************
+ *                                    Class for manual setup
+ **********************************************************************************************/
+
+
+// For routes passed with Jwt middleware
+export interface SecureRequest extends Request 
+{
+    payload: any
+}
 

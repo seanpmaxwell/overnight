@@ -44,7 +44,7 @@ export let middleware: string = setupMiddlware(SECRET)
 //     Eg: 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count.
 //     If you use a string be sure you provide the time units (days, hours, etc), otherwise
 //     milliseconds unit is used by default ("120" is equal to "120ms").
-function setupJwt(dataToEcrypt: any, secret: string, expirationTime: string | number): string
+function setupJwt(dataToEcrypt: {[key: string]: any}, secret: string, expirationTime: string | number): string
 {
     let exp = {
         expiresIn: expirationTime
@@ -53,7 +53,7 @@ function setupJwt(dataToEcrypt: any, secret: string, expirationTime: string | nu
     return jsonwebtoken.sign(dataToEcrypt, secret, exp)
 }
 
-export function jwt(dataToEcrypt: any)
+export function jwt(dataToEcrypt: any): string
 {
     return setupJwt(dataToEcrypt, SECRET, EXP)
 }
@@ -65,16 +65,25 @@ export function jwt(dataToEcrypt: any)
  *                                    Class for manual setup
  **********************************************************************************************/
 
-export class jwtHandler
+export class JwtHandler
 {
-    getJwt(dataToEcrypt: any, secret: string, expirationTime: string | number): string
+    private readonly _secret: string
+    private readonly _expirationTime: string | number
+
+    constructor(secret: string, expirationTime: string | number)
     {
-        return setupJwt(dataToEcrypt, secret, expirationTime)
+        this._secret = secret
+        this._expirationTime = expirationTime
     }
 
-    getMiddleware(secret: string): void
+    getJwt(dataToEcrypt: {[key: string]: any}): string
     {
-        return setupMiddlware(secret)
+        return setupJwt(dataToEcrypt, this._secret, this._expirationTime)
+    }
+
+    getMiddleware(): void
+    {
+        return setupMiddlware(this._secret)
     }
 }
 

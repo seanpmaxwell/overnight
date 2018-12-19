@@ -11,7 +11,7 @@ import { Request, Response } from 'express'
 import { ParentController }  from './ParentController'
 
 const jwtHandler = new JwtHandler('secret', '10h')
-const JWTMIDDLEWARE = jwtHander.getMiddleware()
+const JWTMIDDLEWARE = jwtHandler.getMiddleware()
 
 
 @Controller('api/jwt')

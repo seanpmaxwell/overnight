@@ -13,9 +13,11 @@ OvernightJS is a clean simple library to add TypeScript decorators for methods m
 ## Features
 * Define a base route using a @Controller decorator.
 * Define routes on GET, POST, PUT, and DELETE verbs for methods in the controller.
+* Decorator for Express Router Middleware 
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Master repo includes sample application if you want to practice with an API calling tool such as Postman.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router
+* Fully type safe :)
 
 
 ## Why OvernightJS
@@ -48,8 +50,8 @@ $ npm install --save-dev @types/express
 #### Create your controller
 
 ```typescript
-import { Request, Response, NextFunction }    from 'express'
-import { Controller, Get, Post, Put, Delete } from '@overnightjs/core'
+import { Request, Response, NextFunction } from 'express'
+import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core'
 
 @Controller('api/users')
 export class UserController
@@ -63,7 +65,8 @@ export class UserController
     }
 
     // add whatever options you want as the second parameter
-    @Get('', middleware1)
+    @Get('')
+    @Middleware(middleware)
     private getAll(req: Request, res: Response): void
     {
         res.status(200).json({msg: 'get_all_called'})
@@ -75,7 +78,8 @@ export class UserController
         res.status(200).json({msg: 'add_called'})
     }
 
-    @Put('update-user', [middleware1, middleware2])
+    @Put('update-user')
+    @Middleware([middleware1, middleware2])
     private update(req: Request, res: Response): void
     {
         res.status(200).json({msg: 'update_called'})
@@ -192,7 +196,7 @@ public getRoutes(): Router
 {
     let router = Router()
     
-    router.get('/', this.jwtMiddleWare, (req, res) => {
+    router.get('/', jwtMiddleWare, (req, res) => {
         this.getAll(<SecureRequest>req, res)
     })
     

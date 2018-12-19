@@ -22,7 +22,7 @@ export class UserController extends ParentController
     }
 
     @Get('')
-    @Middleware(getJwtMiddleware())
+    @Middleware(jwtmiddleware)
     private getAll(req: Request, res: Response): void
     {
         cinfo(req)

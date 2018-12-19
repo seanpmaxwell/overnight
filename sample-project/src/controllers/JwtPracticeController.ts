@@ -10,7 +10,7 @@ import { jwt, jwtmiddleware, JwtHandler, SecureRequest }  from '@overnightjs/jwt
 import { Request, Response } from 'express'
 import { ParentController }  from './ParentController'
 
-const jwtHander = new JwtHandler('secret', '10h')
+const jwtHandler = new JwtHandler('secret', '10h')
 const JWTMIDDLEWARE = jwtHander.getMiddleware()
 
 
@@ -41,7 +41,7 @@ export class JwtPracticeController extends ParentController
             fullName: req.params.fullname
         }
 
-        res.status(200).json({jwt: jwtHander.getJwt(dataToEncypt)})
+        res.status(200).json({jwt: jwtHandler.getJwt(dataToEncypt)})
     }
 
     @Get('callProtectedRouteFromHandler')

@@ -29,39 +29,45 @@ export class Server
      *                                      Setup Controllers
      **********************************************************************************************/
 
-    protected addControllers_<T extends {}>(controllers: T | Array<T>, customRouterLib?: Function): void
+    protected addControllers_<T extends object>(controllers: T | Array<T>, customRouterLib?: Function): void
     {
-        // Create array if only a single value is passed
-        let ctlrs = (controllers instanceof Array) ? controllers : [controllers]
         let count = 0
+        let routerLib = customRouterLib || express.Router
 
-        ctlrs.forEach(ctlr => {
-
-            // Make Sure Value passed is a controller
-            let basePath = (<Controller>ctlr).controllerBasePath
-
-            if(!basePath) {
-                throw Error(this._NOT_CTLR_ERR)
-                return
-            }
-            else {
-                let router = this.getRouter(ctlr, customRouterLib || express.Router)
-                this.app_.use(basePath, router)
+        if(controllers instanceof Array)
+        {
+            controllers.forEach(controller => {
+                this._applyRouterObj(controller, routerLib)
                 count++
-            }
-
-        })
+            })
+        }
+        else
+        {
+            this._applyRouterObj(controllers, routerLib)
+            count = 1
+        }
 
         console.log(count + ` controller${count === 1 ? '' : 's'} configured.`)
     }
 
-    private getRouter(controller: Controller, RouterLib: Function): Router
+    private _applyRouterObj(controller: Controller, routerLib: Function): void
+    {
+        let basePath = controller.controllerBasePath
+
+        // Make sure value passed is a controller
+        if(!basePath) throw Error(this._NOT_CTLR_ERR)
+
+        let router = this._getRouter(controller, routerLib)
+        this.app_.use(basePath, router)
+    }
+
+    private _getRouter(controller: Controller, RouterLib: Function): Router
     {
         let router = RouterLib()
 
         for(let member in controller) {
 
-            // Make sure route has been decorated
+            // Make sure route is a decorated overnight route call
             let routeProperties = controller[member].overnightRouteProperties
             if(!routeProperties) continue
 

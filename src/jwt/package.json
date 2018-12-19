@@ -1,7 +1,7 @@
 {
   "name": "@overnightjs/jwt",
   "version": "1.0.0",
-  "description": "",
+  "description": "Json Web Token manger for ExpressJS",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "directories": {
@@ -28,11 +28,8 @@
   },
   "keywords": [
     "overnight",
-    "core",
     "overnightjs",
     "typescript",
-    "decorator",
-    "decorators",
     "routes",
     "route",
     "router",

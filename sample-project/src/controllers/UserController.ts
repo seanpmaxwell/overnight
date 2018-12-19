@@ -5,6 +5,7 @@
  */
 
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core'
+import { jwtmiddleware }     from '@overnightjs/jwt'
 import { Request, Response } from 'express'
 import { cinfo, cerr }       from 'simple-color-print'
 import { ParentController }  from './ParentController'
@@ -21,7 +22,7 @@ export class UserController extends ParentController
     }
 
     @Get('')
-    // @Middleware(getJwtMiddleware())
+    @Middleware(getJwtMiddleware())
     private getAll(req: Request, res: Response): void
     {
         cinfo(req)

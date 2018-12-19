@@ -4,11 +4,10 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core'
+import { Controller, Middleware, Get } from '@overnightjs/core'
 import { jwt, jwtmiddleware, JwtHandler, SecureRequest }  from '@overnightjs/jwt'
 
 import { Request, Response } from 'express'
-import { cinfo, cerr }       from 'simple-color-print'
 import { ParentController }  from './ParentController'
 
 const jwtHander = new JwtHandler('secret', '10h')

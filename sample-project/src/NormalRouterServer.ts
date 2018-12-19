@@ -14,7 +14,6 @@ import { MailPromise }      from 'mail-promise'
 import { Dao }              from './daos/Dao'
 import { ParentController } from './controllers/ParentController'
 import { UserDao }          from './daos/daos'
-import {UserController} from "./controllers/controllers";
 
 
 export class NormalRouterServer extends Server

@@ -1,6 +1,6 @@
 {
   "name": "@overnightjs/core",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "TypeScript decorators for the Express web server. Part of the OvernightJS project.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",

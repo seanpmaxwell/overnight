@@ -18,7 +18,7 @@ const JWTMIDDLEWARE = jwtHander.getMiddleware()
 @Controller('api/jwt')
 export class JwtPracticeController extends ParentController
 {
-    @Get(':email')
+    @Get('getjwt/:email')
     private getJwt(req: Request, res: Response): void
     {
         let dataToEncypt = {
@@ -32,10 +32,10 @@ export class JwtPracticeController extends ParentController
     @Middleware(jwtmiddleware)
     private callProtectedRoute(req: SecureRequest, res: Response): void
     {
-        res.status(200).json({email: req.params.payload.email})
+        res.status(200).json({email: req.payload.email})
     }
 
-    @Get(':fullname')
+    @Get('getJwtFromHandler/:fullname')
     private getJwtFromHandler(req: Request, res: Response): void
     {
         let dataToEncypt = {
@@ -49,6 +49,6 @@ export class JwtPracticeController extends ParentController
     @Middleware([JWTMIDDLEWARE])
     private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void
     {
-        res.status(200).json({fullname: req.params.payload.fullName})
+        res.status(200).json({fullname: req.payload.fullName})
     }
 }

@@ -1,5 +1,5 @@
 /**
- *
+ * Core file for the Overnight/Jwt library
  *
  * created by Sean Maxwell Dec 17, 2018
  */
@@ -31,7 +31,7 @@ function setupMiddlware(secret: string): RequestHandler
     return expressJwt(options)
 }
 
-export let jwtmiddleware = setupMiddlware(SECRET)
+export let jwtmiddleware: RequestHandler = setupMiddlware(SECRET)
 
 
 
@@ -44,7 +44,7 @@ export let jwtmiddleware = setupMiddlware(SECRET)
 //     Eg: 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count.
 //     If you use a string be sure you provide the time units (days, hours, etc), otherwise
 //     milliseconds unit is used by default ("120" is equal to "120ms").
-function setupJwt(dataToEcrypt: {[key: string]: any}, secret: string, expires: string | number): string
+function setupJwt(dataToEcrypt: string | Buffer | object, secret: string, expires: string | number): string
 {
     let exp = {
         expiresIn: expires
@@ -53,7 +53,7 @@ function setupJwt(dataToEcrypt: {[key: string]: any}, secret: string, expires: s
     return jsonwebtoken.sign(dataToEcrypt, secret, exp)
 }
 
-export function jwt(dataToEcrypt: any): string
+export function jwt(dataToEcrypt: string | Buffer | object): string
 {
     return setupJwt(dataToEcrypt, SECRET, EXP)
 }
@@ -76,7 +76,7 @@ export class JwtHandler
         this._expires = expires
     }
 
-    getJwt(dataToEcrypt: {[key: string]: any}): string
+    getJwt(dataToEcrypt: string | Buffer | object): string
     {
         return setupJwt(dataToEcrypt, this._secret, this._expires)
     }

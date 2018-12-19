@@ -4,8 +4,8 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as express    from 'express'
-import { Application } from 'express'
+import * as express from 'express'
+import { Application, Router } from 'express'
 
 
 interface Controller {
@@ -44,25 +44,18 @@ export class Server
                 throw Error(this._NOT_CTLR_ERR)
                 return
             }
-
-            // Use custom Router if one has been passed
-            let router
-            if(customRouterLib) {
-                console.info('custom router added.')
-                router = this.getRouter(ctlr, customRouterLib)
-            }
             else {
-                router = this.getRouter(ctlr, express.Router)
+                let router = this.getRouter(ctlr, customRouterLib || express.Router)
+                this.app_.use(basePath, router)
+                count++
             }
 
-            this.app_.use(basePath, router)
-            count++
         })
 
         console.log(count + ` controller${count === 1 ? '' : 's'} configured.`)
     }
 
-    private getRouter(controller: Controller, RouterLib: Function): Function
+    private getRouter(controller: Controller, RouterLib: Function): Router
     {
         let router = RouterLib()
 

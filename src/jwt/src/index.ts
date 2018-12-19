@@ -31,7 +31,7 @@ function setupMiddlware(secret: string): RequestHandler
     return expressJwt(options)
 }
 
-export let jwtmiddleware: string = setupMiddlware(SECRET)
+export let jwtmiddleware = setupMiddlware(SECRET)
 
 
 
@@ -81,7 +81,7 @@ export class JwtHandler
         return setupJwt(dataToEcrypt, this._secret, this._expires)
     }
 
-    getMiddleware(): void
+    getMiddleware(): RequestHandler
     {
         return setupMiddlware(this._secret)
     }

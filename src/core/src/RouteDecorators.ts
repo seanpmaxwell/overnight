@@ -65,20 +65,12 @@ export function Middleware(middleware: Function | Function[]): MethodDecorator
 {
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
     {
-        // Middleware must be a function
-        if(!(middleware instanceof Function)) {
-            throw Error('middle must be an instance of function')
-            return descriptor.value
-        }
-
-        // Save the scope
         const originalMethod = descriptor.value
 
         descriptor.value = function(...args: any[]) {
             return originalMethod.apply(this, args)
         }
 
-        // Set the middleware
         descriptor.value.middleware = middleware
 
         return descriptor

@@ -34,15 +34,13 @@ export class Server
         let count = 0
         let routerLib = customRouterLib || express.Router
 
-        if(controllers instanceof Array)
-        {
+        if(controllers instanceof Array) {
             controllers.forEach(controller => {
                 this._applyRouterObj(controller, routerLib)
                 count++
             })
         }
-        else
-        {
+        else {
             this._applyRouterObj(controllers, routerLib)
             count = 1
         }

@@ -20,6 +20,7 @@ from the environment variables.
 * `JwtHandler` class which can be passed a secret and expiration time if you wish to set those from
 your code instead of the environment variables. 
 * Default values for the secret and expiration. Which is convenient for a development environment.
+* SecureRequest ExpressJS router object. 
 * Fully type-safe :)
 
 <br>
@@ -40,19 +41,18 @@ $ npm install --save-dev @types/express
 ## Quick start: Option 1
 
 #### Set the environment variables
-// pick up here
+This is 
+
 
 #### Create your controller
 
+Thats all there is to it. Just import `jwt` and `jwtmiddleware`.
+
+
 ```typescript
-import { Controller, Middleware, Get } from '@overnightjs/core'
-import { jwt, jwtmiddleware, JwtHandler, SecureRequest }  from '@overnightjs/jwt'
-
-import { Request, Response } from 'express'
-import { ParentController }  from './ParentController'
-
-const jwtHandler = new JwtHandler('secret', '10h')
-const JWTMIDDLEWARE = jwtHandler.getMiddleware()
+import { Controller, Middleware, Get }       from '@overnightjs/core'
+import { jwt, jwtmiddleware, SecureRequest } from '@overnightjs/jwt'
+import { Request, Response }                 from 'express'
 
 
 @Controller('api/jwt')

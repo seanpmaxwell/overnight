@@ -41,12 +41,25 @@ $ npm install --save-dev @types/express
 ## Quick start: Option 1
 
 #### Set the environment variables
-This is 
+This is what really saves you from having to do boilerplate code. The two environment variables you
+need to set are **OVERNIGHTJWTSECRET** and **OVERNIGHTJWTEXP**. OVERNIGHTJWTSECRET should be a really
+long, random string (mine is 80 characters) and the rules for setting OVERNIGHTJWTEXP are the same as
+setting the expiration time for the _jsonwebtoken_ library. The rules are:
+
+> 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count. If you use a string be 
+sure you provide the time units (days, hours, etc), otherwise milliseconds unit is used by default 
+("120" is equal to "120ms").
+
+<br>
+
+How you set you environment variables will vary depending on the which environment you are working in. 
+I use Ubuntu which is pretty easy. 
 
 
 #### Create your controller
 
-Thats all there is to it. Just import `jwt` and `jwtmiddleware`.
+The data that is encrypted is stored as the payload `property`. That's all there is to it. Just import 
+`jwt` and `jwtmiddleware`.
 
 
 ```typescript
@@ -76,3 +89,8 @@ export class JwtPracticeController
     }
 }
 ```
+
+## Quick start: Option 2
+
+
+## Works just as fine in regular express

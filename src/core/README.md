@@ -32,7 +32,10 @@ application.
 <br><br>
 
 
-# @overnightjs/core
+## @overnightjs/core
+
+_@overnightjs/core_ contains the decorators and Server super class which you need for activating the
+decorators. @overnightjs/jwt contains the tools for managing json web tokens. 
 
 
 ## Installation

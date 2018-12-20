@@ -1,6 +1,6 @@
 # OvernightJS/jwt
 
-> Simply the process for Json Web Tokens inside of ExpressJS routes
+> Simply the process for working with Json-Web-Tokens inside of ExpressJS routes
 
 <img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/overnightjs.png' border='0'>
 

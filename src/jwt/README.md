@@ -57,7 +57,6 @@ I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and typ
 
 > OVERNIGHTJWTSECRET="your super long random string"
 
-<br>
 
 >OVERNIGHTJWTEXP="your expiration time"
 

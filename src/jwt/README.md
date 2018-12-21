@@ -84,20 +84,20 @@ import { Request, Response }                 from 'express'
 export class JwtPracticeController
 {
     @Get('getjwt/:email')
-    private getJwt(req: Request, res: Response): void
+    private getJwt(req: Request, res: Response): void;
     {
         let dataToEncypt = {
             email: req.params.email
-        }
+        };
 
-        res.status(200).json({jwt: jwt(dataToEncypt)})
+        res.status(200).json({jwt: jwt(dataToEncypt)});
     }
 
     @Get('callProtectedRoute')
     @Middleware(jwtmiddleware)
     private callProtectedRoute(req: SecureRequest, res: Response): void
     {
-        res.status(200).json({email: req.payload.email})
+        res.status(200).json({email: req.payload.email});
     }
 }
 ```

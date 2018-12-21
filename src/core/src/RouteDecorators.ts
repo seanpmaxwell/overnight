@@ -12,46 +12,46 @@
 
 export function Get(path?: string): MethodDecorator
 {
-    return helperForRoutes('GET', path)
+    return helperForRoutes('GET', path);
 }
 
 export function Post(path?: string): MethodDecorator
 {
-    return helperForRoutes('POST', path)
+    return helperForRoutes('POST', path);
 }
 
 export function Put(path?: string): MethodDecorator
 {
-    return helperForRoutes('PUT', path)
+    return helperForRoutes('PUT', path);
 }
 
 export function Delete(path?: string): MethodDecorator
 {
-    return helperForRoutes('DELETE', path)
+    return helperForRoutes('DELETE', path);
 }
 
 function helperForRoutes(call: string, path?: string): MethodDecorator
 {
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
     {
-        const originalMethod = descriptor.value
-        const middleware = originalMethod.middleware || null
+        const originalMethod = descriptor.value;
+        const middleware = originalMethod.middleware || null;
 
         descriptor.value = function(...args: any[])
         {
-            return originalMethod.apply(this, args)
-        }
+            return originalMethod.apply(this, args);
+        };
 
         // Set the HTTP call type and Path
         let properties = {
             call: call,
             path: path ? ('/' + path) : '',
             middleware: middleware
-        }
+        };
 
-        descriptor.value.overnightRouteProperties = properties
+        descriptor.value.overnightRouteProperties = properties;
 
-        return descriptor
+        return descriptor;
     }
 }
 
@@ -65,14 +65,14 @@ export function Middleware(middleware: Function | Function[]): MethodDecorator
 {
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
     {
-        const originalMethod = descriptor.value
+        const originalMethod = descriptor.value;
 
         descriptor.value = function(...args: any[]) {
             return originalMethod.apply(this, args)
-        }
+        };
 
-        descriptor.value.middleware = middleware
+        descriptor.value.middleware = middleware;
 
-        return descriptor
+        return descriptor;
     }
 }

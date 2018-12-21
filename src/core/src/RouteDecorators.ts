@@ -41,7 +41,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator
         {
             return originalMethod.apply(this, args);
         };
-        
+
         descriptor.value.overnightRouteProperties = {
             httpVerb: httpVerb,
             path: path ? ('/' + path) : '',

@@ -35,8 +35,7 @@ export class NormalRouterServer extends Server
     private setupControllers(): Array<ParentController>
     {
         // Setup mailer object
-        let mailer = new MailPromise('Gmail', process.env.EMAILUSER,
-        process.env.EMAILPWD);
+        let mailer = new MailPromise();
 
         // Create a type for the 'controllers.ts' file
         type Controllers = {

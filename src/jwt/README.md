@@ -56,7 +56,10 @@ How you set you environment variables will vary depending on the which environme
 I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and type:
 
 > OVERNIGHTJWTSECRET="your super long random string"
-> OVERNIGHTJWTEXP="your expiration time"
+
+<br>
+
+>OVERNIGHTJWTEXP="your expiration time"
 
 <br>
 

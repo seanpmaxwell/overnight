@@ -11,7 +11,7 @@ export function Controller(path: string)
     {
         return class extends constructor
         {
-            controllerBasePath = '/' + path
+            controllerBasePath = '/' + path;
         }
     }
 }

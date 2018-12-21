@@ -22,7 +22,7 @@ export class Server
 
     constructor()
     {
-        this.app_ = express()
+        this.app_ = express();
     }
 
     /***********************************************************************************************
@@ -31,59 +31,56 @@ export class Server
 
     protected addControllers_<T extends object>(controllers: T | Array<T>, customRouterLib?: Function): void
     {
-        let count = 0
-        let routerLib = customRouterLib || express.Router
+        let count = 0;
+        let routerLib = customRouterLib || express.Router;
 
         if(controllers instanceof Array) {
             controllers.forEach(controller => {
-                this._applyRouterObj(controller, routerLib)
-                count++
+                this._applyRouterObj(controller, routerLib);
+                count++;
             })
-        }
-        else {
-            this._applyRouterObj(controllers, routerLib)
-            count = 1
+        } else {
+            this._applyRouterObj(controllers, routerLib);
+            count = 1;
         }
 
-        console.log(count + ` controller${count === 1 ? '' : 's'} configured.`)
+        console.log(count + ` controller${count === 1 ? '' : 's'} configured.`);
     }
 
     private _applyRouterObj(controller: Controller, routerLib: Function): void
     {
-        let basePath = controller.controllerBasePath
+        let basePath = controller.controllerBasePath;
 
-        // Make sure value passed is a controller
-        if(!basePath) throw Error(this._NOT_CTLR_ERR)
+        if (!basePath) {
+            throw Error(this._NOT_CTLR_ERR);
+        }
 
-        let router = this._getRouter(controller, routerLib)
-        this.app_.use(basePath, router)
+        let router = this._getRouter(controller, routerLib);
+        this.app_.use(basePath, router);
     }
 
     private _getRouter(controller: Controller, RouterLib: Function): Router
     {
-        let router = RouterLib()
+        let router = RouterLib();
 
-        for(let member in controller) {
+        for (let member in controller) {
 
-            // Make sure route is a decorated overnight route call
-            let routeProperties = controller[member].overnightRouteProperties
-            if(!routeProperties) continue
+            let orp = controller[member].overnightRouteProperties;
 
-            // Get, Put, Post, Delete
-            let call = routeProperties.call.toLowerCase()
+            if (orp) {
 
-            if(routeProperties.middleware) {
-                router[call](routeProperties.path, routeProperties.middleware, (req, res, next) => {
-                    return controller[member](req, res, next)
-                })
-            }
-            else {
-                router[call](routeProperties.path, (req, res, next) => {
-                    return controller[member](req, res, next)
-                })
+                let callBack = (req, res, next) => {
+                    return controller[member](req, res, next);
+                };
+
+                if (orp.middleware) {
+                    router[orp.httpVerb](orp.path, orp.middleware, callBack);
+                } else {
+                    router[orp.httpVerb](orp.path, callBack);
+                }
             }
         }
 
-        return router
+        return router;
     }
 }

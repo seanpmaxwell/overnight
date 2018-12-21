@@ -12,25 +12,25 @@
 
 export function Get(path?: string): MethodDecorator
 {
-    return helperForRoutes('GET', path);
+    return helperForRoutes('get', path);
 }
 
 export function Post(path?: string): MethodDecorator
 {
-    return helperForRoutes('POST', path);
+    return helperForRoutes('post', path);
 }
 
 export function Put(path?: string): MethodDecorator
 {
-    return helperForRoutes('PUT', path);
+    return helperForRoutes('put', path);
 }
 
 export function Delete(path?: string): MethodDecorator
 {
-    return helperForRoutes('DELETE', path);
+    return helperForRoutes('delete', path);
 }
 
-function helperForRoutes(call: string, path?: string): MethodDecorator
+function helperForRoutes(httpVerb: string, path?: string): MethodDecorator
 {
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
     {
@@ -44,7 +44,7 @@ function helperForRoutes(call: string, path?: string): MethodDecorator
 
         // Set the HTTP call type and Path
         let properties = {
-            call: call,
+            httpVerb: httpVerb,
             path: path ? ('/' + path) : '',
             middleware: middleware
         };

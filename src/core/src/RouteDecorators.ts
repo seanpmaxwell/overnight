@@ -68,7 +68,7 @@ export function Middleware(middleware: Function | Function[]): MethodDecorator
         const originalMethod = descriptor.value;
 
         descriptor.value = function(...args: any[]) {
-            return originalMethod.apply(this, args)
+            return originalMethod.apply(this, args);
         };
 
         descriptor.value.middleware = middleware;

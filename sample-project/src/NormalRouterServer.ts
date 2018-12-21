@@ -61,13 +61,13 @@ export class NormalRouterServer extends Server
     public start(port?: number)
     {
         this.app_.get('/home', (req, res) => {
-            res.send('overnightjs with standard express router started')
+            res.send('overnightjs with standard express router started');
         })
 
         port = port || 3000;
 
         this.app_.listen(port, () => {
-            cimp('overnightjs with standard express router started on port:' + port)
+            cimp('overnightjs with standard express router started on port:' + port);
         })
     }
 }

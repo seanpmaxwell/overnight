@@ -60,7 +60,10 @@ I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and typ
 
 <br>
 
-If you do not set these environment variables 
+If you do not set these environment variables a default value of '3 days' will be set for the expiration
+time and a random string will be generated for the secret. The random string is fine for development
+but do not use it for production. Every time you restart the server the secret will change and all 
+logins will become invalid. 
 
 
 #### Create your controller

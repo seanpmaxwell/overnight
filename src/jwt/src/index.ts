@@ -12,8 +12,8 @@ import { Request }        from 'express'
 
 
 // Pull in environment variables
-const SECRET = process.env.OVERNIGHTJWTSECRET || randomstring.generate(80)
-const EXP = process.env.OVERNIGHTJWTEXP || '3 days'
+const SECRET = process.env.OVERNIGHTJWTSECRET || randomstring.generate(80);
+const EXP = process.env.OVERNIGHTJWTEXP || '3 days';
 
 
 
@@ -26,12 +26,12 @@ function setupMiddlware(secret: string): RequestHandler
     let options = {
         secret: secret,
         userProperty: 'payload'
-    }
+    };
 
-    return expressJwt(options)
+    return expressJwt(options);
 }
 
-export let jwtmiddleware: RequestHandler = setupMiddlware(SECRET)
+export let jwtmiddleware: RequestHandler = setupMiddlware(SECRET);
 
 
 
@@ -48,14 +48,14 @@ function setupJwt(dataToEcrypt: string | Buffer | object, secret: string, expire
 {
     let exp = {
         expiresIn: expires
-    }
+    };
 
-    return jsonwebtoken.sign(dataToEcrypt, secret, exp)
+    return jsonwebtoken.sign(dataToEcrypt, secret, exp);
 }
 
 export function jwt(dataToEcrypt: string | Buffer | object): string
 {
-    return setupJwt(dataToEcrypt, SECRET, EXP)
+    return setupJwt(dataToEcrypt, SECRET, EXP);
 }
 
 
@@ -72,18 +72,18 @@ export class JwtHandler
 
     constructor(secret: string, expires: string | number)
     {
-        this._secret = secret
-        this._expires = expires
+        this._secret = secret;
+        this._expires = expires;
     }
 
     getJwt(dataToEcrypt: string | Buffer | object): string
     {
-        return setupJwt(dataToEcrypt, this._secret, this._expires)
+        return setupJwt(dataToEcrypt, this._secret, this._expires);
     }
 
     getMiddleware(): RequestHandler
     {
-        return setupMiddlware(this._secret)
+        return setupMiddlware(this._secret);
     }
 }
 

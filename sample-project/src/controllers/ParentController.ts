@@ -5,21 +5,14 @@
  */
 
 import { MailPromise } from 'mail-promise'
-import { UserDao }     from '../daos/UserDao'
 
 
 export class ParentController
 {
     protected mailer_: MailPromise
-    protected userDao_: UserDao
-
-    setUserDao(userDao: UserDao): void
-    {
-        this.userDao_ = userDao
-    }
 
     setMailer(mailer: MailPromise): void
     {
-        this.mailer_ = mailer
+        this.mailer_ = mailer;
     }
 }

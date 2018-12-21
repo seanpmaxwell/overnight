@@ -10,8 +10,8 @@ import { jwt, jwtmiddleware, JwtHandler, SecureRequest }  from '@overnightjs/jwt
 import { Request, Response } from 'express'
 import { ParentController }  from './ParentController'
 
-const jwtHandler = new JwtHandler('secret', '10h')
-const JWTMIDDLEWARE = jwtHandler.getMiddleware()
+const jwtHandler = new JwtHandler('secret', '10h');
+const JWTMIDDLEWARE = jwtHandler.getMiddleware();
 
 
 @Controller('api/jwt')
@@ -22,16 +22,16 @@ export class JwtPracticeController extends ParentController
     {
         let dataToEncypt = {
             email: req.params.email
-        }
+        };
 
-        res.status(200).json({jwt: jwt(dataToEncypt)})
+        res.status(200).json({jwt: jwt(dataToEncypt)});
     }
 
     @Get('callProtectedRoute')
     @Middleware(jwtmiddleware)
     private callProtectedRoute(req: SecureRequest, res: Response): void
     {
-        res.status(200).json({email: req.payload.email})
+        res.status(200).json({email: req.payload.email});
     }
 
     @Get('getJwtFromHandler/:fullname')
@@ -39,15 +39,15 @@ export class JwtPracticeController extends ParentController
     {
         let dataToEncypt = {
             fullName: req.params.fullname
-        }
+        };
 
-        res.status(200).json({jwt: jwtHandler.getJwt(dataToEncypt)})
+        res.status(200).json({jwt: jwtHandler.getJwt(dataToEncypt)});
     }
 
     @Get('callProtectedRouteFromHandler')
     @Middleware([JWTMIDDLEWARE])
     private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void
     {
-        res.status(200).json({fullname: req.payload.fullName})
+        res.status(200).json({fullname: req.payload.fullName});
     }
 }

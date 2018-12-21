@@ -12,22 +12,19 @@ import { PostController } from './controllers/PostController'
 
 export class CustomRouterServer extends Server
 {
+    private readonly _START_MSG = 'overnightjs with custom router started on port:'
+
     constructor()
     {
-        super()
-
-        // Setup the controller
-        let postController = new PostController()
-
-        super.addControllers_(postController, customRouter)
+        super();
+        let postController = new PostController();
+        super.addControllers_(postController, customRouter);
     }
 
     public start(port?: number)
     {
-        port = port ? port : 3000
-
-        this.app_.listen(port, () => {
-            cimp('overnightjs with custom router started on port:' + port)
+        this.app_.listen(port || 3000, () => {
+            cimp(this._START_MSG + port);
         })
     }
 }

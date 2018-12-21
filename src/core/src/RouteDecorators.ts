@@ -41,15 +41,12 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator
         {
             return originalMethod.apply(this, args);
         };
-
-        // Set the HTTP call type and Path
-        let properties = {
+        
+        descriptor.value.overnightRouteProperties = {
             httpVerb: httpVerb,
             path: path ? ('/' + path) : '',
             middleware: middleware
         };
-
-        descriptor.value.overnightRouteProperties = properties;
 
         return descriptor;
     }

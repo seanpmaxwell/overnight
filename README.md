@@ -468,7 +468,7 @@ export class JwtPracticeController
 ```
 
 
-#### Works just as fine in regular express
+#### Works just as fine in regular Express
 
 You dont have to use `@overnightjs/jwt` with `@overnightjs/core`. If you're using Express but not
 interested in using decorators, you can pass the middleware just the same as you would for any typical 
@@ -485,6 +485,10 @@ router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
 app.use('api', router)
 
 ``` 
+
+<br>
+<br>
+
 
 
 ## That's All!!

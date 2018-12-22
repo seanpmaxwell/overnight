@@ -26,6 +26,7 @@ your code instead of the environment variables.
 <br>
 
 
+
 ## Installation
 
 You can get the latest release using npm:
@@ -38,7 +39,17 @@ $ npm install --save-dev @types/express
 <br>
 
 
-## Quick start: Option 1
+
+## Table of Contents
+
+* [Option 1](#option-1)
+* [Option 2](#option-2)
+
+<br>
+
+
+
+## <a name="options-1"></a> Option 1:
 
 #### Set the environment variables
 This is what really saves you from having to do boilerplate code. The two environment variables you
@@ -57,12 +68,11 @@ I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and typ
 
 > OVERNIGHTJWTSECRET="your super long random string"
 
-
->OVERNIGHTJWTEXP="your expiration time"
+> OVERNIGHTJWTEXP="your expiration time"
 
 <br>
 
-If you do not set these environment variables a default value of '3 days' will be set for the expiration
+If you do not set these environment variables a default value of **'3 days'** will be set for the expiration
 time and a random string will be generated for the secret. The random string is fine for development
 but do not use it for production. Every time you restart the server the secret will change and all 
 logins will become invalid. 
@@ -102,7 +112,13 @@ export class JwtPracticeController
 }
 ```
 
-## Quick start: Option 2
+<br>
 
 
-## Works just as fine in regular express
+#### Works just as fine in regular express
+
+
+
+## <a name="options-2"></a> Option 2:
+
+If you want to set your secret and expiration time manually 

@@ -1,4 +1,4 @@
-# OvernightJS
+# OvernightJS/core
 
 > TypeScript decorators for the ExpressJS Web Server!
 

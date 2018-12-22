@@ -22,7 +22,6 @@ export class SignupController extends ParentController
 
             cinfo(info.response);
             res.status(200).json({msg: 'email_sent_to_' + req.body.email});
-
         } catch (err) {
             cerr(err);
             res.status(400).json({msg: 'problem_sending_email'});

@@ -20,11 +20,11 @@ export class JwtPracticeController extends ParentController
     @Get('getjwt/:email')
     private getJwt(req: Request, res: Response): void
     {
-        let dataToEncypt = {
+        let jwtStr = jwt({
             email: req.params.email
-        };
+        });
 
-        res.status(200).json({jwt: jwt(dataToEncypt)});
+        res.status(200).json({jwt: jwtStr});
     }
 
     @Get('callProtectedRoute')
@@ -37,15 +37,15 @@ export class JwtPracticeController extends ParentController
     @Get('getJwtFromHandler/:fullname')
     private getJwtFromHandler(req: Request, res: Response): void
     {
-        let dataToEncypt = {
+        let jwtStr = jwtHandler.getJwt({
             fullName: req.params.fullname
-        };
+        });
 
-        res.status(200).json({jwt: jwtHandler.getJwt(dataToEncypt)});
+        res.status(200).json({jwt: jwtStr});
     }
 
     @Get('callProtectedRouteFromHandler')
-    @Middleware([JWTMIDDLEWARE])
+    @Middleware(JWTMIDDLEWARE)
     private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void
     {
         res.status(200).json({fullname: req.payload.fullName});

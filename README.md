@@ -395,7 +395,7 @@ logins will become invalid.
 
 #### Create your controller
 
-The data that is encrypted is stored as the payload `property`. That's all there is to it. Just import 
+The data that is encrypted is stored as the `payload` property. That's all there is to it. Just import 
 `jwt` and `jwtmiddleware`.
 
 
@@ -411,11 +411,11 @@ export class JwtPracticeController
     @Get('getjwt/:email')
     private getJwt(req: Request, res: Response): void
     {
-        let dataToEncypt = {
+        let jwtStr = jwt({
             email: req.params.email
-        };
+        });
 
-        res.status(200).json({jwt: jwt(dataToEncypt)});
+        res.status(200).json({jwt: jwtStr});
     }
 
     @Get('callProtectedRoute')
@@ -430,10 +430,63 @@ export class JwtPracticeController
 <br>
 
 
-#### Works just as fine in regular express
-
-
-
 ## <a name="options-2"></a> Option 2:
 
-If you want to set your secret and expiration time manually 
+If you want to set your secret and expiration time manually, you can import the `JwtHandler` class 
+and set them via the constructor. I love using Option 1 way more, but I thought I'd supply this option
+for people 
+
+```typescript
+import { Controller, Middleware, Get } from '@overnightjs/core'
+import { JwtHandler, SecureRequest }   from '@overnightjs/jwt'
+import { Request, Response }           from 'express'
+
+const jwtHandler = new JwtHandler('secret', '10h');
+const JWTMIDDLEWARE = jwtHandler.getMiddleware();
+
+
+@Controller('api/jwt')
+export class JwtPracticeController
+{
+    @Get('getjwt/:email')
+    private getJwt(req: Request, res: Response): void
+    {
+        let jwtStr = jwtHandler.getJwt({
+            email: req.params.email
+        });
+
+        res.status(200).json({jwt: jwtStr});
+    }
+
+    @Get('callProtectedRoute')
+    @Middleware(JWTMIDDLEWARE)
+    private callProtectedRoute(req: SecureRequest, res: Response): void
+    {
+        res.status(200).json({email: req.payload.email});
+    }
+}
+```
+
+
+#### Works just as fine in regular express
+
+You dont have to use `@overnightjs/jwt` with `@overnightjs/core`. If you're using Express but not
+interested in using decorators, you can pass the middleware just the same as you would for any typical 
+Express Router object.
+
+```javascript
+
+var router = express.Router()
+
+router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
+    console.log(req.payload.email)
+})
+
+app.use('api', router)
+
+``` 
+
+
+## That's All!!
+
+Please star this repo if you found it useful. Happy web-deving :)

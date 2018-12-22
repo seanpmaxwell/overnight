@@ -84,7 +84,7 @@ import { Request, Response }                 from 'express'
 export class JwtPracticeController
 {
     @Get('getjwt/:email')
-    private getJwt(req: Request, res: Response): void;
+    private getJwt(req: Request, res: Response): void
     {
         let dataToEncypt = {
             email: req.params.email

@@ -34,7 +34,7 @@ export class Server
         let count = 0;
         let routerLib = customRouterLib || express.Router;
 
-        if(controllers instanceof Array) {
+        if (controllers instanceof Array) {
             controllers.forEach(controller => {
                 this._applyRouterObj(controller, routerLib);
                 count++;
@@ -44,19 +44,18 @@ export class Server
             count = 1;
         }
 
-        console.log(count + ` controller${count === 1 ? '' : 's'} configured.`);
+        let s = count === 1 ? '' : 's';
+        console.log(count +  ` controller${s} configured.`);
     }
 
     private _applyRouterObj(controller: Controller, routerLib: Function): void
     {
-        let basePath = controller.controllerBasePath;
-
-        if (!basePath) {
+        if (!controller.controllerBasePath) {
             throw Error(this._NOT_CTLR_ERR);
         }
 
         let router = this._getRouter(controller, routerLib);
-        this.app_.use(basePath, router);
+        this.app_.use(controller.controllerBasePath, router);
     }
 
     private _getRouter(controller: Controller, RouterLib: Function): Router

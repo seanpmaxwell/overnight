@@ -17,6 +17,7 @@ export class CustomRouterServer extends Server
     constructor()
     {
         super();
+
         let postController = new PostController();
         super.addControllers_(postController, customRouter);
     }

@@ -372,9 +372,8 @@ need to set are **OVERNIGHTJWTSECRET** and **OVERNIGHTJWTEXP**. OVERNIGHTJWTSECR
 long, random string (mine is 80 characters) and the rules for setting OVERNIGHTJWTEXP are the same as
 setting the expiration time for the _jsonwebtoken_ library. The rules are:
 
-> examples: 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count. If you use 
-a string be sure you provide the time units (days, hours, etc), otherwise milliseconds unit is used 
-by default ("120" is equal to "120ms").
+> Examples: "2 days", "10h", "7d". If you use a string be sure you provide the time units (days, hours, etc), 
+otherwise milliseconds unit is used by default ("120" is equal to "120ms").
 
 <br>
 

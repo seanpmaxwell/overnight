@@ -4,13 +4,13 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as bodyParser      from 'body-parser'
-import * as controllers     from './controllers/controllers'
+import * as bodyParser      from 'body-parser';
+import * as controllers     from './controllers/controllers';
 
-import { Server }           from '@overnightjs/core'
-import { cinfo, cimp }      from 'simple-color-print'
-import { MailPromise }      from 'mail-promise'
-import { ParentController } from './controllers/ParentController'
+import { Server }           from '@overnightjs/core';
+import { cimp }             from 'simple-color-print';
+import { MailPromise }      from 'mail-promise';
+import { ParentController } from './controllers/ParentController';
 
 
 export class NormalRouterServer extends Server
@@ -62,7 +62,7 @@ export class NormalRouterServer extends Server
     {
         this.app_.get('/home', (req, res) => {
             res.send('overnightjs with standard express router started');
-        })
+        });
 
         port = port || 3000;
 

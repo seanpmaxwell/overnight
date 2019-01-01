@@ -4,11 +4,11 @@
  * created by Sean Maxwell Dec 17, 2018
  */
 
-import * as randomstring  from 'randomstring'
-import * as expressJwt    from 'express-jwt'
-import * as jsonwebtoken  from 'jsonwebtoken'
-import { RequestHandler } from 'express-jwt'
-import { Request }        from 'express'
+import * as randomstring  from 'randomstring';
+import * as expressJwt    from 'express-jwt';
+import * as jsonwebtoken  from 'jsonwebtoken';
+import { RequestHandler } from 'express-jwt';
+import { Request }        from 'express';
 
 
 // Pull in environment variables
@@ -67,8 +67,8 @@ export function jwt(dataToEcrypt: string | Buffer | object): string
 
 export class JwtHandler
 {
-    private readonly _secret: string
-    private readonly _expires: string | number
+    private readonly _secret: string;
+    private readonly _expires: string | number;
 
     constructor(secret: string, expires: string | number)
     {
@@ -96,8 +96,7 @@ export class JwtHandler
 
 
 // For routes passed with Jwt middleware
-export interface SecureRequest extends Request 
-{
-    payload: any
+export interface SecureRequest extends Request {
+    payload: any;
 }
 

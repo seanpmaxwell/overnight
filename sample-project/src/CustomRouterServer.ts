@@ -4,20 +4,19 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import customRouter       from 'express-promise-router'
-import { Server }         from '@overnightjs/core'
-import { cimp }           from 'simple-color-print'
-import { PostController } from './controllers/PostController'
+import customRouter       from 'express-promise-router';
+import { Server }         from '@overnightjs/core';
+import { cimp }           from 'simple-color-print';
+import { PostController } from './controllers/PostController';
 
 
 export class CustomRouterServer extends Server
 {
-    private readonly _START_MSG = 'overnightjs with custom router started on port:'
+    private readonly _START_MSG = 'overnightjs with custom router started on port:';
 
     constructor()
     {
         super();
-
         let postController = new PostController();
         super.addControllers_(postController, customRouter);
     }

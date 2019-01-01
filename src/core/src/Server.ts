@@ -4,21 +4,21 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as express from 'express'
-import { Application, Router } from 'express'
+import * as express            from 'express';
+import { Application, Router } from 'express';
 
 
 interface Controller {
-    controllerBasePath?: string
+    controllerBasePath?: string;
 }
 
 
 export class Server
 {
     private readonly _NOT_CTLR_ERR = 'Value passed was not a controller. Please make sure to use ' +
-        'a TypeScript class with the @Controller decorator'
+        'a TypeScript class with the @Controller decorator';
 
-    protected readonly app_: Application
+    protected readonly app_: Application;
 
     constructor()
     {

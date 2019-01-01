@@ -8,14 +8,14 @@
 ## What is it
 
 This is an easy tool for removing boilerplate code around json-web-tokens (jwt). You can get your token
-strings and middleware with just one line of code. @overnightJS/core is a clean simple library to add 
+strings and middleware with just one line of code. @overnightJS/core is a sister library to add 
 TypeScript decorators for methods meant to call Express routes. @overnightjs/jwt does not require
 @overnightjs/core but they do work beautifully together. 
 
 
 
 ## Features
-* `jwt` and `jwtmiddleware` libraries which can pull the secret-string and expiration-time directly 
+* `jwt` and `jwtmiddleware` functions which can pull the secret-string and expiration-time directly 
 from the environment variables.
 * `JwtHandler` class which can be passed a secret and expiration time if you wish to set those from
 your code instead of the environment variables. 
@@ -54,27 +54,27 @@ $ npm install --save-dev @types/express
 #### Set the environment variables
 This is what really saves you from having to do boilerplate code. The two environment variables you
 need to set are **OVERNIGHTJWTSECRET** and **OVERNIGHTJWTEXP**. OVERNIGHTJWTSECRET should be a really
-long, random string (mine is 80 characters) and the rules for setting OVERNIGHTJWTEXP are the same as
+long, random string (recommended is 80 characters) and the rules for setting OVERNIGHTJWTEXP are the same as
 setting the expiration time for the _jsonwebtoken_ library. The rules are:
 
-> Examples: "2 days", "10h", "7d". If you use a string be sure you provide the time units (days, hours, etc), 
-otherwise milliseconds unit is used by default ("120" is equal to "120ms").
+> If you use a string be sure you provide the time units (days, hours, etc), otherwise milliseconds is used by
+default ("120" is equal to "120ms"). Examples: "2 days", "10h", "7d". 
 
 <br>
 
-How you set you environment variables will vary depending on the which environment you are working in. 
+How you set your environment variables will vary depending on the which environment you are working in. 
 I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and type:
 
 > OVERNIGHTJWTSECRET="your super long random string"
-
 > OVERNIGHTJWTEXP="your expiration time"
+
+Another common option is the `dotenv` library, which imports environment variables from a .env file
 
 <br>
 
-If you do not set these environment variables a default value of **'3 days'** will be set for the expiration
-time and a random string will be generated for the secret. The random string is fine for development
-but do not use it for production. Every time you restart the server the secret will change and all 
-logins will become invalid. 
+If you do not set these environment variables, a default value of **'3 days'** will be set for the expiration time and a 
+random string will be generated for the secret. The random string is fine for development but do not use it for 
+production. Every time you restart the server the secret will change and all client-side jwts will become invalid. 
 
 
 #### Create your controller
@@ -118,7 +118,7 @@ export class JwtPracticeController
 
 If you want to set your secret and expiration time manually, you can import the `JwtHandler` class 
 and set them via the constructor. I love using Option 1 way more, but I thought I'd supply this option
-for people 
+for people who prefer to import it another way. 
 
 ```typescript
 import { Controller, Middleware, Get } from '@overnightjs/core'
@@ -154,7 +154,7 @@ export class JwtPracticeController
 
 #### Works just as fine in regular Express
 
-You dont have to use `@overnightjs/jwt` with `@overnightjs/core`. If you're using Express but not
+You dont have to use `@overnightjs/jwt` with `@overnightjs/core`. If you're using Express but are not
 interested in using decorators, you can pass the middleware just the same as you would for any typical 
 Express Router object.
 
@@ -168,4 +168,4 @@ router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
 
 app.use('api', router)
 
-```
+``` 

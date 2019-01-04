@@ -13,15 +13,14 @@ interface Controller {
 }
 
 
-export class Server
-{
+export class Server {
+
     private readonly _NOT_CTLR_ERR = 'Value passed was not a controller. Please make sure to use ' +
         'a TypeScript class with the @Controller decorator';
 
     protected readonly app_: Application;
 
-    constructor()
-    {
+    constructor() {
         this.app_ = express();
     }
 
@@ -29,8 +28,8 @@ export class Server
      *                                      Setup Controllers
      **********************************************************************************************/
 
-    protected addControllers_<T extends object>(controllers: T | Array<T>, customRouterLib?: Function): void
-    {
+    protected addControllers_<T extends object>(controllers: T | Array<T>, customRouterLib?: Function): void {
+
         let count = 0;
         let routerLib = customRouterLib || express.Router;
 
@@ -48,8 +47,8 @@ export class Server
         console.log(count +  ` controller${s} configured.`);
     }
 
-    private _applyRouterObj(controller: Controller, routerLib: Function): void
-    {
+    private _applyRouterObj(controller: Controller, routerLib: Function): void {
+
         if (!controller.controllerBasePath) {
             throw Error(this._NOT_CTLR_ERR);
         }
@@ -58,8 +57,8 @@ export class Server
         this.app_.use(controller.controllerBasePath, router);
     }
 
-    private _getRouter(controller: Controller, RouterLib: Function): Router
-    {
+    private _getRouter(controller: Controller, RouterLib: Function): Router {
+
         let router = RouterLib();
 
         for (let member in controller) {

@@ -7,7 +7,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "express-promise-router": "^3.0.3",
-    "mail-promise": "^1.2.2",
+    "mail-promise": "^1.2.4",
     "simple-color-print": "^1.0.4"
   },
   "devDependencies": {

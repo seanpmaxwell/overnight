@@ -10,19 +10,18 @@ import { cimp }           from 'simple-color-print';
 import { PostController } from './controllers/PostController';
 
 
-export class CustomRouterServer extends Server
-{
+export class CustomRouterServer extends Server {
+
     private readonly _START_MSG = 'overnightjs with custom router started on port:';
 
-    constructor()
-    {
+    constructor() {
         super();
         let postController = new PostController();
         super.addControllers_(postController, customRouter);
     }
 
-    public start(port?: number)
-    {
+    public start(port?: number) {
+
         this.app_.listen(port || 3000, () => {
             cimp(this._START_MSG + port);
         })

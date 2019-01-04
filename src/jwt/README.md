@@ -84,17 +84,17 @@ The data that is encrypted is stored as the `payload` property. That's all there
 
 
 ```typescript
-import { Controller, Middleware, Get }       from '@overnightjs/core'
-import { jwt, jwtmiddleware, SecureRequest } from '@overnightjs/jwt'
-import { Request, Response }                 from 'express'
+import { Controller, Middleware, Get }       from '@overnightjs/core';
+import { jwt, jwtmiddleware, SecureRequest } from '@overnightjs/jwt';
+import { Request, Response }                 from 'express';
 
 
 @Controller('api/jwt')
-export class JwtPracticeController
-{
+export class JwtPracticeController {
+    
     @Get('getjwt/:email')
-    private getJwt(req: Request, res: Response): void
-    {
+    private getJwt(req: Request, res: Response): void {
+        
         let jwtStr = jwt({
             email: req.params.email
         });
@@ -104,8 +104,7 @@ export class JwtPracticeController
 
     @Get('callProtectedRoute')
     @Middleware(jwtmiddleware)
-    private callProtectedRoute(req: SecureRequest, res: Response): void
-    {
+    private callProtectedRoute(req: SecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
 }
@@ -121,20 +120,20 @@ and set them via the constructor. I love using Option 1 way more, but I thought 
 for people who prefer to import it another way. 
 
 ```typescript
-import { Controller, Middleware, Get } from '@overnightjs/core'
-import { JwtHandler, SecureRequest }   from '@overnightjs/jwt'
-import { Request, Response }           from 'express'
+import { Controller, Middleware, Get } from '@overnightjs/core';
+import { JwtHandler, SecureRequest }   from '@overnightjs/jwt';
+import { Request, Response }           from 'express';
 
 const jwtHandler = new JwtHandler('secret', '10h');
 const JWTMIDDLEWARE = jwtHandler.getMiddleware();
 
 
 @Controller('api/jwt')
-export class JwtPracticeController
-{
+export class JwtPracticeController {
+    
     @Get('getjwt/:email')
-    private getJwt(req: Request, res: Response): void
-    {
+    private getJwt(req: Request, res: Response): void {
+        
         let jwtStr = jwtHandler.getJwt({
             email: req.params.email
         });
@@ -144,8 +143,7 @@ export class JwtPracticeController
 
     @Get('callProtectedRoute')
     @Middleware(JWTMIDDLEWARE)
-    private callProtectedRoute(req: SecureRequest, res: Response): void
-    {
+    private callProtectedRoute(req: SecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
 }
@@ -160,12 +158,12 @@ Express Router object.
 
 ```javascript
 
-var router = express.Router()
+var router = express.Router();
 
 router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
-    console.log(req.payload.email)
-})
+    console.log(req.payload.email);
+});
 
-app.use('api', router)
+app.use('api', router); 
 
 ``` 

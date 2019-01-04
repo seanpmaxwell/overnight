@@ -11,11 +11,11 @@ import { ParentController }  from './ParentController'
 
 
 @Controller('api/signup')
-export class SignupController extends ParentController
-{
+export class SignupController extends ParentController {
+
     @Post()
-    private async signup(req: Request, res: Response): Promise<void>
-    {
+    private async signup(req: Request, res: Response): Promise<void> {
+
         try {
             let info = await this.mailer_.send(req.body.email, 'Overnight Developers',
                 'Thanks for signing up', null, '<h1>You are awesome</h1>');

@@ -13,10 +13,10 @@ import { MailPromise }      from 'mail-promise';
 import { ParentController } from './controllers/ParentController';
 
 
-export class NormalRouterServer extends Server
-{
-    constructor()
-    {
+export class NormalRouterServer extends Server {
+
+    constructor() {
+
         super();
         this.setupExpress();
 
@@ -24,16 +24,16 @@ export class NormalRouterServer extends Server
         super.addControllers_(controllers);
     }
 
-    private setupExpress(): void
-    {
+    private setupExpress(): void {
+
         // Setup express here like you would
         // any other ExpressJS application.
         this.app_.use(bodyParser.json());
         this.app_.use(bodyParser.urlencoded({extended: true}));
     }
 
-    private setupControllers(): Array<ParentController>
-    {
+    private setupControllers(): Array<ParentController> {
+
         // Setup mailer object
         let mailer = new MailPromise();
 
@@ -58,8 +58,8 @@ export class NormalRouterServer extends Server
         return ctlrInstances;
     }
 
-    public start(port?: number)
-    {
+    public start(port?: number): void {
+
         this.app_.get('/home', (req, res) => {
             res.send('overnightjs with standard express router started');
         });

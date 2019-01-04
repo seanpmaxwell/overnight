@@ -10,30 +10,26 @@
  *                                            Routes
  **********************************************************************************************/
 
-export function Get(path?: string): MethodDecorator
-{
+export function Get(path?: string): MethodDecorator {
     return helperForRoutes('get', path);
 }
 
-export function Post(path?: string): MethodDecorator
-{
+export function Post(path?: string): MethodDecorator {
     return helperForRoutes('post', path);
 }
 
-export function Put(path?: string): MethodDecorator
-{
+export function Put(path?: string): MethodDecorator {
     return helperForRoutes('put', path);
 }
 
-export function Delete(path?: string): MethodDecorator
-{
+export function Delete(path?: string): MethodDecorator {
     return helperForRoutes('delete', path);
 }
 
-function helperForRoutes(httpVerb: string, path?: string): MethodDecorator
-{
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
-    {
+function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
+
+    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+
         const originalMethod = descriptor.value;
         const middleware = originalMethod.middleware || null;
 
@@ -57,11 +53,10 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator
  *                                         Middleware
  **********************************************************************************************/
 
-// pick up here, get rid of options keyword, options is the middleware,
-export function Middleware(middleware: Function | Function[]): MethodDecorator
-{
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor)
-    {
+export function Middleware(middleware: Function | Function[]): MethodDecorator {
+
+    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
+
         const originalMethod = descriptor.value;
 
         descriptor.value = function(...args: any[]) {

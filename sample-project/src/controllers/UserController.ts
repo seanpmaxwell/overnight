@@ -12,47 +12,41 @@ import { ParentController }                               from './ParentControll
 
 
 @Controller('api/users')
-export class UserController extends ParentController
-{
+export class UserController extends ParentController {
+
     @Get(':id')
-    get(req: Request, res: Response): any
-    {
+    private get(req: Request, res: Response): any {
         cinfo(req.params.id);
         return res.status(200).json({msg: 'get_called'});
     }
 
     @Get('')
     @Middleware(jwtmiddleware)
-    private getAll(req: SecureRequest, res: Response): void
-    {
+    private getAll(req: SecureRequest, res: Response): void {
         cinfo(req.payload);
         res.status(200).json({msg: 'get_all_called'});
     }
 
     @Post()
-    private add(req: Request, res: Response): void
-    {
+    private add(req: Request, res: Response): void {
         cinfo(req.body);
         res.status(200).json({msg: 'add_called'});
     }
 
     @Put('update-user')
-    private update(req: Request, res: Response): void
-    {
+    private update(req: Request, res: Response): void {
         cinfo(req.body);
         res.status(200).json({msg: 'update_called'});
     }
 
     @Delete('delete/:id')
-    private delete(req: Request, res: Response): void
-    {
+    private delete(req: Request, res: Response): void {
         cinfo(req.params);
         res.status(200).json({msg: 'delete_called'});
     }
 
     @Get('practice/async')
-    private async getWithAsync(req: Request, res: Response): Promise<void>
-    {
+    private async getWithAsync(req: Request, res: Response): Promise<void> {
         let msg;
 
         try {
@@ -65,8 +59,8 @@ export class UserController extends ParentController
         }
     }
 
-    private asyncMethod(req: Request): Promise<string>
-    {
+    private asyncMethod(req: Request): Promise<string> {
+
         return new Promise(resolve => {
             resolve(req.originalUrl + ' called');
         })

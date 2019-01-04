@@ -61,50 +61,45 @@ $ npm install --save-dev @types/express
 #### Create your controller
 
 ```typescript
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction }                from 'express';
 import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
 
+
 @Controller('api/users')
-export class UserController
-{
+export class UserController {
+    
     @Get(':id')
-    get(req: Request, res: Response): any
-    {
+    get(req: Request, res: Response): any {
         console.log(req.params.id);
         return res.status(200).json({msg: 'get_called'});
     }
 
     @Get()
     @Middleware(middleware)
-    private getAll(req: Request, res: Response): void
-    {
+    private getAll(req: Request, res: Response): void {
         res.status(200).json({msg: 'get_all_called'});
     }
 
     @Post()
-    private add(req: Request, res: Response): void
-    {
+    private add(req: Request, res: Response): void {
         res.status(200).json({msg: 'add_called'});
     }
 
     @Put('update-user')
     @Middleware([middleware1, middleware2])
-    private update(req: Request, res: Response): void
-    {
+    private update(req: Request, res: Response): void {
         res.status(200).json({msg: 'update_called'});
     }
 
     // Next param is optional
     @Delete('delete/:id')
-    private delete(req: Request, res: Response, next: NextFunction): void
-    {
+    private delete(req: Request, res: Response, next: NextFunction): void {
         res.status(200).json({msg: 'delete_called'});
     }
 
     // async/await work normally :)
     @Get('practice/async')
-    private async getWithAsync(req: Request, res: Response): Promise<void>
-    {
+    private async getWithAsync(req: Request, res: Response): Promise<void> {
         let msg;
 
         try {
@@ -144,11 +139,11 @@ import { UserController }   from './UserController';
 import { SignupController } from './SignupController';
 
 
-export class SampleServer extends Server
-{
-    constructor()
-    {
+export class SampleServer extends Server {
+    
+    constructor() {
         super();
+        
         this.setupExpress();
         let ctrlsArr = this.setupControllers();
         
@@ -160,16 +155,16 @@ export class SampleServer extends Server
         super.addControllers_(ctrlsArr);
     }
 
-    private setupExpress(): void
-    {
+    private setupExpress(): void {
+        
         // Setup express here like you would
         // any other ExpressJS application.
         this.app_.use(bodyParser.json());
         this.app_.use(bodyParser.urlencoded({extended: true}));
     }
 
-    private setupControllers(): Array<CustomController>
-    {
+    private setupControllers(): Array<CustomController> {
+        
         let userController = new UserController();
         let signupController = new SignupController();
         
@@ -180,8 +175,8 @@ export class SampleServer extends Server
         return [userController, signupController];
     }
 
-    public start(port: number)
-    {
+    public start(port: number): void {
+        
         this.app_.listen(port, () => {
             cimp('Server listening on port:' + port);
         })
@@ -199,8 +194,8 @@ Without the above decorators we would have to wrap each controller method with s
 ```typescript
 
 /* In the controller file*/
-public getRoutes(): Router
-{
+public getRoutes(): Router {
+    
     let router = Router();
     
     router.get('/', jwtMiddleWare, (req, res) => {
@@ -243,34 +238,30 @@ import { Controller, Get, Put } from '@overnightjs/core';
 
 
 @Controller('api/posts')
-export class PostController
-{
+export class PostController {
+    
     private readonly _INVALID_MSG = 'You entered an invalid post id: ';
     private readonly _VALID_MSG = 'You entered the post id: ';
 
     @Get(':id')
-    private get(req: Request, res: Response): Promise<Response>
-    {
+    private get(req: Request, res: Response): Promise<Response> {
         return this.someAsyncFunction(req.params.id)
                     .then(ret => res.status(200).json({msg: ret}));
     }
 
-    private someAsyncFunction(id: number): Promise<string>
-    {
+    private someAsyncFunction(id: number): Promise<string> {
         return new Promise((res, rej) => {
             isNaN(id) ? rej(this._INVALID_MSG + id) : res(this._VALID_MSG + id);
         })
     }
 
     @Put(':id')
-    private add(req: Request, res: Response): Promise<string>
-    {
+    private add(req: Request, res: Response): Promise<string> {
         return Promise.resolve('next');
     }
 
     @Put('foo')
-    private add2(req: Request, res: Response): void
-    {
+    private add2(req: Request, res: Response): void {
         res.status(200).json({msg: 'Route used: ' + req.url});
     }
 }
@@ -291,19 +282,17 @@ import { Server }         from '@overnightjs/core';
 import { PostController } from './controllers/PostController';
 
 
-export class CustomRouterServer extends Server
-{
+export class CustomRouterServer extends Server {
+    
     private readonly _START_MSG = 'overnightjs with custom router started on port: ';
     
-    constructor()
-    {
+    constructor() {
         super();
         let postController = new PostController();
         super.addControllers_(postController, customRouter);
     }
 
-    public start(port: number)
-    {
+    public start(port: number): void {
         this.app_.listen(port, () => {
             console.log(this._START_MSG + port);
         })
@@ -405,11 +394,11 @@ import { Request, Response }                 from 'express';
 
 
 @Controller('api/jwt')
-export class JwtPracticeController
-{
+export class JwtPracticeController {
+    
     @Get('getjwt/:email')
-    private getJwt(req: Request, res: Response): void
-    {
+    private getJwt(req: Request, res: Response): void {
+        
         let jwtStr = jwt({
             email: req.params.email
         });
@@ -419,8 +408,7 @@ export class JwtPracticeController
 
     @Get('callProtectedRoute')
     @Middleware(jwtmiddleware)
-    private callProtectedRoute(req: SecureRequest, res: Response): void
-    {
+    private callProtectedRoute(req: SecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
 }
@@ -445,11 +433,11 @@ const JWTMIDDLEWARE = jwtHandler.getMiddleware();
 
 
 @Controller('api/jwt')
-export class JwtPracticeController
-{
+export class JwtPracticeController {
+    
     @Get('getjwt/:email')
-    private getJwt(req: Request, res: Response): void
-    {
+    private getJwt(req: Request, res: Response): void {
+        
         let jwtStr = jwtHandler.getJwt({
             email: req.params.email
         });
@@ -459,8 +447,7 @@ export class JwtPracticeController
 
     @Get('callProtectedRoute')
     @Middleware(JWTMIDDLEWARE)
-    private callProtectedRoute(req: SecureRequest, res: Response): void
-    {
+    private callProtectedRoute(req: SecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
 }

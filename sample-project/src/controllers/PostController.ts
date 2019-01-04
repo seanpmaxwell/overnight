@@ -12,17 +12,16 @@ import { ParentController }     from './ParentController';
 
 
 @Controller('api/posts')
-export class PostController extends ParentController
-{
+export class PostController extends ParentController {
+
     @Get(':id')
-    private get(req: Request, res: Response): Promise<Response>
-    {
+    private get(req: Request, res: Response): Promise<Response> {
         return this.someAsyncFunction(req.params.id)
                     .then(ret => res.status(200).json({msg: ret}));
     }
 
-    private someAsyncFunction(id: number): Promise<string>
-    {
+    private someAsyncFunction(id: number): Promise<string> {
+
         return new Promise((resolve, reject) => {
 
             if (isNaN(id)) {
@@ -34,14 +33,12 @@ export class PostController extends ParentController
     }
 
     @Put(':id')
-    private add(req: Request, res: Response): Promise<string>
-    {
+    private add(req: Request, res: Response): Promise<string> {
         return Promise.resolve('next');
     }
 
     @Put('foo')
-    private add2(req: Request, res: Response): void
-    {
+    private add2(req: Request, res: Response): void {
         res.status(200).json({msg: 'Route used: ' + req.url});
     }
 }

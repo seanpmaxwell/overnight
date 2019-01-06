@@ -6,9 +6,9 @@
  * created by Sean Maxwell Aug 28, 2018
  */
 
-import { Request, Response }    from 'express';
+import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
-import { ParentController }     from './ParentController';
+import { ParentController } from './ParentController';
 
 
 @Controller('api/posts')

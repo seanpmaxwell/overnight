@@ -4,7 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as express            from 'express';
+import * as express from 'express';
 import { Application, Router } from 'express';
 
 

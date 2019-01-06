@@ -4,20 +4,21 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as bodyParser      from 'body-parser';
-import * as controllers     from './controllers/controllers';
+import * as bodyParser from 'body-parser';
+import * as controllers from './controllers/controllers';
 
-import { Server }           from '@overnightjs/core';
-import { cimp }             from 'simple-color-print';
-import { MailPromise }      from 'mail-promise';
+import { Server } from '@overnightjs/core';
+import { cimp } from 'simple-color-print';
 import { ParentController } from './controllers/ParentController';
+
+import MailPromise from 'mail-promise';
 
 
 export class NormalRouterServer extends Server {
 
     constructor() {
-
         super();
+
         this.setupExpress();
 
         let controllers = this.setupControllers();
@@ -25,7 +26,6 @@ export class NormalRouterServer extends Server {
     }
 
     private setupExpress(): void {
-
         // Setup express here like you would
         // any other ExpressJS application.
         this.app_.use(bodyParser.json());

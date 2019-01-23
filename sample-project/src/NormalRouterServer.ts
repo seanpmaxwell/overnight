@@ -28,8 +28,8 @@ export class NormalRouterServer extends Server {
     private setupExpress(): void {
         // Setup express here like you would
         // any other ExpressJS application.
-        this.app_.use(bodyParser.json());
-        this.app_.use(bodyParser.urlencoded({extended: true}));
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({extended: true}));
     }
 
     private setupControllers(): Array<ParentController> {
@@ -60,13 +60,13 @@ export class NormalRouterServer extends Server {
 
     public start(port?: number): void {
 
-        this.app_.get('/home', (req, res) => {
+        this.app.get('/home', (req, res) => {
             res.send('overnightjs with standard express router started');
         });
 
         port = port || 3000;
 
-        this.app_.listen(port, () => {
+        this.app.listen(port, () => {
             cimp('overnightjs with standard express router started on port:' + port);
         })
     }

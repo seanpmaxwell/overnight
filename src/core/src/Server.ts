@@ -18,10 +18,14 @@ export class Server {
     private readonly _NOT_CTLR_ERR = 'Value passed was not a controller. Please make sure to use ' +
         'a TypeScript class with the @Controller decorator';
 
-    protected readonly app_: Application;
+    private readonly _APP: Application;
 
     constructor() {
-        this.app_ = express();
+        this._APP = express();
+    }
+
+    get app(): Application {
+        return this._APP;
     }
 
     /***********************************************************************************************
@@ -54,7 +58,7 @@ export class Server {
         }
 
         let router = this._getRouter(controller, routerLib);
-        this.app_.use(controller.controllerBasePath, router);
+        this.app.use(controller.controllerBasePath, router);
     }
 
     private _getRouter(controller: Controller, RouterLib: Function): Router {

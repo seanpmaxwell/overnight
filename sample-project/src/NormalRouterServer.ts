@@ -15,6 +15,7 @@ import MailPromise from 'mail-promise';
 
 export class NormalRouterServer extends Server {
 
+
     constructor() {
         super();
 
@@ -24,12 +25,15 @@ export class NormalRouterServer extends Server {
         super.addControllers_(controllers);
     }
 
+
     private setupExpress(): void {
+
         // Setup express here like you would
         // any other ExpressJS application.
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
     }
+
 
     private setupControllers(): Array<ParentController> {
 
@@ -56,6 +60,7 @@ export class NormalRouterServer extends Server {
 
         return ctlrInstances;
     }
+
 
     public start(port?: number): void {
 

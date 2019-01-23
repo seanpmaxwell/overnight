@@ -24,7 +24,7 @@ export class CustomRouterServer extends Server {
 
     public start(port?: number) {
 
-        this.app_.listen(port || 3000, () => {
+        this.app.listen(port || 3000, () => {
             cimp(this._START_MSG + port);
         })
     }

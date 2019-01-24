@@ -18,16 +18,12 @@ export class CustomRouterServer extends Server {
 
     constructor() {
         super();
-
         let postController = new PostController();
         super.addControllers_(postController, customRouter);
     }
 
 
     public start(port?: number) {
-
-        this.app.listen(port || 3000, () => {
-            cimp(this._START_MSG + port);
-        })
+        this.app.listen(port || 3000, () => cimp(this._START_MSG + port))
     }
 }

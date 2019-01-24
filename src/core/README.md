@@ -114,7 +114,7 @@ export class UserController {
 #### Import your controller into the server
 
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
-object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
+object is accessed using `this.app`, which is a readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`. 
 The reason the controllers are not imported and setup for you automatically is the server is meant to 
 be a place where you hook everything together. Suppose for example that you want to add the same database 

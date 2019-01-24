@@ -17,16 +17,18 @@ export class Server {
 
     private readonly _NOT_CTLR_ERR = 'Value passed was not a controller. Please make sure to use ' +
         'a TypeScript class with the @Controller decorator';
-
     private readonly _APP: Application;
+
 
     constructor() {
         this._APP = express();
     }
 
+
     get app(): Application {
         return this._APP;
     }
+
 
     /***********************************************************************************************
      *                                      Setup Controllers
@@ -51,6 +53,7 @@ export class Server {
         console.log(count +  ` controller${s} configured.`);
     }
 
+
     private _applyRouterObj(controller: Controller, routerLib: Function): void {
 
         if (!controller.controllerBasePath) {
@@ -61,24 +64,25 @@ export class Server {
         this.app.use(controller.controllerBasePath, router);
     }
 
+
     private _getRouter(controller: Controller, RouterLib: Function): Router {
 
         let router = RouterLib();
 
         for (let member in controller) {
 
-            let orp = controller[member].overnightRouteProperties;
+            if (controller[member].overnightRouteProperties) {
 
-            if (orp) {
+                let { middleware, httpVerb, path } = controller[member].overnightRouteProperties;
 
                 let callBack = (req, res, next) => {
                     return controller[member](req, res, next);
                 };
 
-                if (orp.middleware) {
-                    router[orp.httpVerb](orp.path, orp.middleware, callBack);
+                if (middleware) {
+                    router[httpVerb](path, middleware, callBack);
                 } else {
-                    router[orp.httpVerb](orp.path, callBack);
+                    router[httpVerb](path, callBack);
                 }
             }
         }

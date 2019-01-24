@@ -33,8 +33,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
         const originalMethod = descriptor.value;
         const middleware = originalMethod.middleware || null;
 
-        descriptor.value = function(...args: any[])
-        {
+        descriptor.value = function(...args: any[]) {
             return originalMethod.apply(this, args);
         };
 

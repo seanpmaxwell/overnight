@@ -23,7 +23,7 @@ export class CustomRouterServer extends Server {
         super.addControllers_(postController, customRouter);
     }
 
-    
+
     public start(port?: number) {
 
         this.app.listen(port || 3000, () => {

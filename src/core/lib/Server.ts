@@ -5,7 +5,7 @@
  */
 
 import * as express from 'express';
-import { Application, Router } from 'express';
+import { Application, Request, Response, NextFunction, Router } from 'express';
 
 
 interface Controller {
@@ -71,14 +71,14 @@ export class Server {
 
         for (let member in controller) {
 
-            let routeProperties = controller[member].overnightRouteProperties;
+            let method = (controller as any)[member];
 
-            if (routeProperties) {
+            if (method.overnightRouteProperties) {
 
-                let { middleware, httpVerb, path } = routeProperties;
+                let { middleware, httpVerb, path } = method.overnightRouteProperties;
 
-                let callBack = (req, res, next) => {
-                    return controller[member](req, res, next);
+                let callBack = (req: Request, res: Response, next: NextFunction) => {
+                    return method(req, res, next);
                 };
 
                 if (middleware) {

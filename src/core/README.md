@@ -114,7 +114,7 @@ export class UserController {
 #### Import your controller into the server
 
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
-object is accessed using `this.app_`, which is a protected, readonly class variable. You can interact 
+object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`. 
 The reason the controllers are not imported and setup for you automatically is the server is meant to 
 be a place where you hook everything together. Suppose for example that you want to add the same database 
@@ -156,8 +156,8 @@ export class SampleServer extends Server {
         
         // Setup express here like you would
         // any other ExpressJS application.
-        this.app_.use(bodyParser.json());
-        this.app_.use(bodyParser.urlencoded({extended: true}));
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({extended: true}));
     }
 
     private setupControllers(): Array<CustomController> {
@@ -174,7 +174,7 @@ export class SampleServer extends Server {
 
     public start(port: number): void {
         
-        this.app_.listen(port, () => {
+        this.app.listen(port, () => {
             cimp('Server listening on port:' + port);
         })
     }
@@ -290,7 +290,7 @@ export class CustomRouterServer extends Server {
     }
 
     public start(port: number): void {
-        this.app_.listen(port, () => {
+        this.app.listen(port, () => {
             console.log(this._START_MSG + port);
         })
     }

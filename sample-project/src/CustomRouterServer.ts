@@ -5,13 +5,12 @@
  */
 
 import customRouter from 'express-promise-router';
-
 import { Server } from '@overnightjs/core';
 import { cimp } from 'simple-color-print';
-import { PostController } from './controllers/PostController';
+import PostController from './controllers/PostController';
 
 
-export class CustomRouterServer extends Server {
+class CustomRouterServer extends Server {
 
     private readonly _START_MSG = 'overnightjs with custom router started on port:';
 
@@ -27,3 +26,9 @@ export class CustomRouterServer extends Server {
         this.app.listen(port || 3000, () => cimp(this._START_MSG + port))
     }
 }
+
+
+(() => {
+    let server = new CustomRouterServer();
+    server.start();
+})();

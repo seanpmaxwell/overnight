@@ -8,11 +8,11 @@
 
 import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
-import { ParentController } from './ParentController';
+import ParentController from './ParentController';
 
 
 @Controller('api/posts')
-export class PostController extends ParentController {
+class PostController extends ParentController {
 
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
@@ -42,3 +42,5 @@ export class PostController extends ParentController {
         res.status(200).json({msg: 'Route used: ' + req.url});
     }
 }
+
+export default PostController;

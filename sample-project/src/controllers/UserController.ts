@@ -8,7 +8,7 @@ import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/cor
 import { jwtmiddleware, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
 import { cinfo, cerr } from 'simple-color-print';
-import { ParentController } from './ParentController';
+import ParentController from './ParentController';
 
 
 @Controller('api/users')

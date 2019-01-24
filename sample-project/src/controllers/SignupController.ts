@@ -7,7 +7,7 @@
 import { Request, Response } from 'express'
 import { Controller, Post  } from '@overnightjs/core'
 import { cinfo, cerr, } from 'simple-color-print'
-import { ParentController } from './ParentController'
+import ParentController from './ParentController'
 
 
 @Controller('api/signup')

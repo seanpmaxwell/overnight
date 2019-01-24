@@ -7,7 +7,7 @@
 import MailPromise from 'mail-promise';
 
 
-export class ParentController {
+class ParentController {
 
     protected mailer_: MailPromise;
 
@@ -15,3 +15,5 @@ export class ParentController {
         this.mailer_ = mailer;
     }
 }
+
+export default ParentController;

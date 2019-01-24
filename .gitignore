@@ -1,15 +1,17 @@
 # Created by .ignore support plugin (hsz.mobi)
 
-# Created by .ignore support plugin (hsz.mobi)
 
 # IntelliJ project files
 *.iml
 .idea/
 
+
 # Misc
 **/node_modules
 **/package-lock.json
 
+
 # Transpiled files
+**/src/**/*.js
+**/src/**/*.map
 **/lib
-**/built

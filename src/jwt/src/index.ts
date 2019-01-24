@@ -4,11 +4,12 @@
  * created by Sean Maxwell Dec 17, 2018
  */
 
-import * as randomstring  from 'randomstring';
-import * as expressJwt    from 'express-jwt';
-import * as jsonwebtoken  from 'jsonwebtoken';
+import * as randomstring from 'randomstring';
+import * as expressJwt from 'express-jwt';
+import * as jsonwebtoken from 'jsonwebtoken';
+
 import { RequestHandler } from 'express-jwt';
-import { Request }        from 'express';
+import { Request } from 'express';
 
 
 // Pull in environment variables

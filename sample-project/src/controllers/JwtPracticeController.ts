@@ -14,7 +14,7 @@ const JWTMIDDLEWARE = jwtHandler.getMiddleware();
 
 
 @Controller('api/jwt')
-class JwtPracticeController extends ParentController {
+export class JwtPracticeController extends ParentController {
 
 
     @Get('getjwt/:email')
@@ -52,5 +52,3 @@ class JwtPracticeController extends ParentController {
         res.status(200).json({fullname: req.payload.fullName});
     }
 }
-
-export default JwtPracticeController;

@@ -5,7 +5,7 @@
  */
 
 if (process.argv[2] === 'customRouter') {
-    require('./built/CustomRouterServer');
+    require('./src/CustomRouterServer');
 } else {
-    require('./built/NormalRouterServer');
+    require('./src/NormalRouterServer');
 }

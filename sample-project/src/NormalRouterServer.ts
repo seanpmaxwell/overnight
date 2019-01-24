@@ -9,7 +9,8 @@ import * as controllers from './controllers/controllers';
 
 import { Server } from '@overnightjs/core';
 import { cimp } from 'simple-color-print';
-import { ParentController } from './controllers/ParentController';
+
+import ParentController from './controllers/ParentController';
 import MailPromise from 'mail-promise';
 
 

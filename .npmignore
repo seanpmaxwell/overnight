@@ -1,9 +1,0 @@
-# Created by .ignore support plugin (hsz.mobi)
-
-
-.gitignore
-
-**/node_modules
-**/**/*.js.map
-
-src/**/src

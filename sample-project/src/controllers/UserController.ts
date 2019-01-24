@@ -14,11 +14,13 @@ import { ParentController } from './ParentController';
 @Controller('api/users')
 export class UserController extends ParentController {
 
+
     @Get(':id')
     private get(req: Request, res: Response): any {
         cinfo(req.params.id);
         return res.status(200).json({msg: 'get_called'});
     }
+
 
     @Get('')
     @Middleware(jwtmiddleware)
@@ -27,11 +29,13 @@ export class UserController extends ParentController {
         res.status(200).json({msg: 'get_all_called'});
     }
 
+
     @Post()
     private add(req: Request, res: Response): void {
         cinfo(req.body);
         res.status(200).json({msg: 'add_called'});
     }
+
 
     @Put('update-user')
     private update(req: Request, res: Response): void {
@@ -39,14 +43,17 @@ export class UserController extends ParentController {
         res.status(200).json({msg: 'update_called'});
     }
 
+
     @Delete('delete/:id')
     private delete(req: Request, res: Response): void {
         cinfo(req.params);
         res.status(200).json({msg: 'delete_called'});
     }
 
+
     @Get('practice/async')
     private async getWithAsync(req: Request, res: Response): Promise<void> {
+
         let msg;
 
         try {
@@ -58,6 +65,7 @@ export class UserController extends ParentController {
             res.status(200).json({msg: msg});
         }
     }
+
 
     private asyncMethod(req: Request): Promise<string> {
 

@@ -119,7 +119,7 @@ with this variable like you would any normal express Application created with `r
 The reason the controllers are not imported and setup for you automatically is the server is meant to 
 be a place where you hook everything together. Suppose for example that you want to add the same database 
 connection instance to several of your controllers at once. This setup let's you do that before 
-initializing all of your controller routes. `super.addControllers_(ctrlsArr)` must be called to enable 
+initializing all of your controller routes. `super.addControllers(ctrlsArr)` must be called to enable 
 all of the routes in your controller. If you don't want to have to import each of your controller objects 
 individually, you could do something like `import * as controllers from './controllers/export.ts` and 
 export all your classes at once in that file. Then you could loop through all your controllers in the 
@@ -149,7 +149,7 @@ export class SampleServer extends Server {
         // array of controllers. Optional router
         // object can also be passed as second 
         // argument.
-        super.addControllers_(ctrlsArr);
+        super.addControllers(ctrlsArr);
     }
 
     private setupExpress(): void {
@@ -222,7 +222,7 @@ This would get really tedious overtime and lead to a lot of boiler plate code.
 Suppose you don't want to use the built in "Router" object which is provided by express. Maybe you
 don't like using async/await or having to call `.catch()` if you're not using try/catch blocks. Maybe
 you're using a library like _express-promise-router_ to handle the route callbacks. OvernightJS allows
-you to pass in a custom router object in the `super.addControllers_()` method. Simply pass in your
+you to pass in a custom router object in the `super.addControllers()` method. Simply pass in your
 custom router object as the second argument after the controller/s. When you don't specify a custom
 router, the default express.Router() object is used. 
 
@@ -264,7 +264,7 @@ export class PostController {
 }
 ```
 
-- Add _express-promise-router_ in the `super.addControllers_()` method:
+- Add _express-promise-router_ in the `super.addControllers()` method:
 
 
 ```typescript
@@ -286,7 +286,7 @@ export class CustomRouterServer extends Server {
     constructor() {
         super();
         let postController = new PostController();
-        super.addControllers_(postController, customRouter);
+        super.addControllers(postController, customRouter);
     }
 
     public start(port: number): void {

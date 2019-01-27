@@ -10,13 +10,14 @@ import { Application, Request, Response, NextFunction, Router } from 'express';
 
 interface Controller {
     controllerBasePath?: string;
+    [key: string]: any;
 }
 
 
 export class Server {
 
-    private readonly _NOT_CTLR_ERR = 'Value passed was not a controller. Please make sure to use ' +
-        'a TypeScript class with the @Controller decorator';
+    private readonly _NOT_CTLR_ERR = 'Value passed was not a controller. Please make sure to ' +
+        'use a TypeScript class with the @Controller decorator';
     private readonly _APP: Application;
 
 
@@ -25,7 +26,7 @@ export class Server {
     }
 
 
-    get app(): Application {
+    protected get app(): Application {
         return this._APP;
     }
 
@@ -34,7 +35,7 @@ export class Server {
      *                                      Setup Controllers
      **********************************************************************************************/
 
-    protected addControllers_<T extends object>(controllers: T | Array<T>, customRouterLib?: Function): void {
+    protected addControllers<T extends object>(controllers: T | Array<T>, customRouterLib?: Function): void {
 
         let count = 0;
         let routerLib = customRouterLib || express.Router;
@@ -57,6 +58,9 @@ export class Server {
     private _applyRouterObj(controller: Controller, routerLib: Function): void {
 
         if (!controller.controllerBasePath) {
+            if (controller.hasOwnProperty('name')) {
+                console.error(`Object with name ${controller.name} does not have the basePath property`)
+            }
             throw Error(this._NOT_CTLR_ERR);
         }
 
@@ -69,16 +73,18 @@ export class Server {
 
         let router = RouterLib();
 
+
         for (let member in controller) {
 
-            let routeProperties = (controller as any)[member].overnightRouteProperties;
+            let routeProperties = (controller)[member].overnightRouteProperties;
+
 
             if (routeProperties) {
 
                 let { middleware, httpVerb, path } = routeProperties;
 
                 let callBack = (req: Request, res: Response, next: NextFunction) => {
-                    return (controller as any)[member](req, res, next);
+                    return (controller)[member](req, res, next);
                 };
 
                 if (middleware) {

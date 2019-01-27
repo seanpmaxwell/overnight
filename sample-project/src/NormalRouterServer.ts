@@ -14,39 +14,29 @@ import ParentController from './controllers/ParentController';
 import MailPromise from 'mail-promise';
 
 
+type Controllers = {
+    [ctrlName: string]: typeof ParentController
+};
+
 class NormalRouterServer extends Server {
 
 
     constructor() {
         super();
 
-        this.setupExpress();
-
-        let controllers = this.setupControllers();
-        super.addControllers_(controllers);
-    }
-
-
-    private setupExpress(): void {
-
-        // Setup express here like you would
-        // any other ExpressJS application.
+        // Setup JSON parse middleware
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
+
+        // Setup APIs
+        this.setupControllers();
     }
 
 
-    private setupControllers(): Array<ParentController> {
+    private setupControllers(): void {
 
-        // Setup mailer object
         let mailer = new MailPromise();
-
-        // Create a type for the 'controllers.ts' file
-        type Controllers = {
-            [ctrlName: string]: typeof ParentController
-        };
-
-        let ctlrInstances: any = [];
+        let ctlrInstances = [];
 
         for (let ctrlName in controllers) {
             if (controllers.hasOwnProperty(ctrlName)) {
@@ -59,17 +49,17 @@ class NormalRouterServer extends Server {
             }
         }
 
-        return ctlrInstances;
+        super.addControllers(ctlrInstances);
     }
 
 
-    public start(port?: number): void {
+    public start(): void {
 
-        this.app.get('/home', (req, res) => {
+        const port = 3000;
+
+        this.app.get('*', (req, res) => {
             res.send('overnightjs with standard express router started');
         });
-
-        port = port || 3000;
 
         this.app.listen(port, () => {
             cimp('overnightjs with standard express router started on port:' + port);

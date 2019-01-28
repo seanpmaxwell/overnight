@@ -58,7 +58,7 @@ $ npm install --save-dev @types/express
 #### Create your controller
 
 ```typescript
-import { Request, Response, NextFunction }                from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
 
 
@@ -129,10 +129,10 @@ master repository contains an example of this.
 <br>
 
 ```typescript
-import * as bodyParser      from 'body-parser';
-import { Server }           from '@overnightjs/core';
-import { cinfo, cimp }      from 'simple-color-print';
-import { UserController }   from './UserController';
+import * as bodyParser from 'body-parser';
+import { Server } from '@overnightjs/core';
+import { cinfo, cimp } from 'simple-color-print';
+import { UserController } from './UserController';
 import { SignupController } from './SignupController';
 
 
@@ -230,7 +230,7 @@ router, the default express.Router() object is used.
 - Controller using _express-promise-router_:
 
 ```typescript
-import { Request, Response }    from 'express';
+import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
 
 
@@ -274,8 +274,8 @@ export class PostController {
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as customRouter  from 'express-promise-router';
-import { Server }         from '@overnightjs/core';
+import * as customRouter from 'express-promise-router';
+import { Server } from '@overnightjs/core';
 import { PostController } from './controllers/PostController';
 
 

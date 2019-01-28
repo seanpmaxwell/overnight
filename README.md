@@ -61,7 +61,7 @@ $ npm install --save-dev @types/express
 #### Create your controller
 
 ```typescript
-import { Request, Response, NextFunction }                from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
 
 
@@ -132,10 +132,10 @@ master repository contains an example of this.
 <br>
 
 ```typescript
-import * as bodyParser      from 'body-parser';
-import { Server }           from '@overnightjs/core';
-import { cinfo, cimp }      from 'simple-color-print';
-import { UserController }   from './UserController';
+import * as bodyParser from 'body-parser';
+import { Server } from '@overnightjs/core';
+import { cinfo, cimp } from 'simple-color-print';
+import { UserController } from './UserController';
 import { SignupController } from './SignupController';
 
 
@@ -233,7 +233,7 @@ router, the default express.Router() object is used.
 - Controller using _express-promise-router_:
 
 ```typescript
-import { Request, Response }    from 'express';
+import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
 
 
@@ -388,9 +388,9 @@ The data that is encrypted is stored as the `payload` property. That's all there
 
 
 ```typescript
-import { Controller, Middleware, Get }       from '@overnightjs/core';
+import { Controller, Middleware, Get } from '@overnightjs/core';
 import { jwt, jwtmiddleware, SecureRequest } from '@overnightjs/jwt';
-import { Request, Response }                 from 'express';
+import { Request, Response } from 'express';
 
 
 @Controller('api/jwt')
@@ -425,8 +425,8 @@ for people who prefer to import it another way.
 
 ```typescript
 import { Controller, Middleware, Get } from '@overnightjs/core';
-import { JwtHandler, SecureRequest }   from '@overnightjs/jwt';
-import { Request, Response }           from 'express';
+import { JwtHandler, SecureRequest } from '@overnightjs/jwt';
+import { Request, Response } from 'express';
 
 const jwtHandler = new JwtHandler('secret', '10h');
 const JWTMIDDLEWARE = jwtHandler.getMiddleware();

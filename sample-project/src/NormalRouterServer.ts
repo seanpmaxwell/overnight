@@ -53,9 +53,9 @@ class NormalRouterServer extends Server {
     }
 
 
-    public start(): void {
+    public start(port?: number): void {
 
-        const port = 3000;
+        port = port || 3000;
 
         this.app.get('*', (req, res) => {
             res.send('overnightjs with standard express router started');
@@ -67,7 +67,4 @@ class NormalRouterServer extends Server {
     }
 }
 
-(() => {
-    let server = new NormalRouterServer();
-    server.start();
-})();
+module.exports = NormalRouterServer;

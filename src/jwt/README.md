@@ -84,9 +84,9 @@ The data that is encrypted is stored as the `payload` property. That's all there
 
 
 ```typescript
-import { Controller, Middleware, Get }       from '@overnightjs/core';
+import { Controller, Middleware, Get } from '@overnightjs/core';
 import { jwt, jwtmiddleware, SecureRequest } from '@overnightjs/jwt';
-import { Request, Response }                 from 'express';
+import { Request, Response } from 'express';
 
 
 @Controller('api/jwt')
@@ -121,8 +121,8 @@ for people who prefer to import it another way.
 
 ```typescript
 import { Controller, Middleware, Get } from '@overnightjs/core';
-import { JwtHandler, SecureRequest }   from '@overnightjs/jwt';
-import { Request, Response }           from 'express';
+import { JwtHandler, SecureRequest } from '@overnightjs/jwt';
+import { Request, Response } from 'express';
 
 const jwtHandler = new JwtHandler('secret', '10h');
 const JWTMIDDLEWARE = jwtHandler.getMiddleware();

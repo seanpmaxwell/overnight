@@ -4,8 +4,12 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
+let Server;
 if (process.argv[2] === 'customRouter') {
-    require('./src/CustomRouterServer');
+    Server = require('./src/CustomRouterServer');
 } else {
-    require('./src/NormalRouterServer');
+    Server = require('./src/NormalRouterServer');
 }
+
+let server = new Server();
+server.start(3000);

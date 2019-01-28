@@ -30,8 +30,4 @@ class CustomRouterServer extends Server {
     }
 }
 
-
-(() => {
-    let server = new CustomRouterServer();
-    server.start();
-})();
+module.exports = CustomRouterServer;

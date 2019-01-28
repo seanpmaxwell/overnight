@@ -4,7 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { jwt, jwtmiddleware, JwtHandler, SecureRequest } from '@overnightjs/jwt';
+import { jwt, jwtmiddleware, JwtHandler, SecureRequest } from '@overnightjs/jwt'
 import { Controller, Middleware, Get } from '@overnightjs/core';
 import { Request, Response } from 'express';
 import ParentController from './ParentController';

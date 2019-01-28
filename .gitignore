@@ -13,5 +13,5 @@
 
 # Transpiled files
 **/src/**/*.js
-**/src/**/*.map
+**/src/**/*.js.map
 **/lib/**/*.d.ts

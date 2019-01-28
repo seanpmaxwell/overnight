@@ -3,6 +3,7 @@
 
 # ignore dev files
 lib/**/*.ts
+lib/**/*.js.map
 
 # not needed npm stuff
 package-lock.json

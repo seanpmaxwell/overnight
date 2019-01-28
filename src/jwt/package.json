@@ -1,6 +1,6 @@
 {
   "name": "@overnightjs/jwt",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Json Web Token manger for ExpressJS",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",

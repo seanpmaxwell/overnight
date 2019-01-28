@@ -279,7 +279,7 @@ export class PostController {
  */
 
 import * as customRouter  from 'express-promise-router';
-import { Server }         from '@overnightjs/core';
+import { Server } from '@overnightjs/core';
 import { PostController } from './controllers/PostController';
 
 

@@ -97,6 +97,7 @@ export class UserController {
     // async/await work normally :)
     @Get('practice/async')
     private async getWithAsync(req: Request, res: Response): Promise<void> {
+        
         let msg;
 
         try {

@@ -33,7 +33,7 @@ You can get the latest release using npm:
 
 ```batch
 $ npm install --save @overnightjs/jwt express 
-$ npm install --save-dev @types/express
+$ npm install --save-dev @types/express @types/express-jwt
 ```
 
 <br>

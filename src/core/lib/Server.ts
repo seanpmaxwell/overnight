@@ -73,15 +73,11 @@ export class Server {
 
         let router = RouterLib();
 
-
         for (let member in controller) {
 
-            let { overnightRouteProperties } = (controller)[member];
+            if ((controller)[member] && (controller)[member].overnightRouteProperties) {
 
-
-            if (overnightRouteProperties) {
-
-                let { middleware, httpVerb, path } = overnightRouteProperties;
+                let { middleware, httpVerb, path } = (controller)[member].overnightRouteProperties;
 
                 let callBack = (req: Request, res: Response, next: NextFunction) => {
                     return (controller)[member](req, res, next);

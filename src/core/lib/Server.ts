@@ -88,8 +88,14 @@ export class Server {
         const filter = (fileName: string) => {
 
             const parts = fileName.split('.');
-            if (parts[1] === 'test') return;
-            return parts[0];
+
+            if (parts[1] === 'test') {
+                return;
+            } else if (parts[0].includes('Controller')) {
+                parts[0];
+            } else {
+                return;
+            }
         };
 
         const resolve = (ctlr: Controller) => {

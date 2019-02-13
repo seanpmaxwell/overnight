@@ -48,6 +48,7 @@ export class Server {
 
         let ctlrInstances: ControllerInstance[] = [];
 
+        // Convert to array if single controller
         if (controllers instanceof Array) {
             ctlrInstances = controllers;
         } else {
@@ -57,6 +58,7 @@ export class Server {
         let count = 0;
         let routerLib = customRouterLib || Router;
 
+        // Init route in each controller
         ctlrInstances.forEach(controller => {
             if (controller && controller.controllerBasePath) {
                 let router = this._getRouter(controller, routerLib);
@@ -65,6 +67,7 @@ export class Server {
             }
         });
 
+        // Print number of controller configured
         let s = count === 1 ? '' : 's';
         console.log(count +  ` controller${s} configured.`);
     }

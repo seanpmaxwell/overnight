@@ -4,7 +4,6 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as fileSys from 'fs';
 import * as express from 'express';
 import { Application, Request, Response, NextFunction, Router } from 'express';
 
@@ -44,19 +43,15 @@ export class Server {
      * search that directory instead. If it is an instance-object or array instance-objects,
      * don't pull in the controllers automatically.
      */
-    protected addControllers(controllersOrDir?: string | ControllerInstance | ControllerInstance[],
+    protected addControllers(controllers: ControllerInstance | ControllerInstance[],
                              customRouterLib?: Function): void {
 
         let ctlrInstances: ControllerInstance[] = [];
 
-        if (!controllersOrDir) {
-            ctlrInstances = this._findAndInitCtlrs('controllers');
-        } else if (typeof controllersOrDir === 'string') {
-            ctlrInstances = this._findAndInitCtlrs(controllersOrDir);
-        } else if (!(controllersOrDir instanceof Array)) {
-            ctlrInstances.push(controllersOrDir);
-        } else if (controllersOrDir instanceof Array) {
-            ctlrInstances = controllersOrDir;
+        if (controllers instanceof Array) {
+            ctlrInstances = controllers;
+        } else {
+            ctlrInstances.push(controllers);
         }
 
         let count = 0;
@@ -75,39 +70,9 @@ export class Server {
     }
 
 
-    private _findAndInitCtlrs(ctlrDir: string): ControllerInstance[] {
-
-        const currDir = process.argv[1];
-        const dirs = currDir.split('/');
-        const dirname = currDir.replace(dirs[dirs.length-1], ctlrDir);
-
-        let indexFile;
-        const retVal: ControllerInstance[] = [];
-
-        if (fileSys.existsSync(dirname + '/index.ts')) {
-            indexFile = require(dirname);
-        } else {
-            console.error('\'index.ts\' file was not found in the directory: ' + ctlrDir);
-            return [];
-        }
-
-        for (const member in indexFile) {
-            if (indexFile.hasOwnProperty(member) && (typeof indexFile[member] === 'function')) {
-                const ctlrInstance = new indexFile[member]();
-                if (ctlrInstance.controllerBasePath) {
-                    retVal.push(ctlrInstance);
-                }
-            }
-        }
-
-        return retVal;
-    }
-
-
     private _getRouter(controller: ControllerInstance, RouterLib: Function): Router {
 
         let router = RouterLib();
-
 
         for (let member in controller) {
 

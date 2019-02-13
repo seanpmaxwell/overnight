@@ -122,13 +122,8 @@ initializing all of your controller routes.
 <br>
 
 `super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
-call it after setting up your middleware. If no arguments are passed, it will look for a controllers/
-directory at the same path of your server file and try to import everything which is exported in
-controllers/index.ts. If you keep your controllers in a folder in a directory named something other
-than "controllers", you can pass in a string and overnight will look for the controllers in that
-directory instead. Now there's a chance you might want import all your controllers manually and do
-something to them (i.e. attach a db connection object) before adding them to express. In this case
-you can pass `super.addControllers()` a single controller instance or an array of controller instances.
+call it after setting up your middleware. You can pass `super.addControllers()` a single controller 
+instance or an array of controller instances.
 <br>
 
 ```typescript
@@ -167,15 +162,8 @@ export class SampleServer extends Server {
 
         // This must be called, and can be passed a single controller or an 
         // array of controllers. Optional router object can also be passed 
-        // as second argument. If no controllers are passed overnight will
-        // import controllers from "controller dir"/index.ts.
+        // as second argument.
         super.addControllers([userController, signupController]);
-        
-        // **OR**
-        // super.addControllers();            // must have controllers/index.ts
-        // super.addControllers('customDir'); // must have customDir/index.ts
-        // super.addControllers(userController); 
-        // super.addControllers('any of the above or null', custom_router_object); 
     }
 
     public start(port: number): void {
@@ -186,8 +174,8 @@ export class SampleServer extends Server {
     }
 }
 ```
-
 <br>
+
 
 #### See how awesome this is!
 Without the above decorators we would have to wrap each controller method with something like:

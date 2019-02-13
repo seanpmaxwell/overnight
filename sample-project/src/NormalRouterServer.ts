@@ -16,32 +16,25 @@ class NormalRouterServer extends Server {
     private readonly _START_MSG = 'overnightjs with standard express router started on port:';
 
 
-    constructor(setupCtlrsMethod?: string) {
+    constructor() {
         super();
 
         // Setup JSON parse middleware
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
 
-        // Setup Controllers
-        if (!setupCtlrsMethod || setupCtlrsMethod === 'auto' ) {
-            super.addControllers();
-        } else if (setupCtlrsMethod === 'manual') {
-            this.setupControllersManually();
-        } else if (setupCtlrsMethod === 'dir') {
-            super.addControllers('controllers');
-        }
+        this.setupControllers();
     }
 
 
-    private setupControllersManually(): void {
+    private setupControllers(): void {
 
+        const ctlrs: any = {...controllers};
         const ctlrInstances = [];
 
-        for (const ctrlName in controllers) {
-            if (controllers.hasOwnProperty(ctrlName)) {
-                const Controller = (controllers as any)[ctrlName];
-                ctlrInstances.push(new Controller());
+        for (const name in ctlrs) {
+            if (controllers.hasOwnProperty(name) && typeof ctlrs[name] === 'function') {
+                ctlrInstances.push(new ctlrs[name]());
             }
         }
 

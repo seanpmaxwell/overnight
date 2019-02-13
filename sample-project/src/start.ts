@@ -12,7 +12,7 @@ let server;
 if (process.argv[2] === 'customRouter') {
     server = new CustomRouterServer();
 } else {
-    server = new NormalRouterServer(process.argv[2]);
+    server = new NormalRouterServer();
 }
 
 server.start(3000);

@@ -113,20 +113,23 @@ export class UserController {
 ```
 
 #### Import your controller into the server
-
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
-object is accessed using `this.app`, which is a readonly class variable. You can interact 
+object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`. 
 The reason the controllers are not imported and setup for you automatically is the server is meant to 
 be a place where you hook everything together. Suppose for example that you want to add the same database 
 connection instance to several of your controllers at once. This setup let's you do that before 
-initializing all of your controller routes. `super.addControllers(ctrlsArr)` must be called to enable 
-all of the routes in your controller. If you don't want to have to import each of your controller objects 
-individually, you could do something like `import * as controllers from './controllers/export.ts` and 
-export all your classes at once in that file. Then you could loop through all your controllers in the 
-server file and make the same modifications to each controller. The sample application of the main
-master repository contains an example of this. 
+initializing all of your controller routes.
+<br>
 
+`super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
+call it after setting up your middleware. If no arguments are passed, it will look for a controllers/
+directory at the same path of your server file and try to import everything which is exported in
+controllers/index.ts. If you keep your controllers in a folder in a directory named something other
+than "controllers", you can pass in a string and overnight will look for the controllers in that
+directory instead. Now there's a chance you might want import all your controllers manually and do
+something to them (i.e. attach a db connection object) before adding them to express. In this case
+you can pass `super.addControllers()` a single controller instance or an array of controller instances.
 <br>
 
 ```typescript
@@ -143,14 +146,7 @@ export class SampleServer extends Server {
         super();
         
         this.setupExpress();
-        let ctrlsArr = this.setupControllers();
-        
-        // This must be called, and can be 
-        // passed a single controller or an 
-        // array of controllers. Optional router
-        // object can also be passed as second 
-        // argument.
-        super.addControllers(ctrlsArr);
+        this.setupControllers();
     }
 
     private setupExpress(): void {
@@ -170,7 +166,17 @@ export class SampleServer extends Server {
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
 
-        return [userController, signupController];
+        // This must be called, and can be passed a single controller or an 
+        // array of controllers. Optional router object can also be passed 
+        // as second argument. If no controllers are passed overnight will
+        // import controllers from "controller dir"/index.ts.
+        super.addControllers([userController, signupController]);
+        
+        // **OR**
+        // super.addControllers();            // must have controllers/index.ts
+        // super.addControllers('customDir'); // must have customDir/index.ts
+        // super.addControllers(userController);
+        // super.addControllers('any of the above or null', custom_router_object); 
     }
 
     public start(port: number): void {
@@ -180,10 +186,9 @@ export class SampleServer extends Server {
         })
     }
 }
-
 ```
-
 <br>
+
 
 #### See how awesome this is!
 

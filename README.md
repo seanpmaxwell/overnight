@@ -6,7 +6,6 @@
  
 
 ## What is it
-
 OvernightJS is a clean simple library to add TypeScript decorators for methods meant to call Express routes. It also
 includes a library for managing json-web-tokens. 
 
@@ -23,7 +22,6 @@ includes a library for managing json-web-tokens.
 
 
 ## Why OvernightJS
-
 OvernightJS isn't meant to be a replacement for Express. If you're already somewhat familiar with ExpressJS, you can
 learn Overnight in about 10 minutes. There are some other frameworks which do add decorators for Express such as NestJS
 and TsExpressDecorators, but these are massive frameworks with entire websites dedicated to their documentation. OvernightJS
@@ -32,7 +30,6 @@ application.
 
 
 ## Table of Contents
-
 * [OvernightJS/core](#overnight-core)
 * [Custom Router](#custom-router)
 * [OvernightJS/jwt](#overnight-jwt)
@@ -41,7 +38,6 @@ application.
 
 
 ## Installation
-
 You can get the latest release using npm:
 
 ```batch
@@ -116,20 +112,23 @@ export class UserController {
 ```
 
 #### Import your controller into the server
-
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
 object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`. 
 The reason the controllers are not imported and setup for you automatically is the server is meant to 
 be a place where you hook everything together. Suppose for example that you want to add the same database 
 connection instance to several of your controllers at once. This setup let's you do that before 
-initializing all of your controller routes. `super.addControllers(ctrlsArr)` must be called to enable 
-all of the routes in your controller. If you don't want to have to import each of your controller objects 
-individually, you could do something like `import * as controllers from './controllers/export.ts` and 
-export all your classes at once in that file. Then you could loop through all your controllers in the 
-server file and make the same modifications to each controller. The sample application of the main
-master repository contains an example of this. 
+initializing all of your controller routes.
+<br>
 
+`super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
+call it after setting up your middleware. If no arguments are passed, it will look for a controllers/
+directory at the same path of your server file and try to import everything which is exported in
+controllers/index.ts. If you keep your controllers in a folder in a directory named something other
+than "controllers", you can pass in a string and overnight will look for the controllers in that
+directory instead. Now there's a chance you might want import all your controllers manually and do
+something to them (i.e. attach a db connection object) before adding them to express. In this case
+you can pass `super.addControllers()` a single controller instance or an array of controller instances.
 <br>
 
 ```typescript
@@ -146,14 +145,7 @@ export class SampleServer extends Server {
         super();
         
         this.setupExpress();
-        let ctrlsArr = this.setupControllers();
-        
-        // This must be called, and can be 
-        // passed a single controller or an 
-        // array of controllers. Optional router
-        // object can also be passed as second 
-        // argument.
-        super.addControllers(ctrlsArr);
+        this.setupControllers();
     }
 
     private setupExpress(): void {
@@ -173,7 +165,17 @@ export class SampleServer extends Server {
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
 
-        return [userController, signupController];
+        // This must be called, and can be passed a single controller or an 
+        // array of controllers. Optional router object can also be passed 
+        // as second argument. If no controllers are passed overnight will
+        // import controllers from "controller dir"/index.ts.
+        super.addControllers([userController, signupController]);
+        
+        // **OR**
+        // super.addControllers();            // must have controllers/index.ts
+        // super.addControllers('customDir'); // must have customDir/index.ts
+        // super.addControllers(userController); 
+        // super.addControllers('any of the above or null', custom_router_object); 
     }
 
     public start(port: number): void {
@@ -183,13 +185,11 @@ export class SampleServer extends Server {
         })
     }
 }
-
 ```
 
 <br>
 
 #### See how awesome this is!
-
 Without the above decorators we would have to wrap each controller method with something like:
 
 ```typescript
@@ -222,7 +222,6 @@ This would get really tedious overtime and lead to a lot of boiler plate code.
 
 
 ## <a name="custom-router"></a> Using a Custom Router
-
 Suppose you don't want to use the built in "Router" object which is provided by express. Maybe you
 don't like using async/await or having to call `.catch()` if you're not using try/catch blocks. Maybe
 you're using a library like _express-promise-router_ to handle the route callbacks. OvernightJS allows
@@ -311,7 +310,6 @@ export class CustomRouterServer extends Server {
 ## <a name="overnight-jwt"></a> OvernightJS/jwt
 
 ## What is it
-
 This is an easy tool for removing boilerplate code around json-web-tokens (jwt). You can get your token
 strings and middleware with just one line of code. @overnightJS/core is a sister library to add 
 TypeScript decorators for methods meant to call Express routes. @overnightjs/jwt does not require
@@ -333,7 +331,6 @@ your code instead of the environment variables.
 
 
 ## Installation
-
 You can get the latest release using npm:
 
 ```batch

@@ -4,8 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-// @ts-ignore
-import * as requireAll from 'require-all';
+import * as fileSys from 'fs';
 import * as express from 'express';
 import { Application, Request, Response, NextFunction, Router } from 'express';
 
@@ -82,21 +81,25 @@ export class Server {
         const dirs = currDir.split('/');
         const dirname = currDir.replace(dirs[dirs.length-1], ctlrDir);
 
+        let indexFile;
         const retVal: ControllerInstance[] = [];
 
-        const resolve = (file: {[key: string]: any}) => {
+        if (fileSys.existsSync(dirname + '/index.ts')) {
+            indexFile = require(dirname);
+        } else {
+            console.error('\'index.ts\' file was not found in the directory: ' + ctlrDir);
+            return [];
+        }
 
-            for (const member in file) {
-                if (file.hasOwnProperty(member) && (typeof file[member] === 'function')) {
-                    const ctlrInstance = new file[member]();
-                    if (ctlrInstance.controllerBasePath) {
-                        retVal.push(ctlrInstance);
-                    }
+        for (const member in indexFile) {
+            if (indexFile.hasOwnProperty(member) && (typeof indexFile[member] === 'function')) {
+                const ctlrInstance = new indexFile[member]();
+                if (ctlrInstance.controllerBasePath) {
+                    retVal.push(ctlrInstance);
                 }
             }
-        };
+        }
 
-        requireAll({dirname, resolve, recursive: true});
         return retVal;
     }
 
@@ -109,7 +112,6 @@ export class Server {
         for (let member in controller) {
 
             let route = (controller)[member] as OvernightRoute;
-
 
             if (route && route.overnightRouteProperties) {
 

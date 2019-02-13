@@ -36,3 +36,5 @@ export class SignupController {
         }
     }
 }
+
+export const someOtherVal = 'foo';

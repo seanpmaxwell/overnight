@@ -18,7 +18,7 @@ interface OvernightRoute {
 
 interface Controller {
     new (...args: any[]): {};
-    controllerBasePath?: string;
+    [key: string]: Function;
 }
 
 interface ControllerInstance {
@@ -80,51 +80,26 @@ export class Server {
 
     private _findAndInitCtlrs(ctlrDir: string): ControllerInstance[] {
 
-        const dirs = process.argv[1].split('/');
-        let dirname = process.argv[1];
-        dirname = dirname.replace(dirs[dirs.length-1], ctlrDir);
-        console.log(dirname);
-
-        // const filter = (fileName: string) => {
-        //
-        //     const parts = fileName.split('.');
-        //
-        //     if (parts[1] === 'test') {
-        //         return;
-        //     } else if (parts[0].includes('Controller')) { // figure how to diff with js
-        //         console.log(parts[0]);
-        //         return parts[0];
-        //     } else {
-        //         return;
-        //     }
-        // };
+        const currDir = process.argv[1];
+        const dirs = currDir.split('/');
+        const dirname = currDir.replace(dirs[dirs.length-1], ctlrDir);
 
         const retVal: any = [];
 
-        const resolve = (ctlr: any) => {
-            console.log(ctlr);
-            for (const member in ctlr) {
-                if (ctlr.hasOwnProperty(member && ctlr[member].controllerBasePath)) {
-                    retVal.push(new ctlr[member]());
+        const resolve = (file: any) => {
+
+            for (const member in file) {
+                if (file.hasOwnProperty(member) && (typeof file[member] === 'function')) {
+                    const ctlrInstance = new file[member]();
+                    if (ctlrInstance.controllerBasePath) {
+                        retVal.push(ctlrInstance);
+                    }
                 }
             }
         };
 
-        requireAll({ // maybe just require all, don't need to return value
-            dirname,
-            resolve,
-            recursive: true
-        });
-
-        // const retVal: any = [];
-        //
-        // Object.keys(controllers).forEach(key => {
-        //     if (controllers[key] && controllers[key].controllerBasePath) {
-        //         retVal.push(controllers[key]);
-        //     }
-        // });
-        //
-        // return retVal;
+        requireAll({dirname, resolve, recursive: true});
+        return retVal;
     }
 
 
@@ -135,6 +110,7 @@ export class Server {
         for (let member in controller) {
 
             let route = (controller)[member] as OvernightRoute;
+
 
             if (route && route.overnightRouteProperties) {
 

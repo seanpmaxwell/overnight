@@ -5,7 +5,7 @@
  */
 
 import * as bodyParser from 'body-parser';
-import * as controllers from './controllers/controllers';
+import * as controllers from './ctlrExport';
 
 import { Server } from '@overnightjs/core';
 import { cimp } from 'simple-color-print';

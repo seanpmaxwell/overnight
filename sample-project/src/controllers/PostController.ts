@@ -8,11 +8,10 @@
 
 import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
-import ParentController from './ParentController';
 
 
 @Controller('api/posts')
-class PostController extends ParentController {
+class PostController {
 
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {

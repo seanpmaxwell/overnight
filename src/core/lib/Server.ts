@@ -4,12 +4,10 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as express from 'express';
-import { Application, Request, Response, NextFunction, Router } from 'express';
-
 // @ts-ignore
 import * as requireAll from 'require-all';
-
+import * as express from 'express';
+import { Application, Request, Response, NextFunction, Router } from 'express';
 
 
 interface OvernightRoute {
@@ -19,6 +17,7 @@ interface OvernightRoute {
 
 interface ControllerInstance {
     [key: string]: any;
+    controllerBasePath?: string;
 }
 
 export class Server {
@@ -49,7 +48,7 @@ export class Server {
     protected addControllers(controllersOrDir?: string | ControllerInstance | ControllerInstance[],
                              customRouterLib?: Function): void {
 
-        let ctlrInstances = [];
+        let ctlrInstances: ControllerInstance[] = [];
 
         if (!controllersOrDir) {
             ctlrInstances = this._findAndInitCtlrs('controllers');
@@ -57,15 +56,19 @@ export class Server {
             ctlrInstances = this._findAndInitCtlrs(controllersOrDir);
         } else if (!(controllersOrDir instanceof Array)) {
             ctlrInstances.push(controllersOrDir);
+        } else if (controllersOrDir instanceof Array) {
+            ctlrInstances = controllersOrDir;
         }
 
         let count = 0;
         let routerLib = customRouterLib || Router;
 
         ctlrInstances.forEach(controller => {
-            let router = this._getRouter(controller, routerLib);
-            this.app.use(controller.controllerBasePath, router);
-            count++;
+            if (controller && controller.controllerBasePath) {
+                let router = this._getRouter(controller, routerLib);
+                this.app.use(controller.controllerBasePath, router);
+                count++;
+            }
         });
 
         let s = count === 1 ? '' : 's';
@@ -79,9 +82,9 @@ export class Server {
         const dirs = currDir.split('/');
         const dirname = currDir.replace(dirs[dirs.length-1], ctlrDir);
 
-        const retVal: any = [];
+        const retVal: ControllerInstance[] = [];
 
-        const resolve = (file: any) => {
+        const resolve = (file: {[key: string]: any}) => {
 
             for (const member in file) {
                 if (file.hasOwnProperty(member) && (typeof file[member] === 'function')) {
@@ -98,9 +101,10 @@ export class Server {
     }
 
 
-    private _getRouter(controller: any, RouterLib: Function): Router {
+    private _getRouter(controller: ControllerInstance, RouterLib: Function): Router {
 
         let router = RouterLib();
+
 
         for (let member in controller) {
 

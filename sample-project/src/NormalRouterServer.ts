@@ -6,17 +6,9 @@
 
 import * as bodyParser from 'body-parser';
 import * as controllers from './ctlrExport';
-
 import { Server } from '@overnightjs/core';
 import { cimp } from 'simple-color-print';
 
-import ParentController from './controllers/ParentController';
-import MailPromise from 'mail-promise';
-
-
-type Controllers = {
-    [ctrlName: string]: typeof ParentController
-};
 
 class NormalRouterServer extends Server {
 
@@ -28,10 +20,10 @@ class NormalRouterServer extends Server {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
 
-        // Setup APIs
+        // Setup Controllers
         if (!setupCtlrsMethod || setupCtlrsMethod === 'auto' ) {
             super.addControllers();
-        } else if (setupCtlrsMethod === 'manually') {
+        } else if (setupCtlrsMethod === 'manual') {
             this.setupControllersManually();
         } else if (setupCtlrsMethod === 'dir') {
             super.addControllers('controllers');
@@ -41,17 +33,12 @@ class NormalRouterServer extends Server {
 
     private setupControllersManually(): void {
 
-        let mailer = new MailPromise();
-        let ctlrInstances = [];
+        const ctlrInstances = [];
 
-        for (let ctrlName in controllers) {
+        for (const ctrlName in controllers) {
             if (controllers.hasOwnProperty(ctrlName)) {
-
-                let Controller = (<Controllers>controllers)[ctrlName];
-                let controller = new Controller();
-
-                controller.setMailer(mailer);
-                ctlrInstances.push(controller);
+                const Controller = (controllers as any)[ctrlName];
+                ctlrInstances.push(new Controller());
             }
         }
 

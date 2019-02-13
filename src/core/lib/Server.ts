@@ -85,36 +85,42 @@ export class Server {
         dirname = dirname.replace(dirs[dirs.length-1], ctlrDir);
         console.log(dirname);
 
-        const filter = (fileName: string) => {
+        // const filter = (fileName: string) => {
+        //
+        //     const parts = fileName.split('.');
+        //
+        //     if (parts[1] === 'test') {
+        //         return;
+        //     } else if (parts[0].includes('Controller')) { // figure how to diff with js
+        //         console.log(parts[0]);
+        //         return parts[0];
+        //     } else {
+        //         return;
+        //     }
+        // };
 
-            const parts = fileName.split('.');
-
-            if (parts[1] === 'test') {
-                return;
-            } else if (parts[0].includes('Controller')) {
-                parts[0];
-            } else {
-                return;
-            }
-        };
-
-        const resolve = (ctlr: Controller) => {
-
-            if (ctlr && ctlr.controllerBasePath) {
+        const resolve = (ctlr: any) => {
+            console.log(ctlr);
+            if (ctlr && ctlr.'name'.controllerBasePath) { // pick up here, need to recursively iterate through each files exports
                 return new ctlr();
             }
         };
 
-        let controllers = requireAll({
+        const controllers = requireAll({
             dirname,
-            filter,
             resolve,
             recursive: true
         });
 
-        return Object.keys(controllers).map(key => {
-            return controllers[key];
+        const retVal: any = [];
+
+        Object.keys(controllers).forEach(key => {
+            if (controllers[key] && controllers[key].controllerBasePath) {
+                retVal.push(controllers[key]);
+            }
         });
+
+        return retVal;
     }
 
 

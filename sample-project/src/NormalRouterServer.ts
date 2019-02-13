@@ -21,7 +21,7 @@ type Controllers = {
 class NormalRouterServer extends Server {
 
 
-    constructor() {
+    constructor(setupCtlrsMethod?: string) {
         super();
 
         // Setup JSON parse middleware
@@ -29,11 +29,17 @@ class NormalRouterServer extends Server {
         this.app.use(bodyParser.urlencoded({extended: true}));
 
         // Setup APIs
-        this.setupControllers();
+        if (!setupCtlrsMethod || setupCtlrsMethod === 'auto' ) {
+            super.addControllers();
+        } else if (setupCtlrsMethod === 'manually') {
+            this.setupControllersManually();
+        } else if (setupCtlrsMethod === 'dir') {
+            super.addControllers('controllers');
+        }
     }
 
 
-    private setupControllers(): void {
+    private setupControllersManually(): void {
 
         let mailer = new MailPromise();
         let ctlrInstances = [];
@@ -67,4 +73,4 @@ class NormalRouterServer extends Server {
     }
 }
 
-module.exports = NormalRouterServer;
+export default NormalRouterServer;

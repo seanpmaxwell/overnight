@@ -18,8 +18,8 @@
   },
   "scripts": {
     "test": "none",
-    "start": "node -r tsconfig-paths/register start.js",
-    "start2": "node -r tsconfig-paths/register start.js customRouter"
+    "start": "node -r tsconfig-paths/register ./src/start.js",
+    "start2": "node -r tsconfig-paths/register ./src/start.js customRouter"
   },
   "repository": {
     "type": "git",

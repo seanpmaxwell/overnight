@@ -30,4 +30,4 @@ class CustomRouterServer extends Server {
     }
 }
 
-module.exports = CustomRouterServer;
+export default CustomRouterServer;

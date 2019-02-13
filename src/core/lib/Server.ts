@@ -7,17 +7,27 @@
 import * as express from 'express';
 import { Application, Request, Response, NextFunction, Router } from 'express';
 
+// @ts-ignore
+import * as requireAll from 'require-all';
+
+
+interface OvernightRoute {
+    (...args: any[]): any;
+    overnightRouteProperties: any;
+}
 
 interface Controller {
+    new (...args: any[]): {};
     controllerBasePath?: string;
+}
+
+interface ControllerInstance {
     [key: string]: any;
 }
 
 
 export class Server {
 
-    private readonly _NOT_CTLR_ERR = 'Value passed was not a controller. Please make sure to ' +
-        'use a TypeScript class with the @Controller decorator';
     private readonly _APP: Application;
 
 
@@ -31,56 +41,91 @@ export class Server {
     }
 
 
+
     /***********************************************************************************************
      *                                      Setup Controllers
      **********************************************************************************************/
 
-    protected addControllers<T extends object>(controllers: T | Array<T>, customRouterLib?: Function): void {
+    /**
+     * If controllers === undefined, search the './controllers' directory. If it is a string,
+     * search that directory instead. If it is an instance-object or array instance-objects,
+     * don't pull in the controllers automatically.
+     */
+    protected addControllers(controllersOrDir?: string | ControllerInstance | ControllerInstance[],
+                             customRouterLib?: Function): void {
+
+        let ctlrInstances = [];
+
+        if (!controllersOrDir) {
+            ctlrInstances = this._findAndInitCtlrs('controllers');
+        } else if (typeof controllersOrDir === 'string') {
+            ctlrInstances = this._findAndInitCtlrs(controllersOrDir);
+        } else if (!(controllersOrDir instanceof Array)) {
+            ctlrInstances.push(controllersOrDir);
+        }
 
         let count = 0;
-        let routerLib = customRouterLib || express.Router;
+        let routerLib = customRouterLib || Router;
 
-        if (controllers instanceof Array) {
-            controllers.forEach(controller => {
-                this._applyRouterObj(controller, routerLib);
-                count++;
-            })
-        } else {
-            this._applyRouterObj(controllers, routerLib);
-            count = 1;
-        }
+        ctlrInstances.forEach(controller => {
+            let router = this._getRouter(controller, routerLib);
+            this.app.use(controller.controllerBasePath, router);
+            count++;
+        });
 
         let s = count === 1 ? '' : 's';
         console.log(count +  ` controller${s} configured.`);
     }
 
 
-    private _applyRouterObj(controller: Controller, routerLib: Function): void {
+    private _findAndInitCtlrs(ctlrDir: string): ControllerInstance[] {
 
-        if (!controller.controllerBasePath) {
-            if (controller.hasOwnProperty('name')) {
-                console.error(`Object with name ${controller.name} does not have the basePath property`)
+        const dirs = process.argv[1].split('/');
+        let dirname = process.argv[1];
+        dirname = dirname.replace(dirs[dirs.length-1], ctlrDir);
+        console.log(dirname);
+
+        const filter = (fileName: string) => {
+
+            const parts = fileName.split('.');
+            if (parts[1] === 'test') return;
+            return parts[0];
+        };
+
+        const resolve = (ctlr: Controller) => {
+
+            if (ctlr && ctlr.controllerBasePath) {
+                return new ctlr();
             }
-            throw Error(this._NOT_CTLR_ERR);
-        }
+        };
 
-        let router = this._getRouter(controller, routerLib);
-        this.app.use(controller.controllerBasePath, router);
+        let controllers = requireAll({
+            dirname,
+            filter,
+            resolve,
+            recursive: true
+        });
+
+        return Object.keys(controllers).map(key => {
+            return controllers[key];
+        });
     }
 
 
-    private _getRouter(controller: Controller, RouterLib: Function): Router {
+    private _getRouter(controller: any, RouterLib: Function): Router {
 
         let router = RouterLib();
 
         for (let member in controller) {
 
-            if ((controller)[member] && (controller)[member].overnightRouteProperties) {
+            let route = (controller)[member] as OvernightRoute;
 
-                let { middleware, httpVerb, path } = (controller)[member].overnightRouteProperties;
+            if (route && route.overnightRouteProperties) {
+
+                let { middleware, httpVerb, path } = route.overnightRouteProperties;
 
                 let callBack = (req: Request, res: Response, next: NextFunction) => {
-                    return (controller)[member](req, res, next);
+                    return ((controller)[member] as OvernightRoute)(req, res, next);
                 };
 
                 if (middleware) {

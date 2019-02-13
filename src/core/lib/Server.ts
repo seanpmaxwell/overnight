@@ -11,20 +11,15 @@ import { Application, Request, Response, NextFunction, Router } from 'express';
 import * as requireAll from 'require-all';
 
 
+
 interface OvernightRoute {
     (...args: any[]): any;
     overnightRouteProperties: any;
 }
 
-interface Controller {
-    new (...args: any[]): {};
-    [key: string]: Function;
-}
-
 interface ControllerInstance {
     [key: string]: any;
 }
-
 
 export class Server {
 

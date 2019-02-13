@@ -99,28 +99,32 @@ export class Server {
         //     }
         // };
 
+        const retVal: any = [];
+
         const resolve = (ctlr: any) => {
             console.log(ctlr);
-            if (ctlr && ctlr.'name'.controllerBasePath) { // pick up here, need to recursively iterate through each files exports
-                return new ctlr();
+            for (const member in ctlr) {
+                if (ctlr.hasOwnProperty(member && ctlr[member].controllerBasePath)) {
+                    retVal.push(new ctlr[member]());
+                }
             }
         };
 
-        const controllers = requireAll({
+        requireAll({ // maybe just require all, don't need to return value
             dirname,
             resolve,
             recursive: true
         });
 
-        const retVal: any = [];
-
-        Object.keys(controllers).forEach(key => {
-            if (controllers[key] && controllers[key].controllerBasePath) {
-                retVal.push(controllers[key]);
-            }
-        });
-
-        return retVal;
+        // const retVal: any = [];
+        //
+        // Object.keys(controllers).forEach(key => {
+        //     if (controllers[key] && controllers[key].controllerBasePath) {
+        //         retVal.push(controllers[key]);
+        //     }
+        // });
+        //
+        // return retVal;
     }
 
 

@@ -29,25 +29,22 @@ class NormalRouterServer extends Server {
 
     private setupControllers(): void {
 
-        const ctlrs: any = {...controllers};
-        const ctlrInstances = [];
+        const controllerInstances = [];
 
-        for (const name in ctlrs) {
-            if (controllers.hasOwnProperty(name) && typeof ctlrs[name] === 'function') {
-                ctlrInstances.push(new ctlrs[name]());
+        for (const name in controllers) {
+            const Controller = (controllers as any)[name];
+            if (controllers.hasOwnProperty(name) && typeof Controller === 'function') {
+                controllerInstances.push(new Controller());
             }
         }
 
-        super.addControllers(ctlrInstances);
+        super.addControllers(controllerInstances);
     }
 
 
     public start(port?: number): void {
-
         port = port || 3000;
-
         this.app.get('*', (req, res) => res.send(this._FRONT_END_MSG));
-
         this.app.listen(port, () => cimp(this._START_MSG + port));
     }
 }

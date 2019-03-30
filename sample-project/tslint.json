@@ -1,0 +1,68 @@
+{
+  "rulesDirectory": [
+    "node_modules/tslint-lines-between-class-members"
+  ],
+  "rules": {
+    "class-name": true,
+    "curly": true,
+    "eofline": true,
+    "forin": true,
+    "indent": [true, "spaces", 4],
+    "label-position": true,
+    "label-undefined": true,
+    "max-line-length": [true, 100],
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-console": true,
+    "no-construct": true,
+    "no-debugger": true,
+    "no-duplicate-key": true,
+    "no-duplicate-variable": true,
+    "no-empty": true,
+    "no-eval": true,
+    "no-string-literal": true,
+    "no-string-throw": true,
+    "no-switch-case-fall-through": true,
+    "no-trailing-whitespace": true,
+    "no-unused-expression": true,
+    "no-unused-variable": true,
+    "no-unreachable": true,
+    "no-use-before-declare": true,
+    "no-var-requires": true,
+    "one-line": [
+      true,
+      "check-open-brace",
+      "check-catch",
+      "check-else",
+      "check-whitespace"
+    ],
+    "quotemark": [true, "single"],
+    "semicolon": [true, "always"],
+    "triple-equals": [true, "allow-null-check"],
+    "typedef": [
+      true,
+      "callSignature",
+      "indexSignature",
+      "parameter",
+      "propertySignature",
+      "variableDeclarator",
+      "memberVariableDeclarator"
+    ],
+    "use-strict": true,
+    "variable-name": [
+      true,
+      "allow-leading-underscore",
+      "allow-trailing-underscore"
+    ],
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-type"
+    ],
+    "prefer-const": true,
+    "lines-between-class-members": [true, 2]
+  }
+}

@@ -13,26 +13,32 @@ import MailPromise from 'mail-promise';
 @Controller('api/signup')
 export class SignupController {
 
-    private _mailer: MailPromise;
+    private readonly mailer: MailPromise;
 
 
     constructor() {
-        this._mailer = new MailPromise();
+        this.mailer = new MailPromise();
     }
 
 
     @Post()
     private async signup(req: Request, res: Response): Promise<void> {
 
+        let msg = 'problem_sending_email';
+        let code = 400;
+
         try {
-            let info = await this._mailer.send(req.body.email, 'Overnight Developers',
+            let info = await this.mailer.send(req.body.email, 'Overnight Developers',
                 'Thanks for signing up', null, '<h1>You are awesome</h1>');
 
             cinfo(info.response);
-            res.status(200).json({msg: 'email_sent_to_' + req.body.email});
+            msg = 'email_sent_to_' + req.body.email;
+            code = 200;
+
         } catch (err) {
             cerr(err);
-            res.status(400).json({msg: 'problem_sending_email'});
+        } finally {
+            res.status(code).json({msg})
         }
     }
 }

@@ -13,23 +13,18 @@ interface OvernightRoute {
     overnightRouteProperties: any;
 }
 
-interface ControllerInstance {
-    [key: string]: any;
-    controllerBasePath?: string;
-}
-
 export class Server {
 
-    private readonly _APP: Application;
+    private readonly _app: Application;
 
 
     constructor() {
-        this._APP = express();
+        this._app = express();
     }
 
 
     protected get app(): Application {
-        return this._APP;
+        return this._app;
     }
 
 
@@ -43,10 +38,10 @@ export class Server {
      * search that directory instead. If it is an instance-object or array instance-objects,
      * don't pull in the controllers automatically.
      */
-    protected addControllers(controllers: ControllerInstance | ControllerInstance[],
+    protected addControllers(controllers: InstanceType<any> | InstanceType<any>[],
                              customRouterLib?: Function): void {
 
-        let ctlrInstances: ControllerInstance[] = [];
+        let ctlrInstances = [];
 
         // Convert to array if single controller
         if (controllers instanceof Array) {
@@ -61,7 +56,7 @@ export class Server {
         // Init route in each controller
         ctlrInstances.forEach(controller => {
             if (controller && controller.controllerBasePath) {
-                let router = this._getRouter(controller, routerLib);
+                let router = this.getRouter(controller, routerLib);
                 this.app.use(controller.controllerBasePath, router);
                 count++;
             }
@@ -73,20 +68,22 @@ export class Server {
     }
 
 
-    private _getRouter(controller: ControllerInstance, RouterLib: Function): Router {
+    private getRouter(controller: InstanceType<any>, RouterLib: Function): Router {
 
         let router = RouterLib();
+
 
         for (let member in controller) {
 
             let route = (controller)[member] as OvernightRoute;
+
 
             if (route && route.overnightRouteProperties) {
 
                 let { middleware, httpVerb, path } = route.overnightRouteProperties;
 
                 let callBack = (req: Request, res: Response, next: NextFunction) => {
-                    return ((controller)[member] as OvernightRoute)(req, res, next);
+                    return controller[member](req, res, next);
                 };
 
                 if (middleware) {

@@ -1,7 +1,7 @@
 {
   "name": "sample-project",
-  "version": "1.0.0",
-  "description": "Show usuage for the OvernightJs library",
+  "version": "2.0.0",
+  "description": "Show usage for the OvernightJs library",
   "main": "none",
   "dependencies": {
     "ejs": "^2.6.1",

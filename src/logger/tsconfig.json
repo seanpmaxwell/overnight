@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "declarationDir": "lib/",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "strictNullChecks": true,
+    "importHelpers": true,
+    "declaration": true,
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "noImplicitAny": false
+  },
+  "include": [
+    "./lib/**/*"
+  ],
+  "exclude": [
+    "core/lib",
+    "dist"
+  ]
+}

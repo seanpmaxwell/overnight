@@ -7,13 +7,12 @@
 import * as bodyParser from 'body-parser';
 import * as controllers from './controllers';
 import { Server } from '@overnightjs/core';
-import { cimp } from 'simple-color-print';
 
 
 class NormalRouterServer extends Server {
 
-    private readonly _FRONT_END_MSG = 'overnightjs with standard express router started';
-    private readonly _START_MSG = 'overnightjs with standard express router started on port:';
+    private readonly FRONT_END_MSG = 'overnightjs with standard express router started';
+    private readonly START_MSG = 'overnightjs with standard express router started on port:';
 
 
     constructor() {
@@ -44,8 +43,8 @@ class NormalRouterServer extends Server {
 
     public start(port?: number): void {
         port = port || 3000;
-        this.app.get('*', (req, res) => res.send(this._FRONT_END_MSG));
-        this.app.listen(port, () => cimp(this._START_MSG + port));
+        this.app.get('*', (req, res) => res.send(this.FRONT_END_MSG));
+        this.app.listen(port, () => cimp(this.START_MSG + port));
     }
 }
 

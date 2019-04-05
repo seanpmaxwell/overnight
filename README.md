@@ -33,6 +33,7 @@ application.
 * [OvernightJS/core](#overnight-core)
 * [Custom Router](#custom-router)
 * [OvernightJS/jwt](#overnight-jwt)
+* [OvernightJS/logger](#overnight-logger)
 
 <br>
 
@@ -181,7 +182,6 @@ export class SampleServer extends Server {
 Without the above decorators we would have to wrap each controller method with something like:
 
 ```typescript
-
 /* In the controller file*/
 public getRoutes(): Router {
     
@@ -201,7 +201,6 @@ public getRoutes(): Router {
 
 this.app.use('/api/users', userController.getRoutes());
 // repeat for every single controller class
-
 ```
 
 This would get really tedious overtime and lead to a lot of boiler plate code.
@@ -290,7 +289,6 @@ export class CustomRouterServer extends Server {
 <br>
 <br>
 <br>
-
 
 
 
@@ -447,7 +445,6 @@ interested in using decorators, you can pass the middleware just the same as you
 Express Router object.
 
 ```javascript
-
 var router = express.Router();
 
 router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
@@ -455,13 +452,20 @@ router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
 })
 
 app.use('api', router); 
-
-``` 
-
+<br>
 <br>
 <br>
 
 
+
+
+## <a name="overnight-logger"></a> OvernightJS/logger
+
+
+
+
+<br>
+<br>
 
 ## That's All!!
 

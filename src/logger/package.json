@@ -1,0 +1,62 @@
+{
+  "name": "@overnightjs/logger",
+  "version": "1.0.0",
+  "description": "Logging service for OvernightJS. Part of the OvernightJS project.",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "colors": "^1.3.3",
+    "util": "^0.11.1"
+  },
+  "devDependencies": {
+    "@types/node": "^11.13.0"
+  },
+  "scripts": {
+    "test": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seanpmaxwell/overnight/tree/master/src/logger"
+  },
+  "keywords": [
+    "overnight",
+    "core",
+    "overnightjs",
+    "typescript",
+    "decorator",
+    "decorators",
+    "routes",
+    "route",
+    "router",
+    "express",
+    "express-ts",
+    "expressjs",
+    "rest",
+    "restful",
+    "simple",
+    "server",
+    "middlware",
+    "options",
+    "controller",
+    "controllers",
+    "api",
+    "framework",
+    "web",
+    "service",
+    "webserver",
+    "services",
+    "back-end",
+    "node",
+    "nodejs",
+    "logging",
+    "logger",
+    "log",
+    "color"
+  ],
+  "author": "Sean Maxwell",
+  "license": "MIT",
+  "homepage": "https://github.com/seanpmaxwell/overnight/#readme"
+}

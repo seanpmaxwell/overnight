@@ -69,23 +69,26 @@ export class Server {
     private getRouter(controller: InstanceType<any>, routerLib: Function): Router {
 
         const router = routerLib();
+        const prototype = controller.__proto__.__proto__;
 
-        for (const member of Object.keys(controller)) {
+        // Iterate each controller-instance's parent function
+        for (const member in prototype) {
+            if (prototype.hasOwnProperty(member)) {
 
-            const route = controller[member];
+                const route = controller[member];
+                if (route && route.overnightRouteProperties) {
 
-            if (route && route.overnightRouteProperties) {
+                    const { middleware, httpVerb, path } = route.overnightRouteProperties;
 
-                const { middleware, httpVerb, path } = route.overnightRouteProperties;
+                    const callBack = (req: Request, res: Response, next: NextFunction) => {
+                        return controller[member](req, res, next);
+                    };
 
-                let callBack = (req: Request, res: Response, next: NextFunction) => {
-                    return controller[member](req, res, next);
-                };
-
-                if (middleware) {
-                    router[httpVerb](path, middleware, callBack);
-                } else {
-                    router[httpVerb](path, callBack);
+                    if (middleware) {
+                        router[httpVerb](path, middleware, callBack);
+                    } else {
+                        router[httpVerb](path, callBack);
+                    }
                 }
             }
         }

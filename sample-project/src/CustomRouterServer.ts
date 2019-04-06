@@ -5,18 +5,21 @@
  */
 
 import { Server } from '@overnightjs/core';
-
 import customRouter from 'express-promise-router';
+import Logger from '@overnightjs/logger';
 import PostController from './controllers/PostController';
 
 
 class CustomRouterServer extends Server {
 
-    private readonly START_MSG = 'overnightjs with custom router started on port:';
+    private readonly START_MSG = 'OvernightJs with custom router started on port:';
+    private readonly logger: Logger;
 
 
     constructor() {
         super();
+
+        this.logger = new Logger();
         const postController = new PostController();
         super.addControllers(postController, customRouter);
     }
@@ -24,7 +27,10 @@ class CustomRouterServer extends Server {
 
     public start(): void {
         const port = 3000;
-        this.app.listen(port, () => cimp(this.START_MSG + port));
+
+        this.app.listen(port, () => {
+            this.logger.imp(this.START_MSG + port);
+        });
     }
 }
 

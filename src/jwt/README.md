@@ -157,7 +157,6 @@ interested in using decorators, you can pass the middleware just the same as you
 Express Router object.
 
 ```javascript
-
 var router = express.Router();
 
 router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
@@ -165,5 +164,4 @@ router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
 });
 
 app.use('api', router); 
-
 ``` 

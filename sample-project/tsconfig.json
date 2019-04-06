@@ -6,7 +6,8 @@
     "experimentalDecorators": true,
     "paths": {
       "@overnightjs/core": ["../src/core"],
-      "@overnightjs/jwt": ["../src/jwt"]
+      "@overnightjs/jwt": ["../src/jwt"],
+      "@overnightjs/logger": ["../src/logger"]
     }
   },
   "include": [

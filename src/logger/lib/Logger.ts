@@ -17,15 +17,20 @@ import * as util from 'util';
 export class Logger {
 
     private readonly turnOff: boolean;
-    private readonly toFile: boolean;
-    private readonly filePath: string;
+    private readonly printToFile: string;
     private readonly DEFAULT_FILE_NAME = 'overnight.log';
 
 
-    constructor(turnOff?: boolean, toFile?: boolean, filePath?: string) {
+    constructor(turnOff?: boolean, printToFile?: boolean | undefined | string) { // pull in file path from environment variables
         this.turnOff = turnOff || false;
-        this.toFile = toFile || false;
-        this.filePath = filePath || path.join(os.homedir(), this.DEFAULT_FILE_NAME);
+
+        if (typeof printToFile === 'string') {
+            this.printToFile = printToFile;
+        } else if (printToFile === true) {
+            this.printToFile = path.join(os.homedir(), this.DEFAULT_FILE_NAME);
+        } else {
+            this.printToFile = '';
+        }
     }
 
 
@@ -59,21 +64,18 @@ export class Logger {
         }
 
         const time = '[' + new Date().toISOString() + ']: ';
-        content = time + content;
+        content = time + content + '\n';
 
-        if (!this.toFile) {
+        if (!this.printToFile) {
             content = colors[color](content);
-        }
-
-        if (this.toFile) {
-            this.printToFile(content);
-        } else {
             console.log(content);
+        } else {
+            this.writeToFile(content);
         }
     }
 
 
-    private async printToFile(content: string): Promise<void> {
+    private async writeToFile(content: string): Promise<void> {
 
         try {
             const fileExists = await this.checkExists();
@@ -90,13 +92,10 @@ export class Logger {
     }
 
 
-    private checkExists(): Promise<true | Error> {
+    private checkExists(): Promise<boolean> {
 
-        return new Promise((resolve, reject) => {
-
-            fs.access(this.filePath, fs.constants.F_OK, err => {
-                err ? reject(err) : resolve(true);
-            });
+        return new Promise(resolve => {
+            fs.access(this.printToFile, err => resolve(!err));
         });
     }
 
@@ -104,8 +103,7 @@ export class Logger {
     private appendFile(content: string): Promise<null | Error> {
 
         return new Promise((resolve, reject) => {
-
-            fs.appendFile(this.filePath, content, err => {
+            fs.appendFile(this.printToFile, content, err => {
                 err ? reject(err) : resolve();
             });
         });
@@ -115,8 +113,7 @@ export class Logger {
     private createNew(content: string): Promise<void | Error> {
 
         return new Promise((resolve, reject) => {
-
-            fs.writeFile(this.filePath, content, err => {
+            fs.writeFile(this.printToFile, content, err => {
                 err ? reject(err) : resolve();
             });
         });

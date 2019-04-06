@@ -20,18 +20,18 @@ export class SignupController {
 
     constructor() {
         this.mailer = new MailPromise();
-        this.logger = new Logger();
+        this.logger = new Logger(false, require('path').join(__dirname, '../../overnight.log'));
     }
 
 
     @Post()
     private async signup(req: Request, res: Response): Promise<void> {
 
-        let msg = 'problem_sending_email'; //req.body.email
+        let msg = 'problem_sending_email';
         let code = 400;
 
         try {
-            const info = await this.mailer.send(null, 'Overnight Developers',
+            const info = await this.mailer.send(req.body.email, 'Overnight Developers',
                 'Thanks for signing up', null, '<h1>You are awesome</h1>');
 
             this.logger.info(info.response);

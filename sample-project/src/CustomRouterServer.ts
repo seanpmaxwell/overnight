@@ -5,8 +5,8 @@
  */
 
 import { Server } from '@overnightjs/core';
+import { Logger } from '@overnightjs/logger';
 import customRouter from 'express-promise-router';
-import Logger from '@overnightjs/logger';
 import PostController from './controllers/PostController';
 
 

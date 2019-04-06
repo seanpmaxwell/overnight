@@ -14,22 +14,35 @@ import * as colors from 'colors';
 import * as util from 'util';
 
 
+export const enum LoggerModes {
+    CONSOLE_MODE = 1,
+    FILE_MODE,
+    OFF_MODE
+}
+
 export class Logger {
 
-    private readonly turnOff: boolean;
-    private readonly printToFile: string;
+    private readonly mode: number;
+    private readonly filePath: string;
     private readonly DEFAULT_FILE_NAME = 'overnight.log';
 
 
-    constructor(turnOff?: boolean, printToFile?: boolean | undefined | string) { // pull in file path from environment variables
-        this.turnOff = turnOff || false;
+    constructor(mode?: LoggerModes, filePath?: string) {
 
-        if (typeof printToFile === 'string') {
-            this.printToFile = printToFile;
-        } else if (printToFile === true) {
-            this.printToFile = path.join(os.homedir(), this.DEFAULT_FILE_NAME);
+        // Set the mode, console mode is default
+        if (mode) {
+            this.mode = Number(mode);
         } else {
-            this.printToFile = '';
+            const envMode = process.env.OVERNIGHT_LOGGER_MODE;
+            this.mode = envMode ? Number(envMode) : Number(LoggerModes.CONSOLE_MODE);
+        }
+
+        // Set the file path
+        if (filePath) {
+            this.filePath = filePath;
+        } else {
+            const filePath = process.env.OVERNIGHT_LOGGER_FILEPATH;
+            this.filePath = filePath || path.join(os.homedir(), this.DEFAULT_FILE_NAME);
         }
     }
 
@@ -56,9 +69,8 @@ export class Logger {
 
     private printLog(content: any, printFull: boolean, color: string): void {
 
-        if (this.turnOff) {
-            return;
-        }
+        if (this.mode === LoggerModes.OFF_MODE) { return; }
+
         if (printFull) {
             content = util.inspect(content);
         }
@@ -66,8 +78,8 @@ export class Logger {
         const time = '[' + new Date().toISOString() + ']: ';
         content = time + content + '\n';
 
-        if (!this.printToFile) {
-            content = colors[color](content);
+        if (this.mode === LoggerModes.FILE_MODE) {
+            content = (colors as any)[color](content);
             console.log(content);
         } else {
             this.writeToFile(content);
@@ -95,7 +107,7 @@ export class Logger {
     private checkExists(): Promise<boolean> {
 
         return new Promise(resolve => {
-            fs.access(this.printToFile, err => resolve(!err));
+            fs.access(this.filePath, err => resolve(!err));
         });
     }
 
@@ -103,7 +115,7 @@ export class Logger {
     private appendFile(content: string): Promise<null | Error> {
 
         return new Promise((resolve, reject) => {
-            fs.appendFile(this.printToFile, content, err => {
+            fs.appendFile(this.filePath, content, err => {
                 err ? reject(err) : resolve();
             });
         });
@@ -113,7 +125,7 @@ export class Logger {
     private createNew(content: string): Promise<void | Error> {
 
         return new Promise((resolve, reject) => {
-            fs.writeFile(this.printToFile, content, err => {
+            fs.writeFile(this.filePath, content, err => {
                 err ? reject(err) : resolve();
             });
         });

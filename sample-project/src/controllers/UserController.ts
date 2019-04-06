@@ -7,7 +7,7 @@
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
 import { jwtmiddleware, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
-import Logger from '@overnightjs/logger';
+import { Logger } from '@overnightjs/logger';
 
 
 @Controller('api/users')

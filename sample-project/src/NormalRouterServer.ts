@@ -7,7 +7,7 @@
 import * as bodyParser from 'body-parser';
 import * as controllers from './controllers';
 import { Server } from '@overnightjs/core';
-import Logger from '@overnightjs/logger';
+import { Logger, LoggerModes } from '@overnightjs/logger';
 
 
 class NormalRouterServer extends Server {
@@ -19,7 +19,7 @@ class NormalRouterServer extends Server {
 
     constructor() {
         super();
-        this.logger = new Logger();
+        this.logger = new Logger(LoggerModes.FILE_MODE);
 
         // Setup JSON parse middleware
         this.app.use(bodyParser.json());

@@ -6,8 +6,7 @@
 
 import { Request, Response } from 'express';
 import { Controller, Post  } from '@overnightjs/core';
-
-import Logger from '@overnightjs/logger';
+import { Logger } from '@overnightjs/logger';
 import MailPromise from 'mail-promise';
 
 
@@ -20,7 +19,7 @@ export class SignupController {
 
     constructor() {
         this.mailer = new MailPromise();
-        this.logger = new Logger(false, require('path').join(__dirname, '../../overnight.log'));
+        this.logger = new Logger();
     }
 
 

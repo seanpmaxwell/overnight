@@ -341,8 +341,8 @@ $ npm install --save-dev @types/express @types/express-jwt @types/jsonwebtoken
 
 #### Set the environment variables
 This is what really saves you from having to do boilerplate code. The two environment variables you
-need to set are **OVERNIGHTJWTSECRET** and **OVERNIGHTJWTEXP**. OVERNIGHTJWTSECRET should be a really
-long, random string (recommended is 80 characters) and the rules for setting OVERNIGHTJWTEXP are the same as
+need to set are **OVERNIGHT_JWT_SECRET** and **OVERNIGHT_JWT_EXP**. OVERNIGHT_JWT_SECRET should be a really
+long, random string (recommended is 80 characters) and the rules for setting OVERNIGHT_JWT_EXP are the same as
 setting the expiration time for the _jsonwebtoken_ library. The rules are:
 
 > If you use a string be sure you provide the time units (days, hours, etc), otherwise milliseconds is used by
@@ -353,8 +353,8 @@ default ("120" is equal to "120ms"). Examples: "2 days", "10h", "7d".
 How you set your environment variables will vary depending on the which environment you are working in. 
 I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and type:
 
-> OVERNIGHTJWTSECRET="your super long random string"
-> OVERNIGHTJWTEXP="your expiration time"
+> OVERNIGHT_JWT_SECRET="your super long random string"
+> OVERNIGHT_JWT_EXP="your expiration time"
 
 Another common option is the `dotenv` library, which imports environment variables from a .env file
 

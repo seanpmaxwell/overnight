@@ -16,8 +16,8 @@ type dataTypes = string | Buffer | object;
 
 
 // Pull in environment variables
-const SECRET = process.env.OVERNIGHTJWTSECRET || randomstring.generate(80);
-const EXP = process.env.OVERNIGHTJWTEXP || '3 days';
+const SECRET = process.env.OVERNIGHT_JWT_SECRET || randomstring.generate(80);
+const EXP = process.env.OVERNIGHT_JWT_EXP || '3 days';
 
 
 

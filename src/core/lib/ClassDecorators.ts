@@ -11,6 +11,6 @@ export function Controller(path: string) {
 
         return class extends constructor {
             public controllerBasePath = '/' + path;
-        }
-    }
+        };
+    };
 }

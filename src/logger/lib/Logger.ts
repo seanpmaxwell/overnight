@@ -5,16 +5,18 @@
  */
 
 import * as colors from 'colors';
-import * as util from 'util'
+import * as util from 'util';
 
 
 export class Logger {
 
+    private readonly turnOff: boolean | undefined;
     private readonly toFile: boolean | undefined;
     private readonly filePath: string | undefined;
 
 
-    constructor(toFile?: boolean, filePath?: string) {
+    constructor(turnOff?: boolean, toFile?: boolean, filePath?: string) {
+        this.turnOff = turnOff || false;
         this.toFile = toFile;
         this.filePath = filePath;
     }
@@ -22,10 +24,25 @@ export class Logger {
 
     public info(content: any, printFull?: boolean): void {
 
+        if (this.turnOff) { return; }
+
         if (printFull) {
-            console.log(content);
+            console.log(util.inspect(content));
         } else {
-            console.log(util(content));
+            console.log(content);
+        }
+    }
+
+
+    public imp(content: any, printFull?: boolean): void {
+
+        if (this.turnOff) { return; }
+
+        if (printFull) {
+            content = util.inspect(content);
+            console.log(colors.magenta(content));
+        } else {
+            console.log(colors.magenta(content));
         }
     }
 }

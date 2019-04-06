@@ -7,7 +7,6 @@
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
 import { jwtmiddleware, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
-import { cinfo, cerr } from 'simple-color-print';
 
 
 @Controller('api/users')
@@ -70,6 +69,6 @@ export class UserController {
 
         return new Promise(resolve => {
             resolve(req.originalUrl + ' called');
-        })
+        });
     }
 }

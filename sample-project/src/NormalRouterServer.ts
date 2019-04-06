@@ -11,8 +11,8 @@ import { Server } from '@overnightjs/core';
 
 class NormalRouterServer extends Server {
 
-    private readonly FRONT_END_MSG = 'overnightjs with standard express router started';
-    private readonly START_MSG = 'overnightjs with standard express router started on port:';
+    private readonly FRONT_END_MSG = 'OvernightJs with standard express router started';
+    private readonly START_MSG = 'OvernightJs with standard express router started on port:';
 
 
     constructor() {
@@ -30,10 +30,9 @@ class NormalRouterServer extends Server {
 
         const controllerInstances = [];
 
-        for (const name in controllers) {
-            const Controller = (controllers as any)[name];
-            if (controllers.hasOwnProperty(name) && typeof Controller === 'function') {
-                controllerInstances.push(new Controller());
+        for (const name of Object.keys(controllers)) {
+            if (typeof (controllers as any)[name] === 'function') {
+                controllerInstances.push(new (controllers as any)[name]());
             }
         }
 

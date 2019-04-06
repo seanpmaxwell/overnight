@@ -12,6 +12,9 @@ import { RequestHandler } from 'express-jwt';
 import { Request } from 'express';
 
 
+type dataTypes = string | Buffer | object;
+
+
 // Pull in environment variables
 const SECRET = process.env.OVERNIGHTJWTSECRET || randomstring.generate(80);
 const EXP = process.env.OVERNIGHTJWTEXP || '3 days';
@@ -24,8 +27,8 @@ const EXP = process.env.OVERNIGHTJWTEXP || '3 days';
 
 function setupMiddlware(secret: string): RequestHandler {
 
-    let options = {
-        secret: secret,
+    const options = {
+        secret,
         userProperty: 'payload'
     };
 
@@ -45,16 +48,16 @@ export let jwtmiddleware: RequestHandler = setupMiddlware(SECRET);
 //     Eg: 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count.
 //     If you use a string be sure you provide the time units (days, hours, etc), otherwise
 //     milliseconds unit is used by default ("120" is equal to "120ms").
-function setupJwt(dataToEcrypt: string | Buffer | object, secret: string, expires: string | number): string {
+function setupJwt(dataToEcrypt: dataTypes, secret: string, expires: string | number): string {
 
-    let exp = {
+    const exp = {
         expiresIn: expires
     };
 
     return jsonwebtoken.sign(dataToEcrypt, secret, exp);
 }
 
-export function jwt(dataToEcrypt: string | Buffer | object): string {
+export function jwt(dataToEcrypt: dataTypes): string {
     return setupJwt(dataToEcrypt, SECRET, EXP);
 }
 
@@ -67,20 +70,23 @@ export function jwt(dataToEcrypt: string | Buffer | object): string {
 
 export class JwtHandler {
 
-    private readonly _secret: string;
-    private readonly _expires: string | number;
+    private readonly secret: string;
+    private readonly expires: string | number;
+
 
     constructor(secret: string, expires: string | number) {
-        this._secret = secret;
-        this._expires = expires;
+        this.secret = secret;
+        this.expires = expires;
     }
 
-    getJwt(dataToEcrypt: string | Buffer | object): string {
-        return setupJwt(dataToEcrypt, this._secret, this._expires);
+
+    getJwt(dataToEcrypt: dataTypes): string {
+        return setupJwt(dataToEcrypt, this.secret, this.expires);
     }
+
 
     getMiddleware(): RequestHandler {
-        return setupMiddlware(this._secret);
+        return setupMiddlware(this.secret);
     }
 }
 

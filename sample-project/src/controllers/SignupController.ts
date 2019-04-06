@@ -6,7 +6,6 @@
 
 import { Request, Response } from 'express';
 import { Controller, Post  } from '@overnightjs/core';
-import { cinfo, cerr, } from 'simple-color-print';
 import MailPromise from 'mail-promise';
 
 
@@ -28,7 +27,7 @@ export class SignupController {
         let code = 400;
 
         try {
-            let info = await this.mailer.send(req.body.email, 'Overnight Developers',
+            const info = await this.mailer.send(req.body.email, 'Overnight Developers',
                 'Thanks for signing up', null, '<h1>You are awesome</h1>');
 
             cinfo(info.response);
@@ -38,7 +37,7 @@ export class SignupController {
         } catch (err) {
             cerr(err);
         } finally {
-            res.status(code).json({msg})
+            res.status(code).json({msg});
         }
     }
 }

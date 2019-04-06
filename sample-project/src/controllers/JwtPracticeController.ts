@@ -4,7 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { jwt, jwtmiddleware, JwtHandler, SecureRequest } from '@overnightjs/jwt'
+import { jwt, jwtmiddleware, JwtHandler, SecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
@@ -19,7 +19,7 @@ export class JwtPracticeController {
     @Get('getjwt/:email')
     private getJwt(req: Request, res: Response): void {
 
-        let jwtStr = jwt({
+        const jwtStr = jwt({
             email: req.params.email
         });
 
@@ -37,14 +37,14 @@ export class JwtPracticeController {
     @Get('getJwtFromHandler/:fullname')
     private getJwtFromHandler(req: Request, res: Response): void {
 
-        let jwtStr = jwtHandler.getJwt({
+        const jwtStr = jwtHandler.getJwt({
             fullName: req.params.fullname
         });
 
         res.status(200).json({jwt: jwtStr});
     }
 
-    
+
     @Get('callProtectedRouteFromHandler')
     @Middleware(JWTMIDDLEWARE)
     private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void {

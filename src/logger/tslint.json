@@ -10,7 +10,7 @@
     "max-line-length": [true, 100],
     "no-arg": true,
     "no-bitwise": true,
-    "no-console": true,
+    "no-console": false,
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-key": true,
@@ -26,13 +26,7 @@
     "no-unreachable": true,
     "no-use-before-declare": true,
     "no-var-requires": true,
-    "one-line": [
-      true,
-      "check-open-brace",
-      "check-catch",
-      "check-else",
-      "check-whitespace"
-    ],
+    "one-line": true,
     "quotemark": [true, "single"],
     "semicolon": [true, "always"],
     "triple-equals": [true, "allow-null-check"],
@@ -46,7 +40,7 @@
       "memberVariableDeclarator"
     ],
     "use-strict": true,
-    "variable-name": true,
+    "variable-name": [true],
     "whitespace": [
       true,
       "check-branch",

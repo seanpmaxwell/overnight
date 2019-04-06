@@ -37,13 +37,13 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
         };
 
         descriptor.value.overnightRouteProperties = {
-            httpVerb: httpVerb,
-            path: path ? ('/' + path) : '',
-            middleware: middleware
+            httpVerb,
+            middleware,
+            path: path ? ('/' + path) : ''
         };
 
         return descriptor;
-    }
+    };
 }
 
 
@@ -53,7 +53,8 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
 export function Middleware(middleware: Function | Function[]): MethodDecorator {
 
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
+    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor):
+        PropertyDescriptor {
 
         const originalMethod = descriptor.value;
 
@@ -64,5 +65,5 @@ export function Middleware(middleware: Function | Function[]): MethodDecorator {
         descriptor.value.middleware = middleware;
 
         return descriptor;
-    }
+    };
 }

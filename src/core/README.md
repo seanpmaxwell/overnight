@@ -183,7 +183,6 @@ export class SampleServer extends Server {
 Without the above decorators we would have to wrap each controller method with something like:
 
 ```typescript
-
 /* In the controller file*/
 public getRoutes(): Router {
     
@@ -203,7 +202,6 @@ public getRoutes(): Router {
 
 this.app.use('/api/users', userController.getRoutes());
 // repeat for every single controller class
-
 ```
 
 This would get really tedious overtime and lead to a lot of boiler plate code.

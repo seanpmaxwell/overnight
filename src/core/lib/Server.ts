@@ -8,10 +8,7 @@ import * as express from 'express';
 import { Application, Request, Response, NextFunction, Router } from 'express';
 
 
-interface OvernightRoute {
-    (...args: any[]): any;
-    overnightRouteProperties: any;
-}
+type Controllers = InstanceType<any> | InstanceType<any>[];
 
 export class Server {
 
@@ -28,7 +25,6 @@ export class Server {
     }
 
 
-
     /***********************************************************************************************
      *                                      Setup Controllers
      **********************************************************************************************/
@@ -38,8 +34,8 @@ export class Server {
      * search that directory instead. If it is an instance-object or array instance-objects,
      * don't pull in the controllers automatically.
      */
-    protected addControllers(controllers: InstanceType<any> | InstanceType<any>[],
-                             customRouterLib?: Function): void {
+    protected addControllers(controllers: Controllers, customRouterLib?: Function,
+                             showLog?: boolean): void {
 
         let ctlrInstances = [];
 
@@ -51,36 +47,36 @@ export class Server {
         }
 
         let count = 0;
-        let routerLib = customRouterLib || Router;
+        const routerLib = customRouterLib || Router;
 
         // Init route in each controller
         ctlrInstances.forEach(controller => {
             if (controller && controller.controllerBasePath) {
-                let router = this.getRouter(controller, routerLib);
+                const router = this.getRouter(controller, routerLib);
                 this.app.use(controller.controllerBasePath, router);
                 count++;
             }
         });
 
-        // Print number of controller configured
-        let s = count === 1 ? '' : 's';
-        console.log(count +  ` controller${s} configured.`);
+        if (showLog) {
+            const s = count === 1 ? ' controller' : ' controllers';
+            // tslint:disable-next-line
+            console.log(count + s + ' configured.');
+        }
     }
 
 
-    private getRouter(controller: InstanceType<any>, RouterLib: Function): Router {
+    private getRouter(controller: InstanceType<any>, routerLib: Function): Router {
 
-        let router = RouterLib();
+        const router = routerLib();
 
+        for (const member of Object.keys(controller)) {
 
-        for (let member in controller) {
-
-            let route = (controller)[member] as OvernightRoute;
-
+            const route = controller[member];
 
             if (route && route.overnightRouteProperties) {
 
-                let { middleware, httpVerb, path } = route.overnightRouteProperties;
+                const { middleware, httpVerb, path } = route.overnightRouteProperties;
 
                 let callBack = (req: Request, res: Response, next: NextFunction) => {
                     return controller[member](req, res, next);

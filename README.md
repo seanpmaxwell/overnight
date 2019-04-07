@@ -58,7 +58,7 @@ $ npm install --save-dev @types/express
 
 #### Create your controller
 
-```typescript
+````typescript
 import { Request, Response, NextFunction } from 'express';
 import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
 
@@ -111,7 +111,7 @@ export class UserController {
     }
    
 }
-```
+````
 
 #### Import your controller into the server
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
@@ -128,7 +128,7 @@ call it after setting up your middleware. You can pass `super.addControllers()` 
 instance or an array of controller instances.
 <br>
 
-```typescript
+````typescript
 import * as bodyParser from 'body-parser';
 import { Server } from '@overnightjs/core';
 import { cinfo, cimp } from 'simple-color-print';
@@ -175,14 +175,14 @@ export class SampleServer extends Server {
         })
     }
 }
-```
+````
 <br>
 
 
 #### See how awesome this is!
 Without the above decorators we would have to wrap each controller method with something like:
 
-```typescript
+````typescript
 /* In the controller file*/
 public getRoutes(): Router {
     
@@ -202,7 +202,7 @@ public getRoutes(): Router {
 
 this.app.use('/api/users', userController.getRoutes());
 // repeat for every single controller class
-```
+````
 
 This would get really tedious overtime and lead to a lot of boiler plate code.
 
@@ -220,7 +220,7 @@ router, the default express.Router() object is used.
 
 - Controller using _express-promise-router_:
 
-```typescript
+````typescript
 import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
 
@@ -253,12 +253,12 @@ export class PostController {
         res.status(200).json({msg: 'Route used: ' + req.url});
     }
 }
-```
+````
 
 - Add _express-promise-router_ in the `super.addControllers()` method:
 
 
-```typescript
+````typescript
 /**
  * Example with custom router for the Overnight web-framework.
  *
@@ -286,7 +286,7 @@ export class CustomRouterServer extends Server {
         })
     }
 }
-```
+````
 <br>
 <br>
 <br>
@@ -334,11 +334,8 @@ $ npm install --save-dev @types/express @types/express-jwt @types/jsonwebtoken
 * [Option 1](#option-1)
 * [Option 2](#option-2)
 
-<br>
 
-
-
-## <a name="options-1"></a> Option 1:
+### <a name="options-1"></a> Option 1:
 
 #### Set the environment variables
 This is what really saves you from having to do boilerplate code. The two environment variables you
@@ -372,7 +369,7 @@ The data that is encrypted is stored as the `payload` property. That's all there
 `jwt` and `jwtmiddleware`.
 
 
-```typescript
+````typescript
 import { Controller, Middleware, Get } from '@overnightjs/core';
 import { jwt, jwtmiddleware, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
@@ -397,18 +394,18 @@ export class JwtPracticeController {
         res.status(200).json({email: req.payload.email});
     }
 }
-```
+````
 
 <br>
 
 
-## <a name="options-2"></a> Option 2:
+### <a name="options-2"></a> Option 2:
 
 If you want to set your secret and expiration time manually, you can import the `JwtHandler` class 
 and set them via the constructor. I love using Option 1 way more, but I thought I'd supply this option
 for people who prefer to import it another way. 
 
-```typescript
+````typescript
 import { Controller, Middleware, Get } from '@overnightjs/core';
 import { JwtHandler, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
@@ -436,7 +433,7 @@ export class JwtPracticeController {
         res.status(200).json({email: req.payload.email});
     }
 }
-```
+````
 
 
 #### Works just as fine in regular Express
@@ -445,7 +442,7 @@ You dont have to use `@overnightjs/jwt` with `@overnightjs/core`. If you're usin
 interested in using decorators, you can pass the middleware just the same as you would for any typical 
 Express Router object.
 
-```javascript
+````javascript
 var router = express.Router();
 
 router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
@@ -453,10 +450,12 @@ router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
 })
 
 app.use('api', router); 
-```
+````
 <br>
 <br>
 <br>
+
+
 
 
 ## <a name="overnight-logger"></a> OvernightJS/logger
@@ -465,12 +464,19 @@ web-server, might take more time than you feel like spending. So you can start l
 away, OvernightJS comes with its own logging package. From the environment variables you can easily
 switch your logs to be printed out to the command line, a file, or turned off completely. Logs printed
 to the console also are printed out in different colors depending on whether they're a warning, error, 
-etc. The file for holdings logs can specified or left as a default
+etc. The file for holdings logs can specified or left as the default. Let's check it out!
+
+````typescript
+
+````
 
 
 <br>
 <br>
+<br>
+
+
+
 
 ## That's All!!
-
 Please star this repo if you found it useful. Happy web-deving :)

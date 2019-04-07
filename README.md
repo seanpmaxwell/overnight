@@ -15,7 +15,8 @@ includes a library for managing json-web-tokens.
 * Define routes on GET, POST, PUT, and DELETE verbs for methods in the controller.
 * Decorator for Express Router Middleware 
 * Server superclass to initialize ExpressJS server and setup controllers.
-* Json-Web-Token management software
+* Json-Web-Token management package.
+* Easy to configure logging tool.
 * Master repo includes sample application if you want to practice with an API calling tool such as Postman.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router
 * Fully type safe :)
@@ -413,7 +414,7 @@ import { JwtHandler, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
 
 const jwtHandler = new JwtHandler('secret', '10h');
-const JWTMIDDLEWARE = jwtHandler.getMiddleware();
+const jwtMiddleware = jwtHandler.getMiddleware();
 
 
 @Controller('api/jwt')
@@ -430,7 +431,7 @@ export class JwtPracticeController {
     }
 
     @Get('callProtectedRoute')
-    @Middleware(JWTMIDDLEWARE)
+    @Middleware(jwtMiddleware)
     private callProtectedRoute(req: SecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
@@ -459,7 +460,12 @@ app.use('api', router);
 
 
 ## <a name="overnight-logger"></a> OvernightJS/logger
-
+Despite the abundance of logging tools out there, knowing exactly which is the right one for your 
+web-server, might take more time than you feel like spending. So you can start logging events right 
+away, OvernightJS comes with its own logging package. From the environment variables you can easily
+switch your logs to be printed out to the command line, a file, or turned off completely. Logs printed
+to the console also are printed out in different colors depending on whether they're a warning, error, 
+etc. The file for holdings logs can specified or left as a default
 
 
 <br>

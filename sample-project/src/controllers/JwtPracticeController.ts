@@ -9,7 +9,7 @@ import { Controller, Middleware, Get } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
 const jwtHandler = new JwtHandler('secret', '10h');
-const JWTMIDDLEWARE = jwtHandler.getMiddleware();
+const jwtMiddleware = jwtHandler.getMiddleware();
 
 
 @Controller('api/jwt')
@@ -46,7 +46,7 @@ export class JwtPracticeController {
 
 
     @Get('callProtectedRouteFromHandler')
-    @Middleware(JWTMIDDLEWARE)
+    @Middleware(jwtMiddleware)
     private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void {
         res.status(200).json({fullname: req.payload.fullName});
     }

@@ -7,19 +7,19 @@
 import * as bodyParser from 'body-parser';
 import * as controllers from './controllers';
 import { Server } from '@overnightjs/core';
-import { Logger, LoggerModes } from '@overnightjs/logger';
+import { Logger } from '@overnightjs/logger';
 
 
 class NormalRouterServer extends Server {
 
-    private readonly FRONT_END_MSG = 'OvernightJS with standard express router started';
-    private readonly START_MSG = 'OvernightJS with standard express router started on port:';
+    private readonly FRONT_END_MSG = 'OvernightJS with standard express router started.';
+    private readonly START_MSG = 'OvernightJS with standard express router started on port: ';
     private readonly logger: Logger;
 
 
     constructor() {
         super();
-        this.logger = new Logger(LoggerModes.FILE_MODE);
+        this.logger = new Logger();
 
         // Setup JSON parse middleware
         this.app.use(bodyParser.json());
@@ -41,7 +41,7 @@ class NormalRouterServer extends Server {
             }
         }
 
-        super.addControllers(controllerInstances, null, true);
+        super.addControllers(controllerInstances);
     }
 
 

@@ -6,7 +6,7 @@
 
 import { Request, Response } from 'express';
 import { Controller, Post  } from '@overnightjs/core';
-import { Logger } from '@overnightjs/logger';
+import { Logger, LoggerModes } from '@overnightjs/logger';
 import MailPromise from 'mail-promise';
 
 
@@ -28,13 +28,14 @@ export class SignupController {
 
         let msg = 'problem_sending_email';
         let code = 400;
+        const email = req.body.email;
 
         try {
-            const info = await this.mailer.send(req.body.email, 'Overnight Developers',
+            const info = await this.mailer.send(email, 'Overnight Developers',
                 'Thanks for signing up', null, '<h1>You are awesome</h1>');
 
             this.logger.info(info.response);
-            msg = 'email_sent_to_' + req.body.email;
+            msg = 'email_sent_to_' + email;
             code = 200;
 
         } catch (err) {

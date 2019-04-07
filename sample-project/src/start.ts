@@ -5,13 +5,22 @@
  */
 
 import * as path from 'path';
+import { Logger } from '@overnightjs/logger';
 import NormalRouterServer from './NormalRouterServer';
 import CustomRouterServer from './CustomRouterServer';
 
-process.env.OVERNIGHT_LOGGER_MODE = '1';
-process.env.OVERNIGHT_LOGGER_FILEPATH = path.join(__dirname, 'sampleProject.log');
+
+// Set env variables
+const logFilePath = path.join(__dirname, '../sampleProject.log');
+process.env.OVERNIGHT_LOGGER_MODE = '2';
+process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 
+// Remove current log file
+Logger.rmFileSync(logFilePath);
+
+
+// Start Server
 let server;
 if (process.argv[2] === 'customRouter') {
     server = new CustomRouterServer();

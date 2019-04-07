@@ -47,27 +47,38 @@ export class Logger {
     }
 
 
+    public static rmFileSync(filePath: string): void {
+
+        try {
+            fs.accessSync(filePath);
+            fs.unlinkSync(filePath);
+        } catch (e) {
+            return;
+        }
+    }
+
+
     public info(content: any, printFull?: boolean): void {
-        this.printLog(content, printFull || false, 'green');
+        this.printLog(content, printFull || false, 'green', 'INFO: ');
     }
 
 
     public imp(content: any, printFull?: boolean): void {
-        this.printLog(content, printFull || false, 'magenta');
+        this.printLog(content, printFull || false, 'magenta', 'IMPORTANT: ');
     }
 
 
     public warn(content: any, printFull?: boolean): void {
-        this.printLog(content, printFull || false, 'yellow');
+        this.printLog(content, printFull || false, 'yellow', 'WARNING: ');
     }
 
 
     public err(content: any, printFull?: boolean): void {
-        this.printLog(content, printFull || false, 'red');
+        this.printLog(content, printFull || false, 'red', 'ERROR: ');
     }
 
 
-    private printLog(content: any, printFull: boolean, color: string): void {
+    private printLog(content: any, printFull: boolean, color: string, prefix: string): void {
 
         if (this.mode === LoggerModes.OFF_MODE) { return; }
 
@@ -78,11 +89,11 @@ export class Logger {
         const time = '[' + new Date().toISOString() + ']: ';
         content = time + content + '\n';
 
-        if (this.mode === LoggerModes.FILE_MODE) {
+        if (this.mode === LoggerModes.CONSOLE_MODE) {
             content = (colors as any)[color](content);
             console.log(content);
-        } else {
-            this.writeToFile(content);
+        } else if (this.mode === LoggerModes.FILE_MODE) {
+            this.writeToFile(prefix + content);
         }
     }
 

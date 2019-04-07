@@ -318,13 +318,11 @@ setting the expiration time for the _jsonwebtoken_ library. The rules are:
 
 > If you use a string be sure you provide the time units (days, hours, etc), otherwise milliseconds is used by
 default ("120" is equal to "120ms"). Examples: "2 days", "10h", "7d". 
-<br>
 
 How you set your environment variables will vary depending on the which environment you are working in. 
 I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and type:
 
-> OVERNIGHT_JWT_SECRET="your super long random string"
-
+> OVERNIGHT_JWT_SECRET="your super long random string" <br>
 > OVERNIGHT_JWT_EXP="your expiration time"
 
 Another common option is the `dotenv` library, which imports environment variables from a .env file

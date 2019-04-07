@@ -449,15 +449,24 @@ all pull from the same environment-variables. The variables you need to set are 
 and the file-path `OVERNIGHT_LOGGER_FILEPATH`. The mode has 3 settings `console`, `file`, and `off`. 
 _logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
 use them in code. If you do not set the mode, _logger_ will default to using `CONSOLE`. I would recommend 
-using `console` for local development, `file` for remote development, and `off` for 
-production.<br> 
+using `console` for local development, `file` for remote development, and `off` for production. If you
+want to change the settings in code, set the mode as the first argument to the constructor, and the
+filepath as the second.<br>
 
 Once you've setup logger there are 4 methods to print logs. They are `info`, which prints green, `imp`, 
 which prints magenta, `warn`, which prints yellow, and `err`, which prints red. Each method must be
 passed the content to print as the first param. There is an optional second param which is a `boolean`.
 If you pass `true` as the second param, _logger_ will use node's `util` so that the full object
 gets printed. You should normally not use this param, but it is especially useful when debugging errors
-so that you can print out the full error object and observe the stack trace. 
+so that you can print out the full error object and observe the stack trace.<br>
+
+_logger_ will by default prepend every log with a datetime stamp. If you want to turn
+this off, set `OVERNIGHT_LOGGER_RM_TIMESTAMP` to `"true"` in the environment files or pass false as the
+third argument to the structure. Like all other settings, the argument to the constructor, will override
+any environment settings.<br>
+
+One more thing, all settings have getter/setters so during development, you can reconfigure them as
+needed. 
 
 
 Let's look at a code sample which sets the environment variables via a start script:
@@ -496,6 +505,15 @@ export class LoggerPracticeController {
     }
 }
 ````
+
+The previous code-snippet show the following content when printed to a file:
+
+
+And this when printed to the console:
+<img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/loggerConsole.png' border='0'>
+
+
+Dont' forget to mention mFileSync
 <br>
 <br>
 <br>

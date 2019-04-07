@@ -15,9 +15,9 @@ import * as util from 'util';
 
 
 export const enum LoggerModes {
-    CONSOLE_MODE = 'console',
-    FILE_MODE = 'file',
-    OFF_MODE = 'off'
+    CONSOLE = 'console',
+    FILE = 'file',
+    OFF = 'off'
 }
 
 export class Logger {
@@ -34,7 +34,7 @@ export class Logger {
             this.mode = mode;
         } else {
             const envMode: any = process.env.OVERNIGHT_LOGGER_MODE;
-            this.mode = envMode || LoggerModes.CONSOLE_MODE;
+            this.mode = envMode || LoggerModes.CONSOLE;
         }
 
         // Set the file path
@@ -80,7 +80,7 @@ export class Logger {
 
     private printLog(content: any, printFull: boolean, color: string, prefix: string): void {
 
-        if (this.mode === LoggerModes.OFF_MODE) {
+        if (this.mode === LoggerModes.OFF) {
             return;
         }
         if (printFull) {
@@ -92,10 +92,10 @@ export class Logger {
         content = time + content;
 
         // Print to console or file
-        if (this.mode === LoggerModes.CONSOLE_MODE) {
+        if (this.mode === LoggerModes.CONSOLE) {
             content = (colors as any)[color](content);
             console.log(content);
-        } else if (this.mode === LoggerModes.FILE_MODE) {
+        } else if (this.mode === LoggerModes.FILE) {
             this.writeToFile(prefix + content + '\n');
         }
     }

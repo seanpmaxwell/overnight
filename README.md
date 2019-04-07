@@ -434,7 +434,7 @@ web-server, might take more time than you feel like spending. So you can start l
 away, OvernightJS comes with its own logging package. From the environment variables you can easily
 switch your logs to be printed out to the command line, a file, or turned off completely. Logs printed
 to the console also are printed out in different colors depending on whether they're a warning, error, 
-etc. The file for holdings logs can specified or left as the default. Let's check it out! <br>
+etc. The file for holdings logs can specified manually or left as the default. Let's check it out! <br>
 
 ### Installation
 ```batch
@@ -442,21 +442,41 @@ $ npm install --save @overnightjs/logger
 ```
 
 ### Guide
-There's not as much to _logger_ as there was our for `core` and `jwt`, so we're just going to quickly
-go over what each method does and how to set it up. The logger package's main export export is the
-`Logger` class. You will have separate instances of `Logger` throughout your project // pick up here
+There's not as much to _/logger_ as there was our for _/core_ and _/jwt_, so we're just going to quickly
+go over what each method does and how to set it up. The logger package's main export is the
+`Logger` class. You will have separate instances of `Logger` throughout your project but they will
+all pull from the same environment-variables. The variables you need to set are the mode `OVERNIGHT_LOGGER_MODE`
+and the file-path `OVERNIGHT_LOGGER_FILEPATH`. The mode has 3 settings `console`, `file`, and `off`. 
+_logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
+use them in code. If you do not set the mode, _logger_ will default to using `CONSOLE`. I would recommend 
+using `console` for local development, `file` for remote development, and `off` for 
+production.<br> 
 
-> OVERNIGHT_LOGGER_MODE="console"
-> OVERNIGHT_LOGGER_FILEPATH="/path to your project directory/name_of_project.log"
+Once you've setup logger there are 4 methods to print logs. They are `info`, which prints green, `imp`, 
+which prints magenta, `warn`, which prints yellow, and `err`, which prints red. Each method must be
+passed the content to print as the first param. There is an optional second param which is a `boolean`.
+If you pass `true` as the second param, _logger_ will use node's `util` so that the full object
+gets printed. You should normally not use this param, but it is especially useful when debugging errors
+so that you can print out the full error object and observe the stack trace. 
+
+
+Let's look at a code sample which sets the environment variables via a start script:
+
 
 ````typescript
+// In the start script
+const logFilePath = path.join(__dirname, '../sampleProject.log');
+process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE; // Can also be CONSOLE, or OFF
+process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
+
+
+// In the controller
 import { Request, Response } from 'express';
 import { Controller, Get } from '@overnightjs/core';
 import { Logger, LoggerModes } from '@overnightjs/logger';
 
 @Controller('api/logger')
 export class LoggerPracticeController {
-
 
     @Get('console/:msg')
     private printLogsConsole(req: Request, res: Response): void {
@@ -470,10 +490,11 @@ export class LoggerPracticeController {
         logger.err(req.params.msg);
 
         logger.err(new Error('printing out an error'));
-        logger.err(new Error('printing out an error full'), true);
+        logger.err(new Error('printing out an error full'), true); // <-- print the full Error object
 
         res.status(200).json({msg: 'console_mode'});
     }
+}
 ````
 <br>
 <br>

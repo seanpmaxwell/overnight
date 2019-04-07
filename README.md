@@ -323,9 +323,7 @@ $ npm install --save-dev @types/express @types/express-jwt @types/jsonwebtoken
 * [Option 2](#option-2)
 
 
-### <a name="options-1"></a> Option 1:
-
-#### Set the environment variables
+#### <a name="options-1"></a> Option 1: Environment Variables
 This is what really saves you from having to do boilerplate code. The two environment variables you
 need to set are **OVERNIGHT_JWT_SECRET** and **OVERNIGHT_JWT_EXP**. OVERNIGHT_JWT_SECRET should be a really
 long, random string (recommended is 80 characters) and the rules for setting OVERNIGHT_JWT_EXP are the same as
@@ -347,11 +345,10 @@ Another common option is the `dotenv` library, which imports environment variabl
 If you do not set these environment variables, a default value of **'3 days'** will be set for the expiration time and a 
 random string will be generated for the secret. The random string is fine for development but do not use it for 
 production. Every time you restart the server the secret will change and all client-side jwts will become invalid. 
+<br>
 
-
-#### Create your controller
-The data that is encrypted is stored as the `payload` property. That's all there is to it. Just import 
-`jwt` and `jwtmiddleware`.
+Now let's create the controller. The data that is encrypted is stored as the `payload` property. That's all there is to it. 
+Just import `jwt` and `jwtmiddleware`.
 
 
 ````typescript
@@ -381,8 +378,7 @@ export class JwtPracticeController {
 }
 ````
 
-
-### <a name="options-2"></a> Option 2:
+#### <a name="options-2"></a> Option 2: JWT Hander Class
 If you want to set your secret and expiration time manually, you can import the `JwtHandler` class 
 and set them via the constructor. I love using Option 1 way more, but I thought I'd supply this option
 for people who prefer to import it another way. 

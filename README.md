@@ -420,7 +420,7 @@ web-server, might take more time than you feel like spending. So you can start l
 away, OvernightJS comes with its own logging package. From the environment variables you can easily
 switch your logs to be printed out to the command line, a file, or turned off completely. Logs printed
 to the console also are printed out in different colors depending on whether they're a warning, error, 
-etc. The file for holdings logs can be specified manually or left as the default. Let's check it out! <br>
+etc. The file for holdings logs can be specified manually or left as the default. Let's check it out!<br>
 
 ### Installation
 ```batch
@@ -432,7 +432,7 @@ There's not as much to _/logger_ as there was our for _/core_ and _/jwt_, so we'
 go over what each method does and how to set it up. The logger package's main export is the
 `Logger` class. You will have separate instances of `Logger` throughout your project but they will
 all pull from the same environment-variables. The variables you need to set are the mode `OVERNIGHT_LOGGER_MODE`
-and the file-path `OVERNIGHT_LOGGER_FILEPATH`. The mode has 3 settings `console`, `file`, and `off`. 
+and the filepath `OVERNIGHT_LOGGER_FILEPATH`. The mode has 3 settings `'console'`, `'file'`, and `'off'`. 
 _logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
 use them in code. If you do not set the mode, _logger_ will default to using `CONSOLE`. I would recommend 
 using `console` for local development, `file` for remote development, and `off` for production. If you

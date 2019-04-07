@@ -5,9 +5,11 @@
  */
 
 import * as path from 'path';
-import { Logger, LoggerModes } from '@overnightjs/logger';
+import * as fs from 'fs';
+import { LoggerModes } from '@overnightjs/logger';
 import NormalRouterServer from './NormalRouterServer';
 import CustomRouterServer from './CustomRouterServer';
+
 
 
 // Set env variables
@@ -17,7 +19,13 @@ process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 
 // Remove current log file
-Logger.rmFileSync(logFilePath);
+(function removeFile() {
+    try {
+        fs.accessSync(logFilePath);
+        fs.unlinkSync(logFilePath);
+    } catch (e) { return; }
+})();
+
 
 
 // Start Server

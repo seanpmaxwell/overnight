@@ -86,17 +86,6 @@ export class Logger {
     }
 
 
-    public static rmFileSync(filePath: string): void {
-
-        try {
-            fs.accessSync(filePath);
-            fs.unlinkSync(filePath);
-        } catch (e) {
-            return;
-        }
-    }
-
-
     public info(content: any, printFull?: boolean): void {
         this.printLog(content, printFull || false, 'green', 'INFO: ');
     }

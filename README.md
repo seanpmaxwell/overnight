@@ -471,15 +471,28 @@ needed.
 
 Let's look at a code sample which sets the environment variables via a start script:
 
-
+- In the start script
 ````typescript
-// In the start script
+import * as path from 'path';
+import * as fs from 'fs';
+import { LoggerModes } from '@overnightjs/logger';
+
+// Set the 
 const logFilePath = path.join(__dirname, '../sampleProject.log');
 process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE; // Can also be CONSOLE, or OFF
 process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
+// Remove current log file if it exists
+(function removeFile() {
+    try {
+        fs.accessSync(logFilePath);
+        fs.unlinkSync(logFilePath);
+    } catch (e) { return; }
+})();
+````
 
-// In the controller
+- In the controller file
+````typescript
 import { Request, Response } from 'express';
 import { Controller, Get } from '@overnightjs/core';
 import { Logger, LoggerModes } from '@overnightjs/logger';

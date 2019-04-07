@@ -54,7 +54,7 @@ class NormalRouterServer extends Server {
 
         this.app.listen(port, () => {
             this.logger.rmTimestamp = true;
-            this.logger.info('\n\n\n');
+            this.logger.info('\n');
             this.logger.rmTimestamp = false;
             this.logger.imp(this.START_MSG + port);
         });

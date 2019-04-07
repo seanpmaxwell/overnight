@@ -434,7 +434,7 @@ web-server, might take more time than you feel like spending. So you can start l
 away, OvernightJS comes with its own logging package. From the environment variables you can easily
 switch your logs to be printed out to the command line, a file, or turned off completely. Logs printed
 to the console also are printed out in different colors depending on whether they're a warning, error, 
-etc. The file for holdings logs can specified manually or left as the default. Let's check it out! <br>
+etc. The file for holdings logs can be specified manually or left as the default. Let's check it out! <br>
 
 ### Installation
 ```batch
@@ -522,7 +522,7 @@ export class LoggerPracticeController {
 }
 ````
 
-The previous code-snippet show the following content when printed to a file:
+- The previous code-snippet show the following content when printed to a file:
 ````
 IMPORTANT: [2019-04-07T19:17:28.799Z]: OvernightJS with standard express router started on port: 3000
 INFO: [2019-04-07T19:18:08.939Z]: hello-logger
@@ -550,7 +550,7 @@ ERROR: [2019-04-07T19:18:08.956Z]: Error: printing out an error full
 ````
 
 
-And this when printed to the console:
+- And this when printed to the console:
 <img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/loggerConsole.png' border='0'>
 
 

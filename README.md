@@ -132,16 +132,11 @@ export class SampleServer extends Server {
     constructor() {
         super();
         
-        this.setupExpress();
-        this.setupControllers();
-    }
-
-    private setupExpress(): void {
-        
-        // Setup express here like you would
-        // any other ExpressJS application.
+        // Setup express before the controllers
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
+                
+        this.setupControllers();
     }
 
     private setupControllers(): void {
@@ -153,9 +148,8 @@ export class SampleServer extends Server {
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
 
-        // This must be called, and can be passed a single controller or an 
-        // array of controllers. Optional router object can also be passed 
-        // as second argument.
+        // This must be called, and can be passed a single controller or an array of 
+        // controllers. Optional router object can also be passed as second argument.
         super.addControllers([userController, signupController]);
     }
 
@@ -289,7 +283,7 @@ export class CustomRouterServer extends Server {
 
 ### What is it
 This is an easy tool for removing boilerplate code around json-web-tokens (jwt). You can get your token
-and middleware with just one line of code. @overnightJS/core is a sister library to add TypeScript decorators 
+and middleware with just one line of code. @overnightjs/core is a sister library to add TypeScript decorators 
 for methods meant to call Express routes and is not required for @overnightjs/jwt but they do work beautifully 
 together. 
 
@@ -330,6 +324,7 @@ How you set your environment variables will vary depending on the which environm
 I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and type:
 
 > OVERNIGHT_JWT_SECRET="your super long random string"
+
 > OVERNIGHT_JWT_EXP="your expiration time"
 
 Another common option is the `dotenv` library, which imports environment variables from a .env file

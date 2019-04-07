@@ -345,7 +345,6 @@ setting the expiration time for the _jsonwebtoken_ library. The rules are:
 
 > If you use a string be sure you provide the time units (days, hours, etc), otherwise milliseconds is used by
 default ("120" is equal to "120ms"). Examples: "2 days", "10h", "7d". 
-
 <br>
 
 How you set your environment variables will vary depending on the which environment you are working in. 
@@ -355,7 +354,6 @@ I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and typ
 > OVERNIGHT_JWT_EXP="your expiration time"
 
 Another common option is the `dotenv` library, which imports environment variables from a .env file
-
 <br>
 
 If you do not set these environment variables, a default value of **'3 days'** will be set for the expiration time and a 
@@ -395,8 +393,6 @@ export class JwtPracticeController {
     }
 }
 ````
-
-<br>
 
 
 ### <a name="options-2"></a> Option 2:
@@ -466,8 +462,32 @@ switch your logs to be printed out to the command line, a file, or turned off co
 to the console also are printed out in different colors depending on whether they're a warning, error, 
 etc. The file for holdings logs can specified or left as the default. Let's check it out!
 
-````typescript
 
+````typescript
+import { Request, Response } from 'express';
+import { Controller, Get } from '@overnightjs/core';
+import { Logger, LoggerModes } from '@overnightjs/logger';
+
+@Controller('api/logger')
+export class LoggerPracticeController {
+
+
+    @Get('console/:msg')
+    private printLogsConsole(req: Request, res: Response): void {
+
+        process.env.OVERNIGHT_LOGGER_MODE = '1';
+        const logger = new Logger();
+
+        logger.info(req.params.msg);
+        logger.imp(req.params.msg);
+        logger.warn(req.params.msg);
+        logger.err(req.params.msg);
+
+        logger.err(new Error('printing out an error'));
+        logger.err(new Error('printing out an error full'), true);
+
+        res.status(200).json({msg: 'console_mode'});
+    }
 ````
 
 

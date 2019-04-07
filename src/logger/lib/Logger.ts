@@ -101,12 +101,12 @@ export class Logger {
     private async writeToFile(content: string): Promise<void> {
 
         try {
-            const fileExists = await this.checkExists();
+            const exists = this.checkExists(this.filePath);
 
-            if (fileExists) {
-                await this.appendFile(content);
+            if (exists) {
+                fs.appendFileSync(this.filePath, content);
             } else {
-                await this.createNew(content);
+                fs.writeFileSync(this.filePath, content);
             }
 
         } catch (err) {
@@ -115,30 +115,13 @@ export class Logger {
     }
 
 
-    private checkExists(): Promise<boolean> {
+    private checkExists(filePath: string): boolean {
 
-        return new Promise(resolve => {
-            fs.access(this.filePath, err => resolve(!err));
-        });
-    }
-
-
-    private appendFile(content: string): Promise<null | Error> {
-
-        return new Promise((resolve, reject) => {
-            fs.appendFile(this.filePath, content, err => {
-                err ? reject(err) : resolve();
-            });
-        });
-    }
-
-
-    private createNew(content: string): Promise<void | Error> {
-
-        return new Promise((resolve, reject) => {
-            fs.writeFile(this.filePath, content, err => {
-                err ? reject(err) : resolve();
-            });
-        });
+        try {
+            fs.accessSync(this.filePath);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }

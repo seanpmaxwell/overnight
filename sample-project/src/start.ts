@@ -12,7 +12,7 @@ import CustomRouterServer from './CustomRouterServer';
 
 // Set env variables
 const logFilePath = path.join(__dirname, '../sampleProject.log');
-process.env.OVERNIGHT_LOGGER_MODE = '2';
+process.env.OVERNIGHT_LOGGER_MODE = '1';
 process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 

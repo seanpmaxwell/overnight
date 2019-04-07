@@ -57,7 +57,6 @@ $ npm install --save-dev @types/express
 import { Request, Response, NextFunction } from 'express';
 import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
 
-
 @Controller('api/users')
 export class UserController {
     
@@ -104,7 +103,6 @@ export class UserController {
             res.status(200).json({msg: msg});
         }
     }
-   
 }
 ````
 
@@ -126,10 +124,8 @@ instance or an array of controller instances.
 ````typescript
 import * as bodyParser from 'body-parser';
 import { Server } from '@overnightjs/core';
-import { cinfo, cimp } from 'simple-color-print';
 import { UserController } from './UserController';
 import { SignupController } from './SignupController';
-
 
 export class SampleServer extends Server {
     
@@ -148,12 +144,12 @@ export class SampleServer extends Server {
         this.app.use(bodyParser.urlencoded({extended: true}));
     }
 
-    private setupControllers(): Array<CustomController> {
+    private setupControllers(): void {
         
-        let userController = new UserController();
-        let signupController = new SignupController();
+        const userController = new UserController();
+        const signupController = new SignupController();
         
-        let dbConnObj = new SomeDbConnClass('credentials');
+        const dbConnObj = new SomeDbConnClass('credentials');
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
 
@@ -164,9 +160,8 @@ export class SampleServer extends Server {
     }
 
     public start(port: number): void {
-        
         this.app.listen(port, () => {
-            cimp('Server listening on port:' + port);
+            cimp('Server listening on port: ' + port);
         })
     }
 }
@@ -178,24 +173,29 @@ Without the above decorators we would have to wrap each controller method with s
 
 ````typescript
 /* In the controller file*/
-public getRoutes(): Router {
+class UserController {
     
-    let router = Router();
-    
-    router.get('/', jwtMiddleWare, (req, res) => {
-        this.getAll(<SecureRequest>req, res);
-    });
-    
-    // Repeat for every single controller method
-    
-    return router;
+    public getRoutes(): Router {
+        
+        const router = Router();
+        
+        router.get('/', your middleware, (req, res) => {
+            // Do some stuff in here
+        });
+        
+        router.get('/anotherRoute', your middleware, (req, res) => {
+            // Do some stuff in here
+        });
+        
+        // Repeat for every single controller method
+        
+        return router;
+    }
 }
 
-
-/* Somewhere in the server file*/
-
+let userController = new UserController();
 this.app.use('/api/users', userController.getRoutes());
-// repeat for every single controller class
+// Repeat for every single controller class
 ````
 
 This would get really tedious overtime and lead to a lot of boiler plate code.
@@ -225,8 +225,8 @@ import { Controller, Get, Put } from '@overnightjs/core';
 @Controller('api/posts')
 export class PostController {
     
-    private readonly _INVALID_MSG = 'You entered an invalid post id: ';
-    private readonly _VALID_MSG = 'You entered the post id: ';
+    private readonly INVALID_MSG = 'You entered an invalid post id: ';
+    private readonly VALID_MSG = 'You entered the post id: ';
 
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
@@ -236,7 +236,7 @@ export class PostController {
 
     private someAsyncFunction(id: number): Promise<string> {
         return new Promise((res, rej) => {
-            isNaN(id) ? rej(this._INVALID_MSG + id) : res(this._VALID_MSG + id);
+            isNaN(id) ? rej(this.INVALID_MSG + id) : res(this.VALID_MSG + id);
         })
     }
 
@@ -256,12 +256,6 @@ export class PostController {
 
 
 ````typescript
-/**
- * Example with custom router for the Overnight web-framework.
- *
- * created by Sean Maxwell Aug 26, 2018
- */
-
 import * as customRouter  from 'express-promise-router';
 import { Server } from '@overnightjs/core';
 import { PostController } from './controllers/PostController';
@@ -269,17 +263,17 @@ import { PostController } from './controllers/PostController';
 
 export class CustomRouterServer extends Server {
     
-    private readonly _START_MSG = 'overnightjs with custom router started on port: ';
+    private readonly START_MSG = 'OvernightJS with custom router started on port: ';
     
     constructor() {
         super();
-        let postController = new PostController();
+        const postController = new PostController();
         super.addControllers(postController, customRouter);
     }
 
     public start(port: number): void {
         this.app.listen(port, () => {
-            console.log(this._START_MSG + port);
+            console.log(this.START_MSG + port);
         })
     }
 }
@@ -351,7 +345,7 @@ Just import `JwtManager`. // pick up here, test that this works
 
 
 ````typescript
-import { Controller, Middleware, Get } from '@overnightjs/core';
+import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { JwtManager, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
 
@@ -359,18 +353,18 @@ import { Request, Response } from 'express';
 @Controller('api/jwt')
 export class JwtPracticeController {
     
-    @Get('getjwt/:email')
+    @Get(':email')
     private getJwt(req: Request, res: Response): void {
         
-        let jwtStr = jwt({
+        const jwtStr = JwtManager.jwt({
             email: req.params.email
         });
 
         res.status(200).json({jwt: jwtStr});
     }
 
-    @Get('callProtectedRoute')
-    @Middleware(jwtmiddleware)
+    @Post('callProtectedRoute')
+    @Middleware(JwtManager.middleware)
     private callProtectedRoute(req: SecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
@@ -388,7 +382,7 @@ import { JwtHandler, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
 
 const jwtHandler = new JwtHandler('secret', '10h');
-const jwtMiddleware = jwtHandler.getMiddleware();
+const jwtMiddleware = jwtHandler.middleware();
 
 
 @Controller('api/jwt')
@@ -452,8 +446,8 @@ There's not as much to _logger_ as there was our for `core` and `jwt`, so we're 
 go over what each method does and how to set it up. The logger package's main export export is the
 `Logger` class. You will have separate instances of `Logger` throughout your project
 
-> OVERNIGHT_="console"
-> OVERNIGHT_=""
+> OVERNIGHT_LOGGER_MODE="console"
+> OVERNIGHT_LOGGER_FILEPATH="/path to your project directory/name_of_project.log"
 
 ````typescript
 import { Request, Response } from 'express';

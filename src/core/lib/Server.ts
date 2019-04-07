@@ -8,8 +8,6 @@ import * as express from 'express';
 import { Application, Request, Response, NextFunction, Router } from 'express';
 
 
-type Controllers = InstanceType<any> | InstanceType<any>[];
-
 export class Server {
 
     private readonly _app: Application;
@@ -25,17 +23,13 @@ export class Server {
     }
 
 
-    /***********************************************************************************************
-     *                                      Setup Controllers
-     **********************************************************************************************/
-
     /**
      * If controllers === undefined, search the './controllers' directory. If it is a string,
      * search that directory instead. If it is an instance-object or array instance-objects,
      * don't pull in the controllers automatically.
      */
-    protected addControllers(controllers: Controllers, customRouterLib?: Function,
-                             showLog?: boolean): void {
+    protected addControllers(controllers: InstanceType<any> | InstanceType<any>[],
+                             customRouterLib?: Function, showLog?: boolean): void {
 
         let ctlrInstances = [];
 

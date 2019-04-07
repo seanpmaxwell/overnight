@@ -5,7 +5,7 @@
  */
 
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
-import { jwtmiddleware, SecureRequest } from '@overnightjs/jwt';
+import { JwtManager, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
 import { Logger } from '@overnightjs/logger';
 
@@ -29,7 +29,7 @@ export class UserController {
 
 
     @Get('')
-    @Middleware(jwtmiddleware)
+    @Middleware(JwtManager.middleware)
     private getAll(req: SecureRequest, res: Response): void {
         this.logger.info(req.payload, true);
         res.status(200).json({msg: 'get_all_called'});

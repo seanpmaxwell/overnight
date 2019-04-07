@@ -4,12 +4,11 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { jwt, jwtmiddleware, JwtHandler, SecureRequest } from '@overnightjs/jwt';
+import { JwtManager, SecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
-const jwtHandler = new JwtHandler('secret', '10h');
-const jwtMiddleware = jwtHandler.getMiddleware();
+const jwtMgr = new JwtManager('secret', '10h');
 
 
 @Controller('api/jwt')
@@ -19,7 +18,7 @@ export class JwtPracticeController {
     @Get('getjwt/:email')
     private getJwt(req: Request, res: Response): void {
 
-        const jwtStr = jwt({
+        const jwtStr = JwtManager.jwt({
             email: req.params.email
         });
 
@@ -28,7 +27,7 @@ export class JwtPracticeController {
 
 
     @Get('callProtectedRoute')
-    @Middleware(jwtmiddleware)
+    @Middleware(JwtManager.middleware)
     private callProtectedRoute(req: SecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
@@ -37,7 +36,7 @@ export class JwtPracticeController {
     @Get('getJwtFromHandler/:fullname')
     private getJwtFromHandler(req: Request, res: Response): void {
 
-        const jwtStr = jwtHandler.getJwt({
+        const jwtStr = jwtMgr.jwt({
             fullName: req.params.fullname
         });
 
@@ -46,7 +45,7 @@ export class JwtPracticeController {
 
 
     @Get('callProtectedRouteFromHandler')
-    @Middleware(jwtMiddleware)
+    @Middleware(jwtMgr.middleware)
     private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void {
         res.status(200).json({fullname: req.payload.fullName});
     }

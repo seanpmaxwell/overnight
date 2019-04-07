@@ -311,8 +311,6 @@ your code instead of the environment variables.
 
 
 ### Installation
-You can get the latest release using npm:
-
 ```batch
 $ npm install --save @overnightjs/jwt express 
 $ npm install --save-dev @types/express @types/express-jwt @types/jsonwebtoken
@@ -443,9 +441,18 @@ switch your logs to be printed out to the command line, a file, or turned off co
 to the console also are printed out in different colors depending on whether they're a warning, error, 
 etc. The file for holdings logs can specified or left as the default. Let's check it out! <br>
 
+### Installation
 ```batch
 $ npm install --save @overnightjs/logger
 ```
+
+### Guide
+There's not as much to _logger_ as there was our for `core` and `jwt`, so we're just going to quickly
+go over what each method does and how to set it up. The logger package's main export export is the
+`Logger` class. You will have separate instances of `Logger` throughout your project
+
+> OVERNIGHT_="console"
+> OVERNIGHT_=""
 
 ````typescript
 import { Request, Response } from 'express';

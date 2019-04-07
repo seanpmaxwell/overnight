@@ -5,9 +5,9 @@
  */
 
 import * as path from 'path';
-import {Request, Response} from 'express';
-import {Controller, Get} from '@overnightjs/core';
-import {Logger, LoggerModes} from '@overnightjs/logger';
+import { Request, Response } from 'express';
+import { Controller, Get } from '@overnightjs/core';
+import { Logger, LoggerModes } from '@overnightjs/logger';
 
 
 @Controller('api/logger')
@@ -17,10 +17,7 @@ export class LoggerPracticeController {
     @Get('console/:msg')
     private printLogsConsole(req: Request, res: Response): void {
 
-        const logFilePath = path.join(__dirname, '../../sampleProject.log');
         process.env.OVERNIGHT_LOGGER_MODE = '1';
-        process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
-
         const logger = new Logger();
 
         logger.info(req.params.msg);
@@ -31,7 +28,7 @@ export class LoggerPracticeController {
         logger.err(new Error('printing out an error'));
         logger.err(new Error('printing out an error full'), true);
 
-        res.status(200).json({msg: 'whatever'});
+        res.status(200).json({msg: 'console_mode'});
     }
 
 
@@ -51,6 +48,20 @@ export class LoggerPracticeController {
         logger.err(new Error('printing out an error'));
         logger.err(new Error('printing out an error full'), true);
 
-        res.status(200).json({msg: 'whatever'});
+        res.status(200).json({msg: 'file_mode'});
+    }
+
+
+    @Get('off/:msg')
+    private printLogsOff(req: Request, res: Response): void {
+
+        const logger = new Logger(LoggerModes.OFF_MODE);
+
+        logger.info(req.params.msg);
+        logger.imp(req.params.msg);
+        logger.warn(req.params.msg);
+        logger.err(req.params.msg);
+
+        res.status(200).json({msg: 'off_mode'});
     }
 }

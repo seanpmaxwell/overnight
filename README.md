@@ -6,18 +6,18 @@
  
 
 ## What is it
-OvernightJS is a clean simple library to add TypeScript decorators for methods meant to call Express routes. It also
-includes a library for managing json-web-tokens. 
+OvernightJS is a simple library to add TypeScript decorators for methods meant to call Express routes. It also
+includes a package for managing json-web-tokens and showing logs. 
 
 
 ## Features
 * Define a base route using a @Controller decorator.
-* Define routes on GET, POST, PUT, and DELETE verbs for methods in the controller.
-* Decorator for Express Router Middleware 
+* @Get, @Post, @Put, and @Delete decorators to convert controller methods into Express routes.
+* @Middleware decorator 
 * Server superclass to initialize ExpressJS server and setup controllers.
-* Json-Web-Token management package.
+* Json-Web-Token management
 * Easy to configure logging tool.
-* Master repo includes sample application if you want to practice with an API calling tool such as Postman.
+* Master repo includes a sample application, if you want to practice with an API calling tool such as Postman.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router
 * Fully type safe :)
 
@@ -117,8 +117,8 @@ initializing all of your controller routes.
 <br>
 
 `super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
-call it after setting up your middleware. You can pass `super.addControllers()` a single controller 
-instance or an array of controller instances.
+call it after setting up your middleware. You can pass `super.addControllers()` a single controller-instance 
+or an array of controller-instances.
 <br>
 
 ````typescript
@@ -201,20 +201,18 @@ This would get really tedious overtime and lead to a lot of boiler plate code.
 
 
 ## <a name="custom-router"></a> Using a Custom Router
-Suppose you don't want to use the built in "Router" object which is provided by express. Maybe you
-don't like using async/await or having to call `.catch()` if you're not using try/catch blocks. Maybe
+Suppose you don't want to use the built in "Router" object which is provided by Express. Maybe you
+don't like using async/await or having to call `.catch()` if you're not using `try/catch` blocks. Maybe
 you're using a library like _express-promise-router_ to handle the route callbacks. OvernightJS allows
 you to pass in a custom router object in the `super.addControllers()` method. Simply pass in your
-custom router object as the second argument after the controller/s. When you don't specify a custom
+custom router as the second param after the controller-instance/s. When you don't specify a custom
 router, the default express.Router() object is used. 
 
 
 - Controller using _express-promise-router_:
-
 ````typescript
 import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
-
 
 @Controller('api/posts')
 export class PostController {
@@ -247,13 +245,10 @@ export class PostController {
 ````
 
 - Add _express-promise-router_ in the `super.addControllers()` method:
-
-
 ````typescript
 import * as customRouter  from 'express-promise-router';
 import { Server } from '@overnightjs/core';
 import { PostController } from './controllers/PostController';
-
 
 export class CustomRouterServer extends Server {
     
@@ -289,13 +284,12 @@ together.
 
 
 ### Features
-* `JwtManager` class which, when when used statically, can pulled the JWT expiration and secret from
+* `JwtManager` class which, when when used statically, can pull the JWT expiration and secret from
 the environment variables.
 * When used as an instance-object, `JwtManager` can be dynamically passed the JWT expiration and secret
 if you prefer to set them through the code.
-* Default values for the secret and expiration when used statically. Which is convenient for a 
+* Default values for the secret and expiration when used statically. This is convenient for a 
 development environment.
-* SecureRequest ExpressJS router object. 
 * Fully type-safe :)
 
 
@@ -325,7 +319,7 @@ I use Ubuntu which is pretty easy. Just open the _/etc/environment_ file and typ
 > OVERNIGHT_JWT_SECRET="your super long random string" <br>
 > OVERNIGHT_JWT_EXP="your expiration time"
 
-Another common option is the `dotenv` library, which imports environment variables from a .env file
+Another common option is the `dotenv` library, which imports environment variables from a _.env_ file
 <br>
 
 If you do not set these environment variables, a default value of **'3 days'** will be set for the expiration time and a 
@@ -341,7 +335,6 @@ Just import `JwtManager`.
 import { JwtManager, SecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
-
 
 @Controller('api/jwt')
 export class JwtPracticeController {
@@ -406,13 +399,13 @@ interested in using decorators, you can pass the middleware just the same as you
 Express Router object.
 
 ````javascript
-var router = express.Router();
+const router = express.Router();
 
 router.get('users', JwtManager.middleware, (req, res) => {
     console.log(req.payload.email);
 })
 
-app.use('api', router); 
+app.use('/', router); 
 ````
 <br>
 <br>

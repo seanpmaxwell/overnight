@@ -17,7 +17,7 @@ export class LoggerPracticeController {
     @Get('console/:msg')
     private printLogsConsole(req: Request, res: Response): void {
 
-        process.env.OVERNIGHT_LOGGER_MODE = 'console';
+        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.CONSOLE;
         const logger = new Logger();
 
         logger.info(req.params.msg);

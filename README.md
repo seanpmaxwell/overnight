@@ -485,7 +485,6 @@ process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 // Remove current log file if it exists
 (function removeFile() {
     try {
-        fs.accessSync(logFilePath);
         fs.unlinkSync(logFilePath);
     } catch (e) { return; }
 })();
@@ -553,8 +552,6 @@ ERROR: [2019-04-07T19:18:08.956Z]: Error: printing out an error full
 - And this when printed to the console:
 <img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/loggerConsole.png' border='0'>
 
-
-Dont' forget to mention mFileSync
 <br>
 <br>
 <br>

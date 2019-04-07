@@ -295,17 +295,18 @@ export class CustomRouterServer extends Server {
 
 ### What is it
 This is an easy tool for removing boilerplate code around json-web-tokens (jwt). You can get your token
-strings and middleware with just one line of code. @overnightJS/core is a sister library to add 
-TypeScript decorators for methods meant to call Express routes. @overnightjs/jwt does not require
-@overnightjs/core but they do work beautifully together. 
+and middleware with just one line of code. @overnightJS/core is a sister library to add TypeScript decorators 
+for methods meant to call Express routes and is not required for @overnightjs/jwt but they do work beautifully 
+together. 
 
 
 ### Features
-* `jwt` and `jwtmiddleware` functions which can pull the secret-string and expiration-time directly 
-from the environment variables.
-* `JwtHandler` class which can be passed a secret and expiration time if you wish to set those from
-your code instead of the environment variables. 
-* Default values for the secret and expiration. Which is convenient for a development environment.
+* `JwtManager` class which, when when used statically, can pulled the JWT expiration and secret from
+the environment variables.
+* When used as an instance-object, `JwtManager` can be dynamically passed the JWT expiration and secret
+if you prefer to set them through the code.
+* Default values for the secret and expiration when used statically. Which is convenient for a 
+development environment.
 * SecureRequest ExpressJS router object. 
 * Fully type-safe :)
 
@@ -346,12 +347,12 @@ production. Every time you restart the server the secret will change and all cli
 <br>
 
 Now let's create the controller. The data that is encrypted is stored as the `payload` property. That's all there is to it. 
-Just import `jwt` and `jwtmiddleware`.
+Just import `JwtManager`. // pick up here, test that this works
 
 
 ````typescript
 import { Controller, Middleware, Get } from '@overnightjs/core';
-import { jwt, jwtmiddleware, SecureRequest } from '@overnightjs/jwt';
+import { JwtManager, SecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
 
 
@@ -376,7 +377,7 @@ export class JwtPracticeController {
 }
 ````
 
-#### <a name="options-2"></a> Option 2: JWT Hander Class
+#### <a name="options-2"></a> Option 2: Pass through the constructor
 If you want to set your secret and expiration time manually, you can import the `JwtHandler` class 
 and set them via the constructor. I love using Option 1 way more, but I thought I'd supply this option
 for people who prefer to import it another way. 

@@ -345,8 +345,8 @@ Just import `JwtManager`. // pick up here, test that this works
 
 
 ````typescript
-import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { JwtManager, SecureRequest } from '@overnightjs/jwt';
+import { Controller, Middleware, Get, Post, Put } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
 
@@ -355,7 +355,7 @@ export class JwtPracticeController {
     
     @Get(':email')
     private getJwt(req: Request, res: Response): void {
-        
+
         const jwtStr = JwtManager.jwt({
             email: req.params.email
         });
@@ -377,31 +377,31 @@ and set them via the constructor. I love using Option 1 way more, but I thought 
 for people who prefer to import it another way. 
 
 ````typescript
-import { Controller, Middleware, Get } from '@overnightjs/core';
-import { JwtHandler, SecureRequest } from '@overnightjs/jwt';
+import { JwtManager, SecureRequest } from '@overnightjs/jwt';
+import { Controller, Middleware, Get, Post, Put } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
-const jwtHandler = new JwtHandler('secret', '10h');
-const jwtMiddleware = jwtHandler.middleware();
+const jwtMgr = new JwtManager('secret', '10h');
 
 
 @Controller('api/jwt')
 export class JwtPracticeController {
     
-    @Get('getjwt/:email')
-    private getJwt(req: Request, res: Response): void {
-        
-        let jwtStr = jwtHandler.getJwt({
-            email: req.params.email
+    @Get('getJwtAlt/:fullname')
+    private getJwtFromHandler(req: Request, res: Response): void {
+
+        const jwtStr = jwtMgr.jwt({
+            fullName: req.params.fullname
         });
 
         res.status(200).json({jwt: jwtStr});
     }
 
-    @Get('callProtectedRoute')
-    @Middleware(jwtMiddleware)
-    private callProtectedRoute(req: SecureRequest, res: Response): void {
-        res.status(200).json({email: req.payload.email});
+
+    @Post('callProtectedRouteAlt')
+    @Middleware(jwtMgr.middleware)
+    private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void {
+        res.status(200).json({fullname: req.payload.fullName});
     }
 }
 ````

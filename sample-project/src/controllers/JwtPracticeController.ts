@@ -5,7 +5,7 @@
  */
 
 import { JwtManager, SecureRequest } from '@overnightjs/jwt';
-import { Controller, Middleware, Get, Post } from '@overnightjs/core';
+import { Controller, Middleware, Get, Post, Put } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
 const jwtMgr = new JwtManager('secret', '10h');
@@ -33,7 +33,7 @@ export class JwtPracticeController {
     }
 
 
-    @Get('getJwtFromHandler/:fullname')
+    @Put('getJwtAlt/:fullname')
     private getJwtFromHandler(req: Request, res: Response): void {
 
         const jwtStr = jwtMgr.jwt({
@@ -44,7 +44,7 @@ export class JwtPracticeController {
     }
 
 
-    @Get('callProtectedRouteFromHandler')
+    @Post('callProtectedRouteAlt')
     @Middleware(jwtMgr.middleware)
     private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void {
         res.status(200).json({fullname: req.payload.fullName});

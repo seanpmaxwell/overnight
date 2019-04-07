@@ -35,7 +35,7 @@ function setupMiddlware(secret: string): RequestHandler {
     return expressJwt(options);
 }
 
-export let jwtmiddleware: RequestHandler = setupMiddlware(SECRET);
+export const jwtmiddleware: RequestHandler = setupMiddlware(SECRET);
 
 
 

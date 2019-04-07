@@ -27,7 +27,7 @@ export class Logger {
     private _mode: LoggerModeOpts;
     private _filePath: string;
     private readonly DEFAULT_FILE_NAME = 'overnight.log';
-    private _rmTimestamp: boolean;
+    private _rmTimestamp = false;
 
 
     constructor(mode?: LoggerModeOpts, filePath?: string, rmTimestamp?: boolean) {

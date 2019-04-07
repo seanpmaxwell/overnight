@@ -32,7 +32,7 @@ export class SignupController {
 
         try {
             const info = await this.mailer.send(email, 'Overnight Developers',
-                'Thanks for signing up', null, '<h1>You are awesome</h1>');
+                'Thanks for signing up', '', '<h1>You are awesome</h1>');
 
             this.logger.info(info.response);
             msg = 'email_sent_to_' + email;

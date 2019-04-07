@@ -27,7 +27,7 @@ export function Delete(path?: string): MethodDecorator {
 
 function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    return function(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
 
         const originalMethod = descriptor.value;
         const middleware = originalMethod.middleware || null;
@@ -53,7 +53,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
 export function Middleware(middleware: Function | Function[]): MethodDecorator {
 
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor):
+    return function(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor):
         PropertyDescriptor {
 
         const originalMethod = descriptor.value;

@@ -36,8 +36,6 @@ application.
 * [OvernightJS/jwt](#overnight-jwt)
 * [OvernightJS/logger](#overnight-logger)
 
-<br>
-
 
 ## Installation
 You can get the latest release using npm:
@@ -49,9 +47,6 @@ $ npm install --save-dev @types/express
 
 > **Important!** OvernightJS requires Node >= 6, Express >= 4, TypeScript >= 2.0 and the `experimentalDecorators`, 
 `lib` compilation options in your `tsconfig.json` file.
-
-
-<br>
 
 
 ## <a name="overnight-core"></a> Quick start
@@ -176,7 +171,6 @@ export class SampleServer extends Server {
     }
 }
 ````
-<br>
 
 
 #### See how awesome this is!
@@ -205,8 +199,11 @@ this.app.use('/api/users', userController.getRoutes());
 ````
 
 This would get really tedious overtime and lead to a lot of boiler plate code.
-
 <br>
+<br>
+<br>
+
+
 
 
 ## <a name="custom-router"></a> Using a Custom Router
@@ -296,15 +293,14 @@ export class CustomRouterServer extends Server {
 
 ## <a name="overnight-jwt"></a> OvernightJS/jwt
 
-## What is it
+### What is it
 This is an easy tool for removing boilerplate code around json-web-tokens (jwt). You can get your token
 strings and middleware with just one line of code. @overnightJS/core is a sister library to add 
 TypeScript decorators for methods meant to call Express routes. @overnightjs/jwt does not require
 @overnightjs/core but they do work beautifully together. 
 
 
-
-## Features
+### Features
 * `jwt` and `jwtmiddleware` functions which can pull the secret-string and expiration-time directly 
 from the environment variables.
 * `JwtHandler` class which can be passed a secret and expiration time if you wish to set those from
@@ -313,11 +309,8 @@ your code instead of the environment variables.
 * SecureRequest ExpressJS router object. 
 * Fully type-safe :)
 
-<br>
 
-
-
-## Installation
+### Installation
 You can get the latest release using npm:
 
 ```batch
@@ -325,12 +318,7 @@ $ npm install --save @overnightjs/jwt express
 $ npm install --save-dev @types/express @types/express-jwt @types/jsonwebtoken
 ```
 
-<br>
-
-
-
-## Table of Contents
-
+### Table of Contents
 * [Option 1](#option-1)
 * [Option 2](#option-2)
 
@@ -362,7 +350,6 @@ production. Every time you restart the server the secret will change and all cli
 
 
 #### Create your controller
-
 The data that is encrypted is stored as the `payload` property. That's all there is to it. Just import 
 `jwt` and `jwtmiddleware`.
 
@@ -396,7 +383,6 @@ export class JwtPracticeController {
 
 
 ### <a name="options-2"></a> Option 2:
-
 If you want to set your secret and expiration time manually, you can import the `JwtHandler` class 
 and set them via the constructor. I love using Option 1 way more, but I thought I'd supply this option
 for people who prefer to import it another way. 
@@ -433,7 +419,6 @@ export class JwtPracticeController {
 
 
 #### Works just as fine in regular Express
-
 You dont have to use `@overnightjs/jwt` with `@overnightjs/core`. If you're using Express but are not
 interested in using decorators, you can pass the middleware just the same as you would for any typical 
 Express Router object.
@@ -460,8 +445,11 @@ web-server, might take more time than you feel like spending. So you can start l
 away, OvernightJS comes with its own logging package. From the environment variables you can easily
 switch your logs to be printed out to the command line, a file, or turned off completely. Logs printed
 to the console also are printed out in different colors depending on whether they're a warning, error, 
-etc. The file for holdings logs can specified or left as the default. Let's check it out!
+etc. The file for holdings logs can specified or left as the default. Let's check it out! <br>
 
+```batch
+$ npm install --save @overnightjs/logger
+```
 
 ````typescript
 import { Request, Response } from 'express';
@@ -489,8 +477,6 @@ export class LoggerPracticeController {
         res.status(200).json({msg: 'console_mode'});
     }
 ````
-
-
 <br>
 <br>
 <br>

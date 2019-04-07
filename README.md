@@ -486,20 +486,23 @@ import { Logger, LoggerModes } from '@overnightjs/logger';
 
 @Controller('api/logger')
 export class LoggerPracticeController {
+    
+    private readonly logger: Logger;
+    
+    constructor() {
+        this.logger = new Logger();
+    }
 
     @Get('console/:msg')
     private printLogsConsole(req: Request, res: Response): void {
 
-        process.env.OVERNIGHT_LOGGER_MODE = '1';
-        const logger = new Logger();
+        this.logger.info(req.params.msg);
+        this.logger.imp(req.params.msg);
+        this.logger.warn(req.params.msg);
+        this.logger.err(req.params.msg);
 
-        logger.info(req.params.msg);
-        logger.imp(req.params.msg);
-        logger.warn(req.params.msg);
-        logger.err(req.params.msg);
-
-        logger.err(new Error('printing out an error'));
-        logger.err(new Error('printing out an error full'), true); // <-- print the full Error object
+        this.logger.err(new Error('printing out an error'));
+        this.logger.err(new Error('printing out an error full'), true); // <-- print the full Error object
 
         res.status(200).json({msg: 'console_mode'});
     }
@@ -507,6 +510,31 @@ export class LoggerPracticeController {
 ````
 
 The previous code-snippet show the following content when printed to a file:
+````
+IMPORTANT: [2019-04-07T19:17:28.799Z]: OvernightJS with standard express router started on port: 3000
+INFO: [2019-04-07T19:18:08.939Z]: hello-logger
+IMPORTANT: [2019-04-07T19:18:08.939Z]: hello-logger
+WARNING: [2019-04-07T19:18:08.939Z]: hello-logger
+ERROR: [2019-04-07T19:18:08.940Z]: hello-logger
+ERROR: [2019-04-07T19:18:08.940Z]: Error: printing out an error
+ERROR: [2019-04-07T19:18:08.956Z]: Error: printing out an error full
+    at class_1.LoggerPracticeController.printLogsFile (/home/seanmaxwell/WebstormProjects/Overnight/sample-project/src/controllers/LoggerPracticeController.ts:49:20)
+    at class_1.descriptor.value [as printLogsFile] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/lib/RouteDecorators.ts:36:35)
+    at callBack (/home/seanmaxwell/WebstormProjects/Overnight/src/core/lib/Server.ts:78:50)
+    at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
+    at /home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:281:22
+    at param (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:354:14)
+    at param (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:365:14)
+    at Function.process_params (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:410:3)
+    at next (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:174:3)
+    at router (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:317:13)
+````
 
 
 And this when printed to the console:

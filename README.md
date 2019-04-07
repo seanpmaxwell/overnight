@@ -337,16 +337,16 @@ Another common option is the `dotenv` library, which imports environment variabl
 
 If you do not set these environment variables, a default value of **'3 days'** will be set for the expiration time and a 
 random string will be generated for the secret. The random string is fine for development but do not use it for 
-production. Every time you restart the server the secret will change and all client-side jwts will become invalid. 
+production. Every time you restart the server the secret will change and all client-side JWTs will become invalid. 
 <br>
 
 Now let's create the controller. The data that is encrypted is stored as the `payload` property. That's all there is to it. 
-Just import `JwtManager`. // pick up here, test that this works
+Just import `JwtManager`.
 
 
 ````typescript
 import { JwtManager, SecureRequest } from '@overnightjs/jwt';
-import { Controller, Middleware, Get, Post, Put } from '@overnightjs/core';
+import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
 
@@ -372,13 +372,13 @@ export class JwtPracticeController {
 ````
 
 #### <a name="options-2"></a> Option 2: Pass through the constructor
-If you want to set your secret and expiration time manually, you can import the `JwtHandler` class 
+If you want to set your secret and expiration time manually, you can instantiate the `JwtManager` class 
 and set them via the constructor. I love using Option 1 way more, but I thought I'd supply this option
 for people who prefer to import it another way. 
 
 ````typescript
 import { JwtManager, SecureRequest } from '@overnightjs/jwt';
-import { Controller, Middleware, Get, Post, Put } from '@overnightjs/core';
+import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
 const jwtMgr = new JwtManager('secret', '10h');
@@ -415,7 +415,7 @@ Express Router object.
 ````javascript
 var router = express.Router();
 
-router.get('users', ['jwtmiddleware directly or from handler'], (req, res) => {
+router.get('users', JwtManager.middleware, (req, res) => {
     console.log(req.payload.email);
 })
 
@@ -444,7 +444,7 @@ $ npm install --save @overnightjs/logger
 ### Guide
 There's not as much to _logger_ as there was our for `core` and `jwt`, so we're just going to quickly
 go over what each method does and how to set it up. The logger package's main export export is the
-`Logger` class. You will have separate instances of `Logger` throughout your project
+`Logger` class. You will have separate instances of `Logger` throughout your project // pick up here
 
 > OVERNIGHT_LOGGER_MODE="console"
 > OVERNIGHT_LOGGER_FILEPATH="/path to your project directory/name_of_project.log"

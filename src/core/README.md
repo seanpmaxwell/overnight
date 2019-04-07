@@ -6,22 +6,21 @@
  
 
 ## What is it
-
-OvernightJS is a clean simple library to add TypeScript decorators for methods meant to call Express routes.
+OvernightJS is a simple library to add TypeScript decorators for methods meant to call Express routes. It also
+includes a package for managing json-web-tokens and showing logs. 
 
 
 ## Features
 * Define a base route using a @Controller decorator.
-* Define routes on GET, POST, PUT, and DELETE verbs for methods in the controller.
-* Decorator for Express Router Middleware 
+* @Get, @Post, @Put, and @Delete decorators to convert controller methods into Express routes.
+* @Middleware decorator 
 * Server superclass to initialize ExpressJS server and setup controllers.
-* Master repo includes sample application if you want to practice with an API calling tool such as Postman.
+* Master repo includes a sample application, if you want to practice with an API calling tool such as Postman.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router
 * Fully type safe :)
 
 
 ## Why OvernightJS
-
 OvernightJS isn't meant to be a replacement for Express. If you're already somewhat familiar with ExpressJS, you can
 learn Overnight in about 10 minutes. There are some other frameworks which do add decorators for Express such as NestJS
 and TsExpressDecorators, but these are massive frameworks with entire websites dedicated to their documentation. OvernightJS
@@ -30,15 +29,13 @@ application.
 
 
 ## Table of Contents
-
 * [OvernightJS/core](#overnight-core)
 * [Custom Router](#custom-router)
-
-<br>
+* [OvernightJS/jwt](#overnight-jwt)
+* [OvernightJS/logger](#overnight-logger)
 
 
 ## Installation
-
 You can get the latest release using npm:
 
 ```batch
@@ -50,17 +47,13 @@ $ npm install --save-dev @types/express
 `lib` compilation options in your `tsconfig.json` file.
 
 
-<br>
-
-
 ## <a name="overnight-core"></a> Quick start
 
 #### Create your controller
 
-```typescript
+````typescript
 import { Request, Response, NextFunction } from 'express';
 import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
-
 
 @Controller('api/users')
 export class UserController {
@@ -108,9 +101,8 @@ export class UserController {
             res.status(200).json({msg: msg});
         }
     }
-   
 }
-```
+````
 
 #### Import your controller into the server
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
@@ -123,115 +115,108 @@ initializing all of your controller routes.
 <br>
 
 `super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
-call it after setting up your middleware. You can pass `super.addControllers()` a single controller 
-instance or an array of controller instances.
+call it after setting up your middleware. You can pass `super.addControllers()` a single controller-instance 
+or an array of controller-instances.
 <br>
 
-```typescript
+````typescript
 import * as bodyParser from 'body-parser';
 import { Server } from '@overnightjs/core';
-import { cinfo, cimp } from 'simple-color-print';
 import { UserController } from './UserController';
 import { SignupController } from './SignupController';
-
 
 export class SampleServer extends Server {
     
     constructor() {
         super();
         
-        this.setupExpress();
+        // Setup express before the controllers
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({extended: true}));
+                
         this.setupControllers();
     }
 
-    private setupExpress(): void {
+    private setupControllers(): void {
         
-        // Setup express here like you would
-        // any other ExpressJS application.
-        this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({extended: true}));
-    }
-
-    private setupControllers(): Array<CustomController> {
+        const userController = new UserController();
+        const signupController = new SignupController();
         
-        let userController = new UserController();
-        let signupController = new SignupController();
-        
-        let dbConnObj = new SomeDbConnClass('credentials');
+        const dbConnObj = new SomeDbConnClass('credentials');
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
 
-        // This must be called, and can be passed a single controller or an 
-        // array of controllers. Optional router object can also be passed 
-        // as second argument.
+        // This must be called, and can be passed a single controller or an array of 
+        // controllers. Optional router object can also be passed as second argument.
         super.addControllers([userController, signupController]);
     }
 
     public start(port: number): void {
-        
         this.app.listen(port, () => {
-            cimp('Server listening on port:' + port);
+            cimp('Server listening on port: ' + port);
         })
     }
 }
-```
-<br>
+````
 
 
 #### See how awesome this is!
-
 Without the above decorators we would have to wrap each controller method with something like:
 
-```typescript
+````typescript
 /* In the controller file*/
-public getRoutes(): Router {
+class UserController {
     
-    let router = Router();
-    
-    router.get('/', jwtMiddleWare, (req, res) => {
-        this.getAll(<SecureRequest>req, res);
-    });
-    
-    // Repeat for every single controller method
-    
-    return router;
+    public getRoutes(): Router {
+        
+        const router = Router();
+        
+        router.get('/', your middleware, (req, res) => {
+            // Do some stuff in here
+        });
+        
+        router.get('/anotherRoute', your middleware, (req, res) => {
+            // Do some stuff in here
+        });
+        
+        // Repeat for every single controller method
+        
+        return router;
+    }
 }
 
-
-/* Somewhere in the server file*/
-
+let userController = new UserController();
 this.app.use('/api/users', userController.getRoutes());
-// repeat for every single controller class
-```
+// Repeat for every single controller class
+````
 
 This would get really tedious overtime and lead to a lot of boiler plate code.
-
+<br>
+<br>
 <br>
 
 
-## <a name="custom-router"></a> Using a Custom Router
 
-Suppose you don't want to use the built in "Router" object which is provided by express. Maybe you
-don't like using async/await or having to call `.catch()` if you're not using try/catch blocks. Maybe
+
+## <a name="custom-router"></a> Using a Custom Router
+Suppose you don't want to use the built in "Router" object which is provided by Express. Maybe you
+don't like using async/await or having to call `.catch()` if you're not using `try/catch` blocks. Maybe
 you're using a library like _express-promise-router_ to handle the route callbacks. OvernightJS allows
 you to pass in a custom router object in the `super.addControllers()` method. Simply pass in your
-custom router object as the second argument after the controller/s. When you don't specify a custom
+custom router as the second param after the controller-instance/s. When you don't specify a custom
 router, the default express.Router() object is used. 
 
 
 - Controller using _express-promise-router_:
-
-```typescript
+````typescript
 import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
-
 
 @Controller('api/posts')
 export class PostController {
     
-    private readonly _INVALID_MSG = 'You entered an invalid post id: ';
-    private readonly _VALID_MSG = 'You entered the post id: ';
-    
+    private readonly INVALID_MSG = 'You entered an invalid post id: ';
+    private readonly VALID_MSG = 'You entered the post id: ';
 
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
@@ -241,7 +226,7 @@ export class PostController {
 
     private someAsyncFunction(id: number): Promise<string> {
         return new Promise((res, rej) => {
-            isNaN(id) ? rej(this._INVALID_MSG + id) : res(this._VALID_MSG + id);
+            isNaN(id) ? rej(this.INVALID_MSG + id) : res(this.VALID_MSG + id);
         })
     }
 
@@ -255,37 +240,34 @@ export class PostController {
         res.status(200).json({msg: 'Route used: ' + req.url});
     }
 }
-```
+````
 
 - Add _express-promise-router_ in the `super.addControllers()` method:
-
-
-```typescript
-/**
- * Example with custom router for the Overnight web-framework.
- *
- * created by Sean Maxwell Aug 26, 2018
- */
-
-import * as customRouter from 'express-promise-router';
+````typescript
+import * as customRouter  from 'express-promise-router';
 import { Server } from '@overnightjs/core';
 import { PostController } from './controllers/PostController';
 
-
 export class CustomRouterServer extends Server {
     
-    private readonly _START_MSG = 'overnightjs with custom router started on port: ';
+    private readonly START_MSG = 'OvernightJS with custom router started on port: ';
     
     constructor() {
         super();
-        let postController = new PostController();
+        const postController = new PostController();
         super.addControllers(postController, customRouter);
     }
 
     public start(port: number): void {
         this.app.listen(port, () => {
-            console.log(this._START_MSG + port);
+            console.log(this.START_MSG + port);
         })
     }
 }
-```
+````
+<br>
+<br>
+<br>
+
+## That's All!!
+Please star this repo if you found it useful. Happy web-deving :)

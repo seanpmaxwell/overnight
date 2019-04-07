@@ -15,26 +15,26 @@ import * as util from 'util';
 
 
 export const enum LoggerModes {
-    CONSOLE_MODE = 1,
-    FILE_MODE,
-    OFF_MODE
+    CONSOLE_MODE = 'console',
+    FILE_MODE = 'file',
+    OFF_MODE = 'off'
 }
 
 export class Logger {
 
-    private readonly mode: number;
+    private readonly mode: 'console' | 'file' | 'off';
     private readonly filePath: string;
     private readonly DEFAULT_FILE_NAME = 'overnight.log';
 
 
-    constructor(mode?: LoggerModes, filePath?: string) {
+    constructor(mode?: 'console' | 'file' | 'off', filePath?: string) {
 
         // Set the mode, console mode is default
         if (mode) {
-            this.mode = Number(mode);
+            this.mode = mode;
         } else {
-            const envMode = process.env.OVERNIGHT_LOGGER_MODE;
-            this.mode = envMode ? Number(envMode) : Number(LoggerModes.CONSOLE_MODE);
+            const envMode: any = process.env.OVERNIGHT_LOGGER_MODE;
+            this.mode = envMode || LoggerModes.CONSOLE_MODE;
         }
 
         // Set the file path
@@ -80,20 +80,23 @@ export class Logger {
 
     private printLog(content: any, printFull: boolean, color: string, prefix: string): void {
 
-        if (this.mode === LoggerModes.OFF_MODE) { return; }
-
+        if (this.mode === LoggerModes.OFF_MODE) {
+            return;
+        }
         if (printFull) {
             content = util.inspect(content);
         }
 
+        // Append time
         const time = '[' + new Date().toISOString() + ']: ';
-        content = time + content + '\n';
+        content = time + content;
 
+        // Print to console or file
         if (this.mode === LoggerModes.CONSOLE_MODE) {
             content = (colors as any)[color](content);
             console.log(content);
         } else if (this.mode === LoggerModes.FILE_MODE) {
-            this.writeToFile(prefix + content);
+            this.writeToFile(prefix + content + '\n');
         }
     }
 
@@ -101,7 +104,7 @@ export class Logger {
     private async writeToFile(content: string): Promise<void> {
 
         try {
-            const exists = this.checkExists(this.filePath);
+            const exists = this.checkExists();
 
             if (exists) {
                 fs.appendFileSync(this.filePath, content);
@@ -115,7 +118,7 @@ export class Logger {
     }
 
 
-    private checkExists(filePath: string): boolean {
+    private checkExists(): boolean {
 
         try {
             fs.accessSync(this.filePath);

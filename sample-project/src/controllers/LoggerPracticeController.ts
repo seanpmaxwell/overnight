@@ -64,4 +64,38 @@ export class LoggerPracticeController {
 
         res.status(200).json({msg: 'off_mode'});
     }
+
+
+    @Get('defaults/:msg')
+    private testDefaults(req: Request, res: Response): void {
+
+        process.env.OVERNIGHT_LOGGER_FILEPATH = '';
+        process.env.OVERNIGHT_LOGGER_MODE = '';
+
+        const logger = new Logger();
+
+        logger.info(req.params.msg);
+        logger.imp(req.params.msg);
+        logger.warn(req.params.msg);
+        logger.err(req.params.msg);
+
+        res.status(200).json({msg: 'test_defaults'});
+    }
+
+
+    @Get('defaultFilePath/:msg')
+    private defaultFilePath(req: Request, res: Response): void {
+
+        process.env.OVERNIGHT_LOGGER_FILEPATH = '';
+        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE_MODE;
+
+        const logger = new Logger();
+
+        logger.info(req.params.msg);
+        logger.imp(req.params.msg);
+        logger.warn(req.params.msg);
+        logger.err(req.params.msg);
+
+        res.status(200).json({msg: 'default_file_path'});
+    }
 }

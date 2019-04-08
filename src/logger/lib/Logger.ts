@@ -132,7 +132,7 @@ export class Logger {
     }
 
 
-    private async writeToFile(content: string): Promise<void> {
+    private writeToFile(content: string): void {
 
         try {
             const exists = this.checkExists();

@@ -12,13 +12,9 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as colors from 'colors';
 import * as util from 'util';
+import { LoggerModes, CustomLogger } from './tools';
 
 
-export const enum LoggerModes {
-    CONSOLE = 'console',
-    FILE = 'file',
-    OFF = 'off'
-}
 
 type LoggerModeOpts = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.OFF;
 
@@ -26,11 +22,17 @@ export class Logger {
 
     private _mode: LoggerModeOpts;
     private _filePath: string;
-    private readonly DEFAULT_FILE_NAME = 'overnight.log';
     private _rmTimestamp = false;
+    private _customLogger: CustomLogger | null = null;
+    private _useExternalTool = false;
+
+    private readonly DEFAULT_FILE_NAME = 'overnight.log';
+    private readonly EXTERNAL_LOGGER_ERR = 'Use custom logger set to true, but no logger ' +
+        'was provided.';
 
 
-    constructor(mode?: LoggerModeOpts, filePath?: string, rmTimestamp?: boolean) {
+    constructor(mode?: LoggerModeOpts, filePath?: string, rmTimestamp?: boolean,
+                customLogger?: CustomLogger, useExternalTool?: boolean) {
 
         // Set the mode, 'console' mode is default
         if (mode) {
@@ -55,8 +57,25 @@ export class Logger {
             const remove = process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP;
             if (remove === 'true') {
                 this._rmTimestamp = true;
-            } else if (remove === 'false' || remove === undefined) {
+            } else if (remove === 'false') {
                 this._rmTimestamp = false;
+            }
+        }
+
+        // Set the external tool
+        if (customLogger) {
+            this._customLogger = customLogger;
+        }
+
+        // Set the external tool to on or off
+        if (typeof useExternalTool === 'boolean') {
+            this._useExternalTool = useExternalTool;
+        } else if (useExternalTool === undefined) {
+            const useExternal = process.env.OVERNIGHT_LOGGER_USE_EXTERNAL_TOOL;
+            if (useExternal === 'true') {
+                this._useExternalTool = true;
+            } else if (useExternal === 'false') {
+                this._useExternalTool = false;
             }
         }
     }
@@ -83,6 +102,14 @@ export class Logger {
 
     public set rmTimestamp(rmTimestamp: boolean) {
         this._rmTimestamp = rmTimestamp;
+    }
+
+    public set customLogger(customLogger: CustomLogger | null) {
+        this._customLogger = customLogger;
+    }
+
+    public get customLogger(): CustomLogger | null {
+        return this._customLogger;
     }
 
 
@@ -122,12 +149,18 @@ export class Logger {
             content = time + content;
         }
 
-        // Print to console or file
+        // Print to console, file, or external tool
         if (this.mode === LoggerModes.CONSOLE) {
             content = (colors as any)[color](content);
             console.log(content);
         } else if (this.mode === LoggerModes.FILE) {
             this.writeToFile(prefix + content + '\n');
+        } else if (this.mode === LoggerModes.EXTERNAL) {
+            if (this._customLogger) {
+                this._customLogger.sendLog(content);
+            } else {
+                throw Error(this.EXTERNAL_LOGGER_ERR);
+            }
         }
     }
 

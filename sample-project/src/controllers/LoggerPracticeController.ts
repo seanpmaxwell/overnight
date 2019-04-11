@@ -98,4 +98,21 @@ export class LoggerPracticeController {
 
         res.status(200).json({msg: 'default_file_path'});
     }
+
+
+    @Get('userCustomLogger/:msg')
+    private useCustomLogger(req: Request, res: Response): void {
+
+        process.env.OVERNIGHT_LOGGER_FILEPATH = '';
+        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.EXTERNAL;
+
+        const logger = new Logger();
+
+        logger.info(req.params.msg);
+        logger.imp(req.params.msg);
+        logger.warn(req.params.msg);
+        logger.err(req.params.msg);
+
+        res.status(200).json({msg: 'default_file_path'});
+    }
 }

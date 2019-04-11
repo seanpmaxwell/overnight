@@ -12,6 +12,6 @@ export class ExternalTool implements ICustomLogger {
 
     public sendLog(content: any): void {
 
-        // pick up here
+        // pick up here tomorrow
     }
 }

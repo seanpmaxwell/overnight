@@ -5,7 +5,7 @@
  */
 
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
-import { JwtManager, SecureRequest } from '@overnightjs/jwt';
+import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
 import { Logger } from '@overnightjs/logger';
 
@@ -30,7 +30,7 @@ export class UserController {
 
     @Get('')
     @Middleware(JwtManager.middleware)
-    private getAll(req: SecureRequest, res: Response): void {
+    private getAll(req: ISecureRequest, res: Response): void {
         this.logger.info(req.payload, true);
         res.status(200).json({msg: 'get_all_called'});
     }
@@ -68,14 +68,14 @@ export class UserController {
             msg = err.message;
             this.logger.err(err, true);
         } finally {
-            res.status(200).json({msg: msg});
+            res.status(200).json({msg});
         }
     }
 
 
     private asyncMethod(req: Request): Promise<string> {
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             resolve(req.originalUrl + ' called');
         });
     }

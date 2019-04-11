@@ -12,7 +12,7 @@ import { Request } from 'express';
 
 
 // Export Secure Request to access the 'payload' property
-export interface SecureRequest extends Request {
+export interface ISecureRequest extends Request {
     payload: any;
 }
 
@@ -31,6 +31,11 @@ export class JwtManager {
     }
 
 
+    /********************************************************************************
+     *                       Get Jwt String
+     *****************************************************************************/
+
+
     public static jwt(dataToEcrypt: string | Buffer | object): string {
         return JwtManager.setupJwt(dataToEcrypt, JwtManager.SECRET, JwtManager.EXP);
     }
@@ -39,6 +44,23 @@ export class JwtManager {
     public jwt(dataToEcrypt: string | Buffer | object): string {
         return JwtManager.setupJwt(dataToEcrypt, this.secret, this.expires);
     }
+
+
+    private static setupJwt(dataToEcrypt: string | Buffer | object, secret: string,
+                            expires: string | number): string {
+
+        const exp = {
+            expiresIn: expires,
+        };
+
+        return jsonwebtoken.sign(dataToEcrypt, secret, exp);
+    }
+
+
+
+    /********************************************************************************
+     *                            Get Middleware
+     *******************************************************************************/
 
 
     public static get middleware(): RequestHandler {
@@ -51,22 +73,11 @@ export class JwtManager {
     }
 
 
-    private static setupJwt(dataToEcrypt: string | Buffer | object, secret: string,
-                            expires: string | number): string {
-
-        const exp = {
-            expiresIn: expires
-        };
-
-        return jsonwebtoken.sign(dataToEcrypt, secret, exp);
-    }
-
-
     private static setupMiddleware(secret: string): RequestHandler {
 
         const options = {
             secret,
-            userProperty: 'payload'
+            userProperty: 'payload',
         };
 
         return expressJwt(options);

@@ -8,9 +8,9 @@ export const enum LoggerModes {
     CONSOLE = 'console',
     FILE = 'file',
     EXTERNAL = 'external',
-    OFF = 'off'
+    OFF = 'off',
 }
 
-export interface CustomLogger {
+export interface ICustomLogger {
     sendLog(content: any): void;
 }

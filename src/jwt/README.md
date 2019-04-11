@@ -56,7 +56,7 @@ Just import `JwtManager`.
 
 
 ````typescript
-import { JwtManager, SecureRequest } from '@overnightjs/jwt';
+import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
@@ -75,7 +75,7 @@ export class JwtPracticeController {
 
     @Post('callProtectedRoute')
     @Middleware(JwtManager.middleware)
-    private callProtectedRoute(req: SecureRequest, res: Response): void {
+    private callProtectedRoute(req: ISecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
 }
@@ -87,7 +87,7 @@ and set them via the constructor. I love using Option 1 way more, but I thought 
 for people who prefer to import it another way. 
 
 ````typescript
-import { JwtManager, SecureRequest } from '@overnightjs/jwt';
+import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
@@ -110,7 +110,7 @@ export class JwtPracticeController {
 
     @Post('callProtectedRouteAlt')
     @Middleware(jwtMgr.middleware)
-    private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void {
+    private callProtectedRouteFromHandler(req: ISecureRequest, res: Response): void {
         res.status(200).json({fullname: req.payload.fullName});
     }
 }

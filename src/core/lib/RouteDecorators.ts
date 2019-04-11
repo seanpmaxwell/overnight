@@ -4,6 +4,8 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
+import { Request, Response, NextFunction } from 'express';
+
 
 /***********************************************************************************************
  *                                            Routes
@@ -27,7 +29,7 @@ export function Delete(path?: string): MethodDecorator {
 
 function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
-    return function(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+    return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
 
         const originalMethod = descriptor.value;
         const middleware = originalMethod.middleware || null;
@@ -39,7 +41,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
         descriptor.value.overnightRouteProperties = {
             httpVerb,
             middleware,
-            path: path ? ('/' + path) : ''
+            path: path ? ('/' + path) : '',
         };
 
         return descriptor;
@@ -51,10 +53,12 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
  *                                         Middleware
  **********************************************************************************************/
 
-export function Middleware(middleware: Function | Function[]): MethodDecorator {
+type Middlware = (req: Request, res: Response, next: NextFunction) => any;
 
-    return function(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor):
-        PropertyDescriptor {
+export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator {
+
+    return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor):
+        PropertyDescriptor => {
 
         const originalMethod = descriptor.value;
 

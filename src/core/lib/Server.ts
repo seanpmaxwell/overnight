@@ -17,7 +17,6 @@ export class Server {
         this._app = express();
     }
 
-
     protected get app(): Application {
         return this._app;
     }
@@ -28,8 +27,8 @@ export class Server {
      * search that directory instead. If it is an instance-object or array instance-objects,
      * don't pull in the controllers automatically.
      */
-    protected addControllers(controllers: InstanceType<any> | InstanceType<any>[],
-                             customRouterLib?: Function, showLog?: boolean): void {
+    protected addControllers(controllers: InstanceType<any> | Array<InstanceType<any>>,
+                             customRouterLib?: () => any, showLog?: boolean): void {
 
         let ctlrInstances = [];
 
@@ -44,7 +43,7 @@ export class Server {
         const routerLib = customRouterLib || Router;
 
         // Init route in each controller
-        ctlrInstances.forEach(controller => {
+        ctlrInstances.forEach((controller) => {
             if (controller && controller.controllerBasePath) {
                 const router = this.getRouter(controller, routerLib);
                 this.app.use(controller.controllerBasePath, router);
@@ -60,7 +59,7 @@ export class Server {
     }
 
 
-    private getRouter(controller: InstanceType<any>, routerLib: Function): Router {
+    private getRouter(controller: InstanceType<any>, routerLib: () => any): Router {
 
         const router = routerLib();
         const prototype = controller.__proto__.__proto__;

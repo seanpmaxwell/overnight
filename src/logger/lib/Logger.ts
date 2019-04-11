@@ -12,7 +12,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as colors from 'colors';
 import * as util from 'util';
-import { LoggerModes, CustomLogger } from './tools';
+import { LoggerModes, ICustomLogger } from './tools';
 
 
 
@@ -23,7 +23,7 @@ export class Logger {
     private _mode: LoggerModeOpts;
     private _filePath: string;
     private _rmTimestamp = false;
-    private _customLogger: CustomLogger | null = null;
+    private _customLogger: ICustomLogger | null = null;
     private _useExternalTool = false;
 
     private readonly DEFAULT_FILE_NAME = 'overnight.log';
@@ -32,7 +32,7 @@ export class Logger {
 
 
     constructor(mode?: LoggerModeOpts, filePath?: string, rmTimestamp?: boolean,
-                customLogger?: CustomLogger, useExternalTool?: boolean) {
+                customLogger?: ICustomLogger, useExternalTool?: boolean) {
 
         // Set the mode, 'console' mode is default
         if (mode) {
@@ -46,8 +46,8 @@ export class Logger {
         if (filePath) {
             this._filePath = filePath;
         } else {
-            const filePath = process.env.OVERNIGHT_LOGGER_FILEPATH;
-            this._filePath = filePath || path.join(os.homedir(), this.DEFAULT_FILE_NAME);
+            const envPath = process.env.OVERNIGHT_LOGGER_FILEPATH;
+            this._filePath = envPath || path.join(os.homedir(), this.DEFAULT_FILE_NAME);
         }
 
         // Set the timestamp, default
@@ -104,11 +104,11 @@ export class Logger {
         this._rmTimestamp = rmTimestamp;
     }
 
-    public set customLogger(customLogger: CustomLogger | null) {
+    public set customLogger(customLogger: ICustomLogger | null) {
         this._customLogger = customLogger;
     }
 
-    public get customLogger(): CustomLogger | null {
+    public get customLogger(): ICustomLogger | null {
         return this._customLogger;
     }
 
@@ -152,6 +152,7 @@ export class Logger {
         // Print to console, file, or external tool
         if (this.mode === LoggerModes.CONSOLE) {
             content = (colors as any)[color](content);
+            // tslint:disable-next-line
             console.log(content);
         } else if (this.mode === LoggerModes.FILE) {
             this.writeToFile(prefix + content + '\n');
@@ -169,14 +170,13 @@ export class Logger {
 
         try {
             const exists = this.checkExists();
-
             if (exists) {
                 fs.appendFileSync(this.filePath, content);
             } else {
                 fs.writeFileSync(this.filePath, content);
             }
-
         } catch (err) {
+            // tslint:disable-next-line
             console.error(err);
         }
     }

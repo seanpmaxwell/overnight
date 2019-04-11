@@ -4,7 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { JwtManager, SecureRequest } from '@overnightjs/jwt';
+import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get, Post, Put } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
@@ -19,7 +19,7 @@ export class JwtPracticeController {
     private getJwt(req: Request, res: Response): void {
 
         const jwtStr = JwtManager.jwt({
-            email: req.params.email
+            email: req.params.email,
         });
 
         res.status(200).json({jwt: jwtStr});
@@ -28,7 +28,7 @@ export class JwtPracticeController {
 
     @Post('callProtectedRoute')
     @Middleware(JwtManager.middleware)
-    private callProtectedRoute(req: SecureRequest, res: Response): void {
+    private callProtectedRoute(req: ISecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
 
@@ -37,7 +37,7 @@ export class JwtPracticeController {
     private getJwtFromHandler(req: Request, res: Response): void {
 
         const jwtStr = jwtMgr.jwt({
-            fullName: req.params.fullname
+            fullName: req.params.fullname,
         });
 
         res.status(200).json({jwt: jwtStr});
@@ -46,7 +46,7 @@ export class JwtPracticeController {
 
     @Post('callProtectedRouteAlt')
     @Middleware(jwtMgr.middleware)
-    private callProtectedRouteFromHandler(req: SecureRequest, res: Response): void {
+    private callProtectedRouteFromHandler(req: ISecureRequest, res: Response): void {
         res.status(200).json({fullname: req.payload.fullName});
     }
 }

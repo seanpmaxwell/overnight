@@ -121,8 +121,8 @@ ERROR: [2019-04-07T19:18:08.956Z]: Error: printing out an error full
 
 ### Using a custom logger 
 For production you'll probably have some third party logging tool like ElasticSearch or Splunk. _logger_ exports
-one export `ICustomLogger` which has one method `sendLogs()` that needs to implemented. If you created a class
-which implements this interface, add it to logger through a setter or the constructor, and set the mode to `CUSTOM`, 
+one interface `ICustomLogger` which has one method `sendLogs()` that needs to implemented. If you created a class
+which implements this interface, and add it to _logger_ through a setter or the constructor, and set the mode to `CUSTOM`, 
 logger will call whatever logic you created for `sendLogs()`.
 
 ````typescript

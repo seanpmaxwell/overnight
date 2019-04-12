@@ -1,6 +1,6 @@
 {
   "name": "@overnightjs/logger",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Logging service for OvernightJS. Part of the OvernightJS project.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",

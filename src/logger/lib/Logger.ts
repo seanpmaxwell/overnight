@@ -16,7 +16,7 @@ import { LoggerModes, ICustomLogger } from './tools';
 
 
 
-type LoggerModeOpts = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.OFF;
+type LoggerModeOpts = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.CUSTOM | LoggerModes.OFF;
 
 export class Logger {
 
@@ -24,7 +24,6 @@ export class Logger {
     private _filePath: string;
     private _rmTimestamp = false;
     private _customLogger: ICustomLogger | null = null;
-    private _useExternalTool = false;
 
     private readonly DEFAULT_FILE_NAME = 'overnight.log';
     private readonly EXTERNAL_LOGGER_ERR = 'Use custom logger set to true, but no logger ' +
@@ -32,7 +31,7 @@ export class Logger {
 
 
     constructor(mode?: LoggerModeOpts, filePath?: string, rmTimestamp?: boolean,
-                customLogger?: ICustomLogger, useExternalTool?: boolean) {
+                customLogger?: ICustomLogger) {
 
         // Set the mode, 'console' mode is default
         if (mode) {
@@ -65,18 +64,6 @@ export class Logger {
         // Set the external tool
         if (customLogger) {
             this._customLogger = customLogger;
-        }
-
-        // Set the external tool to on or off
-        if (typeof useExternalTool === 'boolean') {
-            this._useExternalTool = useExternalTool;
-        } else if (useExternalTool === undefined) {
-            const useExternal = process.env.OVERNIGHT_LOGGER_USE_EXTERNAL_TOOL;
-            if (useExternal === 'true') {
-                this._useExternalTool = true;
-            } else if (useExternal === 'false') {
-                this._useExternalTool = false;
-            }
         }
     }
 
@@ -156,7 +143,7 @@ export class Logger {
             console.log(content);
         } else if (this.mode === LoggerModes.FILE) {
             this.writeToFile(prefix + content + '\n');
-        } else if (this.mode === LoggerModes.EXTERNAL) {
+        } else if (this.mode === LoggerModes.CUSTOM) {
             if (this._customLogger) {
                 this._customLogger.sendLog(content);
             } else {

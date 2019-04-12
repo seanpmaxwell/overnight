@@ -7,7 +7,7 @@
 export const enum LoggerModes {
     CONSOLE = 'console',
     FILE = 'file',
-    EXTERNAL = 'external',
+    CUSTOM = 'custom',
     OFF = 'off',
 }
 

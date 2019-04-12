@@ -1,9 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
+    "baseUrl": "./",
     "paths": {
       "@overnightjs/core": ["../src/core"],
       "@overnightjs/jwt": ["../src/jwt"],

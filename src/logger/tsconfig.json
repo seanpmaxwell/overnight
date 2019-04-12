@@ -3,22 +3,15 @@
   "compilerOptions": {
     "baseUrl": "./",
     "declarationDir": "lib/",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "moduleResolution": "node",
-    "strictNullChecks": true,
-    "importHelpers": true,
-    "declaration": true,
+    "sourceMap": true,
     "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "noImplicitAny": false
+      "node_modules/@types"
+    ]
   },
+  "exclude": [
+    "node_modules"
+  ],
   "include": [
     "./lib/**/*"
-  ],
-  "exclude": [
-    "core/lib",
-    "dist"
   ]
 }

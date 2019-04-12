@@ -104,7 +104,7 @@ export class LoggerPracticeController {
     private useCustomLogger(req: Request, res: Response): void {
 
         process.env.OVERNIGHT_LOGGER_FILEPATH = '';
-        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.EXTERNAL;
+        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.CUSTOM;
 
         const logger = new Logger();
 

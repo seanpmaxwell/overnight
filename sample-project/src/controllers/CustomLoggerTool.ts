@@ -25,7 +25,6 @@ class CustomLoggerTool implements ICustomLogger {
 
 
     public sendLog(content: any): void {
-
         this.thirdPartyLoggingApplication(content);
     }
 }

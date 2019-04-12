@@ -17,7 +17,7 @@ class PostController {
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
         return this.someAsyncFunction(req.params.id)
-                    .then(ret => res.status(200).json({msg: ret}));
+                    .then((ret) => res.status(200).json({msg: ret}));
     }
 
 

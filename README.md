@@ -535,7 +535,7 @@ ERROR: [2019-04-07T19:18:08.956Z]: Error: printing out an error full
 <img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/loggerConsole.png' border='0'>
 
 
-- Using a custom logger
+### Using a custom logger 
 For production you'll probably have some third party logging tool like ElasticSearch or Splunk. _logger_ exports
 one export `ICustomLogger` which has one method `sendLogs()` that needs to implemented. If you created a class
 which implements this interface, add it to logger through a setter or the constructor, and set the mode to `CUSTOM`, 

@@ -8,10 +8,18 @@ import * as path from 'path';
 import { Request, Response } from 'express';
 import { Controller, Get } from '@overnightjs/core';
 import { Logger, LoggerModes } from '@overnightjs/logger';
+import CustomLoggerTool from './CustomLoggerTool';
 
 
 @Controller('api/logger')
 export class LoggerPracticeController {
+
+    private readonly customLoggerTool: CustomLoggerTool;
+
+
+    constructor() {
+        this.customLoggerTool = new CustomLoggerTool();
+    }
 
 
     @Get('console/:msg')
@@ -100,13 +108,11 @@ export class LoggerPracticeController {
     }
 
 
-    @Get('userCustomLogger/:msg')
+    @Get('useCustomLogger/:msg')
     private useCustomLogger(req: Request, res: Response): void {
 
-        process.env.OVERNIGHT_LOGGER_FILEPATH = '';
-        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.CUSTOM;
-
-        const logger = new Logger();
+        const logger = new Logger(LoggerModes.CUSTOM, '', true, this.customLoggerTool);
+        logger.rmTimestamp = true;
 
         logger.info(req.params.msg);
         logger.imp(req.params.msg);

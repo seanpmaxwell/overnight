@@ -15,7 +15,6 @@ import * as util from 'util';
 import { LoggerModes, ICustomLogger } from './tools';
 
 
-
 type LoggerModeOpts = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.CUSTOM | LoggerModes.OFF;
 
 export class Logger {
@@ -26,7 +25,7 @@ export class Logger {
     private _customLogger: ICustomLogger | null = null;
 
     private readonly DEFAULT_FILE_NAME = 'overnight.log';
-    private readonly EXTERNAL_LOGGER_ERR = 'Use custom logger set to true, but no logger ' +
+    private readonly CUSTOM_LOGGER_ERR = 'Use custom logger set to true, but no custom logger ' +
         'was provided.';
 
 
@@ -61,7 +60,7 @@ export class Logger {
             }
         }
 
-        // Set the external tool
+        // Set the custom tool
         if (customLogger) {
             this._customLogger = customLogger;
         }
@@ -147,7 +146,7 @@ export class Logger {
             if (this._customLogger) {
                 this._customLogger.sendLog(content);
             } else {
-                throw Error(this.EXTERNAL_LOGGER_ERR);
+                throw Error(this.CUSTOM_LOGGER_ERR);
             }
         }
     }

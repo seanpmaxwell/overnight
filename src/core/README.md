@@ -31,8 +31,6 @@ application.
 ## Table of Contents
 * [OvernightJS/core](#overnight-core)
 * [Custom Router](#custom-router)
-* [OvernightJS/jwt](#overnight-jwt)
-* [OvernightJS/logger](#overnight-logger)
 
 
 ## Installation

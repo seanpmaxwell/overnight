@@ -24,7 +24,6 @@ export class LoggerPracticeController {
 
     @Get("console/:msg")
     private printLogsConsole(req: Request, res: Response): void {
-
         process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.CONSOLE;
         const logger = new Logger();
 
@@ -42,7 +41,6 @@ export class LoggerPracticeController {
 
     @Get("file/:msg")
     private printLogsFile(req: Request, res: Response): void {
-
         const logFilePath = path.join(__dirname, "../../sampleProject.log");
         process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
@@ -62,7 +60,6 @@ export class LoggerPracticeController {
 
     @Get("off/:msg")
     private printLogsOff(req: Request, res: Response): void {
-
         const logger = new Logger(LoggerModes.OFF);
 
         logger.info(req.params.msg);
@@ -76,7 +73,6 @@ export class LoggerPracticeController {
 
     @Get("defaults/:msg")
     private testDefaults(req: Request, res: Response): void {
-
         process.env.OVERNIGHT_LOGGER_FILEPATH = "";
         process.env.OVERNIGHT_LOGGER_MODE = "";
 
@@ -93,7 +89,6 @@ export class LoggerPracticeController {
 
     @Get("defaultFilePath/:msg")
     private defaultFilePath(req: Request, res: Response): void {
-
         process.env.OVERNIGHT_LOGGER_FILEPATH = "";
         process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE;
 
@@ -110,7 +105,6 @@ export class LoggerPracticeController {
 
     @Get("useCustomLogger/:msg")
     private useCustomLogger(req: Request, res: Response): void {
-
         const logger = new Logger(LoggerModes.CUSTOM, "", true, this.customLoggerTool);
         logger.rmTimestamp = true;
 

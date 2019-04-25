@@ -30,7 +30,6 @@ class NormalRouterServer extends Server {
 
 
     private setupControllers(): void {
-
         const controllerInstances = [];
 
         for (const name of Object.keys(controllers)) {

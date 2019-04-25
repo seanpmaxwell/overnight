@@ -48,7 +48,6 @@ export class JwtManager {
 
     private static setupJwt(dataToEcrypt: string | Buffer | object, secret: string,
                             expires: string | number): string {
-
         const exp = {
             expiresIn: expires,
         };
@@ -74,7 +73,6 @@ export class JwtManager {
 
 
     private static setupMiddleware(secret: string): RequestHandler {
-
         const options = {
             secret,
             userProperty: "payload",

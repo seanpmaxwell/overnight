@@ -17,7 +17,6 @@ export class JwtPracticeController {
 
     @Get(":email")
     private getJwt(req: Request, res: Response): void {
-
         const jwtStr = JwtManager.jwt({
             email: req.params.email,
         });
@@ -35,7 +34,6 @@ export class JwtPracticeController {
 
     @Put("getJwtAlt/:fullname")
     private getJwtFromHandler(req: Request, res: Response): void {
-
         const jwtStr = jwtMgr.jwt({
             fullName: req.params.fullname,
         });

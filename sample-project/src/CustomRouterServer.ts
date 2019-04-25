@@ -18,7 +18,6 @@ class CustomRouterServer extends Server {
 
     constructor() {
         super();
-
         this.logger = new Logger();
         const postController = new PostController();
         super.addControllers(postController, customRouter);

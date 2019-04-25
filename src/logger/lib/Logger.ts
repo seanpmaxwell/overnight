@@ -31,7 +31,6 @@ export class Logger {
 
     constructor(mode?: LoggerModeOpts, filePath?: string, rmTimestamp?: boolean,
                 customLogger?: ICustomLogger) {
-
         // Set the mode, "console" mode is default
         if (mode) {
             this._mode = mode;
@@ -120,16 +119,12 @@ export class Logger {
 
 
     private printLog(content: any, printFull: boolean, color: string, prefix: string): void {
-
         if (this.mode === LoggerModes.OFF) {
             return;
         }
-
         if (printFull) {
             content = util.inspect(content);
         }
-
-        // Append time
         if (!this.rmTimestamp) {
             const time = "[" + new Date().toISOString() + "]: ";
             content = time + content;
@@ -153,7 +148,6 @@ export class Logger {
 
 
     private writeToFile(content: string): void {
-
         try {
             const exists = this.checkExists();
             if (exists) {
@@ -169,7 +163,6 @@ export class Logger {
 
 
     private checkExists(): boolean {
-
         try {
             fs.accessSync(this.filePath);
             return true;

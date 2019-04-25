@@ -25,7 +25,6 @@ export class SignupController {
 
     @Post()
     private async signup(req: Request, res: Response): Promise<void> {
-
         let msg = "problem_sending_email";
         let code = 400;
         const email = req.body.email;

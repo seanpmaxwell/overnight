@@ -29,7 +29,6 @@ export class Server {
      */
     protected addControllers(controllers: InstanceType<any> | Array<InstanceType<any>>,
                              customRouterLib?: () => any, showLog?: boolean): void {
-
         let ctlrInstances = [];
 
         // Convert to array if single controller
@@ -60,7 +59,6 @@ export class Server {
 
 
     private getRouter(controller: InstanceType<any>, routerLib: () => any): Router {
-
         const router = routerLib();
         const prototype = controller.__proto__.__proto__;
 
@@ -85,7 +83,6 @@ export class Server {
                 }
             }
         }
-
         return router;
     }
 }

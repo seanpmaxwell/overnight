@@ -22,7 +22,6 @@ class PostController {
 
 
     private someAsyncFunction(id: number): Promise<string> {
-
         return new Promise((resolve, reject) => {
 
             if (isNaN(id)) {

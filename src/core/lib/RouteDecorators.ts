@@ -15,17 +15,21 @@ export function Get(path?: string): MethodDecorator {
     return helperForRoutes("get", path);
 }
 
+
 export function Post(path?: string): MethodDecorator {
     return helperForRoutes("post", path);
 }
+
 
 export function Put(path?: string): MethodDecorator {
     return helperForRoutes("put", path);
 }
 
+
 export function Delete(path?: string): MethodDecorator {
     return helperForRoutes("delete", path);
 }
+
 
 function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
@@ -55,10 +59,11 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
 type Middlware = (req: Request, res: Response, next: NextFunction) => any;
 
+
 export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator {
 
     return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor):
-        PropertyDescriptor => {
+            PropertyDescriptor => {
 
         const originalMethod = descriptor.value;
 

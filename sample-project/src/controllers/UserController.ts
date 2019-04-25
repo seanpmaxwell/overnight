@@ -59,7 +59,6 @@ export class UserController {
 
     @Get("practice/async")
     private async getWithAsync(req: Request, res: Response): Promise<void> {
-
         let msg;
 
         try {
@@ -74,7 +73,6 @@ export class UserController {
 
 
     private asyncMethod(req: Request): Promise<string> {
-
         return new Promise((resolve) => {
             resolve(req.originalUrl + " called");
         });

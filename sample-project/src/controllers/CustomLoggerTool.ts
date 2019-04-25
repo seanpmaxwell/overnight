@@ -16,7 +16,6 @@ class CustomLoggerTool implements ICustomLogger {
 
 
     constructor() {
-
         this.thirdPartyLoggingApplication = (log: any) => {
             // tslint:disable-next-line
             console.log(colors.america(log));

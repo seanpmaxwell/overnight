@@ -4,15 +4,15 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as path from 'path';
-import * as fs from 'fs';
-import NormalRouterServer from './NormalRouterServer';
-import CustomRouterServer from './CustomRouterServer';
+import * as path from "path";
+import * as fs from "fs";
+import NormalRouterServer from "./NormalRouterServer";
+import CustomRouterServer from "./CustomRouterServer";
 
 
 
 // Set env variables
-const logFilePath = path.join(__dirname, '../sampleProject.log');
+const logFilePath = path.join(__dirname, "../sampleProject.log");
 process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 
@@ -27,7 +27,7 @@ process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 // Start Server
 let server;
-if (process.argv[2] === 'customRouter') {
+if (process.argv[2] === "customRouter") {
     server = new CustomRouterServer();
 } else {
     server = new NormalRouterServer();

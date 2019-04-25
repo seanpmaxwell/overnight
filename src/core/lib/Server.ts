@@ -4,8 +4,8 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import * as express from 'express';
-import { Application, Request, Response, NextFunction, Router } from 'express';
+import * as express from "express";
+import { Application, Request, Response, NextFunction, Router } from "express";
 
 
 export class Server {
@@ -23,9 +23,9 @@ export class Server {
 
 
     /**
-     * If controllers === undefined, search the './controllers' directory. If it is a string,
+     * If controllers === undefined, search the "./controllers" directory. If it is a string,
      * search that directory instead. If it is an instance-object or array instance-objects,
-     * don't pull in the controllers automatically.
+     * don"t pull in the controllers automatically.
      */
     protected addControllers(controllers: InstanceType<any> | Array<InstanceType<any>>,
                              customRouterLib?: () => any, showLog?: boolean): void {
@@ -52,9 +52,9 @@ export class Server {
         });
 
         if (showLog) {
-            const s = count === 1 ? ' controller' : ' controllers';
+            const s = count === 1 ? " controller" : " controllers";
             // tslint:disable-next-line
-            console.log(count + s + ' configured.');
+            console.log(count + s + " configured.");
         }
     }
 

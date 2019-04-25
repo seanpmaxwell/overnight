@@ -4,18 +4,18 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
-import { Controller, Middleware, Get, Post, Put } from '@overnightjs/core';
-import { Request, Response } from 'express';
+import { JwtManager, ISecureRequest } from "@overnightjs/jwt";
+import { Controller, Middleware, Get, Post, Put } from "@overnightjs/core";
+import { Request, Response } from "express";
 
-const jwtMgr = new JwtManager('secret', '10h');
+const jwtMgr = new JwtManager("secret", "10h");
 
 
-@Controller('api/jwt')
+@Controller("api/jwt")
 export class JwtPracticeController {
 
 
-    @Get(':email')
+    @Get(":email")
     private getJwt(req: Request, res: Response): void {
 
         const jwtStr = JwtManager.jwt({
@@ -26,14 +26,14 @@ export class JwtPracticeController {
     }
 
 
-    @Post('callProtectedRoute')
+    @Post("callProtectedRoute")
     @Middleware(JwtManager.middleware)
     private callProtectedRoute(req: ISecureRequest, res: Response): void {
         res.status(200).json({email: req.payload.email});
     }
 
 
-    @Put('getJwtAlt/:fullname')
+    @Put("getJwtAlt/:fullname")
     private getJwtFromHandler(req: Request, res: Response): void {
 
         const jwtStr = jwtMgr.jwt({
@@ -44,7 +44,7 @@ export class JwtPracticeController {
     }
 
 
-    @Post('callProtectedRouteAlt')
+    @Post("callProtectedRouteAlt")
     @Middleware(jwtMgr.middleware)
     private callProtectedRouteFromHandler(req: ISecureRequest, res: Response): void {
         res.status(200).json({fullname: req.payload.fullName});

@@ -4,15 +4,15 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
-import { Server } from "@overnightjs/core";
-import { Logger } from "@overnightjs/logger";
-import customRouter from "express-promise-router";
-import PostController from "./controllers/PostController";
+import { Server } from '@overnightjs/core';
+import { Logger } from '@overnightjs/logger';
+import customRouter from 'express-promise-router';
+import PostController from './controllers/PostController';
 
 
 class CustomRouterServer extends Server {
 
-    private readonly START_MSG = "OvernightJs with custom router started on port:";
+    private readonly START_MSG = 'OvernightJs with custom router started on port:';
     private readonly logger: Logger;
 
 

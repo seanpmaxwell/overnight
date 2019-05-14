@@ -6,7 +6,8 @@
       "@overnightjs/core": ["../src/core"],
       "@overnightjs/jwt": ["../src/jwt"],
       "@overnightjs/logger": ["../src/logger"]
-    }
+    },
+    "target": "es6"
   },
   "include": [
     "./src/**/*"

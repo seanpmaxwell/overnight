@@ -10,7 +10,7 @@ export function Controller(path: string) {
     return <T extends new (...args: any[]) => {}>(constructor: T) => {
 
         return class extends constructor {
-            public controllerBasePath = "/" + path;
+            public controllerBasePath = '/' + path;
         };
     };
 }

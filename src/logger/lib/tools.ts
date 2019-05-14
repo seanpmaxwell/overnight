@@ -5,10 +5,10 @@
  */
 
 export const enum LoggerModes {
-    CONSOLE = "console",
-    FILE = "file",
-    CUSTOM = "custom",
-    OFF = "off",
+    CONSOLE = 'console',
+    FILE = 'file',
+    CUSTOM = 'custom',
+    OFF = 'off',
 }
 
 export interface ICustomLogger {

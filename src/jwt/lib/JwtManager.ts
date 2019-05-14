@@ -4,14 +4,14 @@
  * created by Sean Maxwell Dec 17, 2018
  */
 
-import * as randomstring from "randomstring";
-import * as expressJwt from "express-jwt";
-import * as jsonwebtoken from "jsonwebtoken";
-import { RequestHandler } from "express-jwt";
-import { Request } from "express";
+import * as randomstring from 'randomstring';
+import * as expressJwt from 'express-jwt';
+import * as jsonwebtoken from 'jsonwebtoken';
+import { RequestHandler } from 'express-jwt';
+import { Request } from 'express';
 
 
-// Export Secure Request to access the "payload" property
+// Export Secure Request to access the 'payload' property
 export interface ISecureRequest extends Request {
     payload: any;
 }
@@ -19,7 +19,7 @@ export interface ISecureRequest extends Request {
 export class JwtManager {
 
     private static readonly SECRET = process.env.OVERNIGHT_JWT_SECRET || randomstring.generate(80);
-    private static readonly EXP = process.env.OVERNIGHT_JWT_EXP || "3 days";
+    private static readonly EXP = process.env.OVERNIGHT_JWT_EXP || '3 days';
 
     private readonly secret: string;
     private readonly expires: string | number;
@@ -75,7 +75,7 @@ export class JwtManager {
     private static setupMiddleware(secret: string): RequestHandler {
         const options = {
             secret,
-            userProperty: "payload",
+            userProperty: 'payload',
         };
 
         return expressJwt(options);

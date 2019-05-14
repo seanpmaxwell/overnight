@@ -6,15 +6,15 @@
  * created by Sean Maxwell Aug 28, 2018
  */
 
-import { Request, Response } from "express";
-import { Controller, Get, Put } from "@overnightjs/core";
+import { Request, Response } from 'express';
+import { Controller, Get, Put } from '@overnightjs/core';
 
 
-@Controller("api/posts")
+@Controller('api/posts')
 class PostController {
 
 
-    @Get(":id")
+    @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
         return this.someAsyncFunction(req.params.id)
                     .then((ret) => res.status(200).json({msg: ret}));
@@ -25,23 +25,23 @@ class PostController {
         return new Promise((resolve, reject) => {
 
             if (isNaN(id)) {
-                reject("You entered an invalid post id: " + id);
+                reject('You entered an invalid post id: ' + id);
             } else {
-                resolve("You entered the post id: " + id);
+                resolve('You entered the post id: ' + id);
             }
         });
     }
 
 
-    @Put(":id")
+    @Put(':id')
     private add(req: Request, res: Response): Promise<string> {
-        return Promise.resolve("next");
+        return Promise.resolve('next');
     }
 
 
-    @Put("foo")
+    @Put('foo')
     private add2(req: Request, res: Response): void {
-        res.status(200).json({msg: "Route used: " + req.url});
+        res.status(200).json({msg: 'Route used: ' + req.url});
     }
 }
 

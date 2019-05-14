@@ -4,7 +4,7 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
 
 /***********************************************************************************************
@@ -12,22 +12,22 @@ import { Request, Response, NextFunction } from "express";
  **********************************************************************************************/
 
 export function Get(path?: string): MethodDecorator {
-    return helperForRoutes("get", path);
+    return helperForRoutes('get', path);
 }
 
 
 export function Post(path?: string): MethodDecorator {
-    return helperForRoutes("post", path);
+    return helperForRoutes('post', path);
 }
 
 
 export function Put(path?: string): MethodDecorator {
-    return helperForRoutes("put", path);
+    return helperForRoutes('put', path);
 }
 
 
 export function Delete(path?: string): MethodDecorator {
-    return helperForRoutes("delete", path);
+    return helperForRoutes('delete', path);
 }
 
 
@@ -45,7 +45,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
         descriptor.value.overnightRouteProperties = {
             httpVerb,
             middleware,
-            path: path ? ("/" + path) : "",
+            path: path ? ('/' + path) : '',
         };
 
         return descriptor;

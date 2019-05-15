@@ -7,10 +7,16 @@
 
 export function Controller(path: string) {
 
-    return <T extends new (...args: any[]) => {}>(constructor: T) => {
+    return (target: new () => any) => {
 
-        return class extends constructor {
-            public controllerBasePath = '/' + path;
-        };
+        Object.defineProperty(target.prototype, 'controllerBasePath', {
+            configurable: true,
+            enumerable: true,
+            value: '/' + path,
+            writable: false,
+        });
+
+        return target;
     };
 }
+

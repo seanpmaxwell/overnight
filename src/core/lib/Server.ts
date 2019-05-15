@@ -60,7 +60,7 @@ export class Server {
 
     private getRouter(controller: InstanceType<any>, routerLib: () => any): Router {
         const router = routerLib();
-        const prototype = controller.__proto__.__proto__; // pick up here
+        const prototype = controller.__proto__; // pick up here
 
         // Iterate each controller-instance's parent function
         for (const member in prototype) {
@@ -69,7 +69,6 @@ export class Server {
                 // Check that it's a decorated route
                 const route = controller[member];
                 if (route && route.overnightRouteProperties) {
-
                     // Get the decorators settings
                     const { middleware, httpVerb, path } = route.overnightRouteProperties;
                     const callBack = (req: Request, res: Response, next: NextFunction) => {

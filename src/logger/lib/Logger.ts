@@ -126,7 +126,6 @@ export class Logger {
             const time = '[' + new Date().toISOString() + ']: ';
             content = time + content;
         }
-
         // Print to console, file, or external tool
         if (this.mode === LoggerModes.CONSOLE) {
             content = (colors as any)[color](content);

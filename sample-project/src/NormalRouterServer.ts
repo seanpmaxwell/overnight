@@ -40,7 +40,7 @@ class NormalRouterServer extends Server {
             }
         }
 
-        super.addControllers(controllerInstances);
+        super.addControllers(controllerInstances, null, true);
     }
 
 

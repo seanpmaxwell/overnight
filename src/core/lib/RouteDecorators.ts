@@ -11,7 +11,7 @@ import { Request, Response, NextFunction } from 'express';
  *                                            Routes
  **********************************************************************************************/
 
-export function Get(path?: string): MethodDecorator {
+export function Get(path?: string): MethodDecorator | PropertyDecorator {
     return helperForRoutes('get', path);
 }
 
@@ -31,7 +31,7 @@ export function Delete(path?: string): MethodDecorator {
 }
 
 
-function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
+function helperForRoutes(httpVerb: string, path?: string): MethodDecorator | PropertyDecorator {
 
     return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
 

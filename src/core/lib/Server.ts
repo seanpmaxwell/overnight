@@ -28,10 +28,11 @@ export class Server {
      * don't pull in the controllers automatically.
      */
     protected addControllers(controllers: InstanceType<any> | Array<InstanceType<any>>,
-                             customRouterLib?: () => any, showLog?: boolean): void {
-        let ctlrInstances = [];
+                             customRouterLib?: (() => any) | null,
+                             showLog?: boolean): void {
 
         // Convert to array if single controller
+        let ctlrInstances = [];
         if (controllers instanceof Array) {
             ctlrInstances = controllers;
         } else {
@@ -58,31 +59,29 @@ export class Server {
     }
 
 
-    private getRouter(controller: InstanceType<any>, routerLib: () => any): Router {
+    private getRouter(controller: InstanceType<any> | (() => any), routerLib: () => any): Router {
         const router = routerLib();
-        const prototype = controller.__proto__; // pick up here
 
-        // Iterate each controller-instance's parent function
-        for (const member in prototype) {
-            if (prototype.hasOwnProperty(member)) {
+        // Include prototype functions AND instance-object properties equal to functions
+        let members = Object.getOwnPropertyNames(controller);
+        members = members.concat(Object.getOwnPropertyNames(controller.__proto__));
 
-                // Check that it's a decorated route
-                const route = controller[member];
-                if (route && route.overnightRouteProperties) {
-                    // Get the decorators settings
-                    const { middleware, httpVerb, path } = route.overnightRouteProperties;
-                    const callBack = (req: Request, res: Response, next: NextFunction) => {
-                        return controller[member](req, res, next);
-                    };
-                    // Set the route
-                    if (middleware) {
-                        router[httpVerb](path, middleware, callBack);
-                    } else {
-                        router[httpVerb](path, callBack);
-                    }
+        // Iterate each controller-instance
+        members.forEach((member) => {
+            const route = controller[member];
+            if (route && route.overnightRouteProperties) {
+                const { middleware, httpVerb, path } = route.overnightRouteProperties;
+                const callBack = (req: Request, res: Response, next: NextFunction) => {
+                    return controller[member](req, res, next);
+                };
+                if (middleware) {
+                    router[httpVerb](path, middleware, callBack);
+                } else {
+                    router[httpVerb](path, callBack);
                 }
             }
-        }
+            return router;
+        });
         return router;
     }
 }

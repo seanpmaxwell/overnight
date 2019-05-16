@@ -22,7 +22,7 @@ export class ArrowFunctionController {
     }
 
 
-    @Get(':id') // pick up here, it's a typing issue
+    @Get(':id') // pick up here, it's a typing issue, look at differences between property and method decorators, maybe have new decorators in diff folder
     private get: any = (req: Request, res: Response) => {
         this.logger.info(req.params.id);
         return res.status(200).json({msg: 'get_called'});

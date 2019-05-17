@@ -48,7 +48,7 @@ export class Server {
                 const prototype = Object.getPrototypeOf(controller);
                 const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
                 if (basePath) {
-                    const router = this.getRouter(controller, routerLib);
+                    const router = this.getRouter(routerLib, controller);
                     this.app.use(basePath, router);
                     count++;
                 }
@@ -69,15 +69,17 @@ export class Server {
      * @param controller
      */
     private getRouter(routerLib: () => any, controller: InstanceType<any> | (() => any)): Router {
+        // Get members of both instance and prototype
         const router = routerLib();
         const prototype = Object.getPrototypeOf(controller);
         let members = Object.getOwnPropertyNames(controller);
         members = members.concat(Object.getOwnPropertyNames(prototype));
-
+        // Iterate all members
         members.forEach((member) => {
             const route = controller[member];
-            if (route && route.overnightRouteProperties) { // pick up here, use metadata
-                const { middleware, httpVerb, path } = route.overnightRouteProperties;
+            const routeProperties = Reflect.getOwnMetadata(member, prototype);
+            if (route && routeProperties) {
+                const { middleware, httpVerb, path } = routeProperties;
                 const callBack = (req: Request, res: Response, next: NextFunction) => {
                     return controller[member](req, res, next);
                 };

@@ -5,6 +5,7 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
+import {BASE_PATH_KEY} from './ClassDecorators';
 
 
 
@@ -35,49 +36,19 @@ export function Delete(path?: string): MethodDecorator {
 function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
     return (target: any, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => {
-
-        const overnightRouteProperties = { // pull metadata and merge this with it
+        let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
+        if (!routeProperties) {
+            routeProperties = {};
+        }
+        routeProperties = {
             httpVerb,
             path: path ? ('/' + path) : '',
+            ...routeProperties,
         };
-
-        // May not need these two methods, just use metadata and return target[propertyKey]
+        Reflect.defineMetadata(propertyKey, routeProperties, target);
         if (descriptor) {
-            return processMethod(overnightRouteProperties, descriptor);
-        } else {
-            return processProperty(target, propertyKey, overnightRouteProperties);
+            return descriptor;
         }
-    };
-}
-
-
-function processMethod(overnightRouteProperties: {[key: string]: any},
-                       descriptor: PropertyDescriptor): PropertyDescriptor {
-
-    const originalMethod = descriptor.value;
-    const middleware = originalMethod.middleware || null;
-    descriptor.value = function(...args: any[]) {
-        return originalMethod.apply(this, args);
-    };
-    descriptor.value.overnightRouteProperties = {
-        ...overnightRouteProperties,
-        middleware,
-    };
-    return descriptor;
-}
-
-
-function processProperty(target: any, propertyKey: string | symbol,
-                         overnightRouteProperties: {[key: string]: any}): void {
-
-    const originalMethod = target[propertyKey];
-    const middleware = originalMethod.middleware || null;
-    target[propertyKey] = function(...args: any[]) {
-        return originalMethod.apply(this, args);
-    };
-    target[propertyKey].overnightRouteProperties = {
-        ...overnightRouteProperties,
-        middleware,
     };
 }
 
@@ -91,17 +62,18 @@ type Middlware = (req: Request, res: Response, next: NextFunction) => any;
 // pick up here, need to update this for properties too
 export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator {
 
-    return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor):
-            PropertyDescriptor => {
-
-        const originalMethod = descriptor.value;
-
-        descriptor.value = function(...args: any[]) {
-            return originalMethod.apply(this, args);
+    return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+        let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
+        if (!routeProperties) {
+            routeProperties = {};
+        }
+        routeProperties = {
+            middleware,
+            ...routeProperties,
         };
-
-        descriptor.value.middleware = middleware;
-
-        return descriptor;
+        Reflect.defineMetadata(propertyKey, routeProperties, target);
+        if (descriptor) {
+            return descriptor;
+        }
     };
 }

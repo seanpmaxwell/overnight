@@ -23,11 +23,11 @@ export class ArrowFunctionController {
     }
 
 
-    // @(OvernightJS as any).Post(':id')
-    // private get: any = (req: Request, res: Response) => {
-    //     this.logger.info(req.params.id);
-    //     return res.status(200).json({msg: 'get_called'});
-    // }
+    @(OvernightJS as any).Post(':id')
+    private get: any = (req: Request, res: Response) => {
+        this.logger.info(req.params.id);
+        return res.status(200).json({msg: 'get_called'}); // pick up here, convert all these to arrows, doublecheck middleware and es5, and update documentation
+    }
 
 
     @Get('')

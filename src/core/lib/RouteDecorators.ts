@@ -59,7 +59,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
 type Middlware = (req: Request, res: Response, next: NextFunction) => any;
 
-// pick up here, need to update this for properties too
+
 export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator {
 
     return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {

@@ -20,7 +20,6 @@ export class JwtPracticeController {
         const jwtStr = JwtManager.jwt({
             email: req.params.email,
         });
-
         res.status(200).json({jwt: jwtStr});
     }
 
@@ -37,7 +36,6 @@ export class JwtPracticeController {
         const jwtStr = jwtMgr.jwt({
             fullName: req.params.fullname,
         });
-
         res.status(200).json({jwt: jwtStr});
     }
 

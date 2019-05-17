@@ -513,7 +513,7 @@ ERROR: [2019-04-07T19:18:08.940Z]: hello-logger
 ERROR: [2019-04-07T19:18:08.940Z]: Error: printing out an error
 ERROR: [2019-04-07T19:18:08.956Z]: Error: printing out an error full
     at class_1.LoggerPracticeController.printLogsFile (/home/seanmaxwell/WebstormProjects/Overnight/sample-project/src/controllers/LoggerPracticeController.ts:49:20)
-    at class_1.descriptor.value [as printLogsFile] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/lib/RouteDecorators.ts:36:35)
+    at class_1.descriptor.value [as printLogsFile] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/lib/PropertyDecorators.ts:36:35)
     at callBack (/home/seanmaxwell/WebstormProjects/Overnight/src/core/lib/Server.ts:78:50)
     at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
     at next (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/route.js:137:13)

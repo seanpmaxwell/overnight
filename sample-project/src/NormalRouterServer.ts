@@ -20,37 +20,29 @@ class NormalRouterServer extends Server {
     constructor() {
         super();
         this.logger = new Logger();
-
-        // Setup JSON parse middleware
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
-
         this.setupControllers();
     }
 
 
     private setupControllers(): void {
         const controllerInstances = [];
-
         for (const name of Object.keys(controllers)) {
-
             const controller = (controllers as any)[name];
             if (typeof controller === 'function') {
                 controllerInstances.push(new controller());
             }
         }
-
         super.addControllers(controllerInstances, null, true);
     }
 
 
     public start(port?: number): void {
         port = port || 3000;
-
         this.app.get('*', (req, res) => {
             res.send(this.FRONT_END_MSG);
         });
-
         this.app.listen(port, () => {
             this.logger.rmTimestamp = true;
             this.logger.info('\n');

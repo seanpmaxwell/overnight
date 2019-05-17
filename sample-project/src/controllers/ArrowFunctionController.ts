@@ -6,6 +6,7 @@
  */
 
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
+import * as OvernightJS from '@overnightjs/core';
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
 import { Logger } from '@overnightjs/logger';
@@ -22,11 +23,11 @@ export class ArrowFunctionController {
     }
 
 
-    @Get(':id') // pick up here, it's a typing issue, look at differences between property and method decorators, maybe have new decorators in diff folder
-    private get: any = (req: Request, res: Response) => {
-        this.logger.info(req.params.id);
-        return res.status(200).json({msg: 'get_called'});
-    }
+    // @(OvernightJS as any).Post(':id')
+    // private get: any = (req: Request, res: Response) => {
+    //     this.logger.info(req.params.id);
+    //     return res.status(200).json({msg: 'get_called'});
+    // }
 
 
     @Get('')

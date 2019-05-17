@@ -4,18 +4,14 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
+import 'reflect-metadata';
 
-export function Controller(path: string) {
 
-    return (target: new () => any) => {
+export function Controller(path: string): ClassDecorator {
 
-        Object.defineProperty(target.prototype, 'controllerBasePath', {
-            configurable: true,
-            enumerable: true,
-            value: '/' + path,
-            writable: false,
-        });
-
+    // tslint:disable-next-line:ban-types
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata('controllerBasePath', '/' + path, target.prototype);
         return target;
     };
 }

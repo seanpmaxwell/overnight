@@ -7,11 +7,12 @@
 import { Request, Response, NextFunction } from 'express';
 
 
+
 /***********************************************************************************************
  *                                            Routes
  **********************************************************************************************/
 
-export function Get(path?: string): MethodDecorator | PropertyDecorator {
+export function Get(path?: string): MethodDecorator {
     return helperForRoutes('get', path);
 }
 
@@ -31,24 +32,52 @@ export function Delete(path?: string): MethodDecorator {
 }
 
 
-function helperForRoutes(httpVerb: string, path?: string): MethodDecorator | PropertyDecorator {
+function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
-    return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+    return (target: any, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => {
 
-        const originalMethod = descriptor.value;
-        const middleware = originalMethod.middleware || null;
-
-        descriptor.value = function(...args: any[]) {
-            return originalMethod.apply(this, args);
-        };
-
-        descriptor.value.overnightRouteProperties = {
+        const overnightRouteProperties = {
             httpVerb,
-            middleware,
             path: path ? ('/' + path) : '',
         };
 
-        return descriptor;
+        // May not need these two methods, just use metadata and return target[propertyKey]
+        if (descriptor) {
+            return processMethod(overnightRouteProperties, descriptor);
+        } else {
+            return processProperty(target, propertyKey, overnightRouteProperties);
+        }
+    };
+}
+
+
+function processMethod(overnightRouteProperties: {[key: string]: any},
+                       descriptor: PropertyDescriptor): PropertyDescriptor {
+
+    const originalMethod = descriptor.value;
+    const middleware = originalMethod.middleware || null;
+    descriptor.value = function(...args: any[]) {
+        return originalMethod.apply(this, args);
+    };
+    descriptor.value.overnightRouteProperties = {
+        ...overnightRouteProperties,
+        middleware,
+    };
+    return descriptor;
+}
+
+
+function processProperty(target: any, propertyKey: string | symbol,
+                         overnightRouteProperties: {[key: string]: any}): void {
+
+    const originalMethod = target[propertyKey];
+    const middleware = originalMethod.middleware || null;
+    target[propertyKey] = function(...args: any[]) {
+        return originalMethod.apply(this, args);
+    };
+    target[propertyKey].overnightRouteProperties = {
+        ...overnightRouteProperties,
+        middleware,
     };
 }
 
@@ -59,7 +88,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator | Pro
 
 type Middlware = (req: Request, res: Response, next: NextFunction) => any;
 
-
+// pick up here, need to update this for properties too
 export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator {
 
     return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor):

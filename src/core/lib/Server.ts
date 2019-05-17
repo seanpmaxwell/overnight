@@ -26,11 +26,13 @@ export class Server {
      * If controllers === undefined, search the './controllers' directory. If it is a string,
      * search that directory instead. If it is an instance-object or array instance-objects,
      * don't pull in the controllers automatically.
+     * @param controllers
+     * @param customRouterLib
+     * @param showLog
      */
     protected addControllers(controllers: InstanceType<any> | Array<InstanceType<any>>,
                              customRouterLib?: (() => any) | null,
                              showLog?: boolean): void {
-
         // Convert to array if single controller
         let ctlrInstances = [];
         if (controllers instanceof Array) {
@@ -38,19 +40,20 @@ export class Server {
         } else {
             ctlrInstances.push(controllers);
         }
-
+        // Init route in each controller
         let count = 0;
         const routerLib = customRouterLib || Router;
-
-        // Init route in each controller
         ctlrInstances.forEach((controller) => {
-            if (controller && controller.controllerBasePath) {
-                const router = this.getRouter(controller, routerLib);
-                this.app.use(controller.controllerBasePath, router);
-                count++;
+            if (controller && controller.__proto__) {
+                const prototype = Object.getPrototypeOf(controller);
+                const basePath = Reflect.getOwnMetadata('controllerBasePath', prototype);
+                if (basePath) {
+                    const router = this.getRouter(controller, routerLib);
+                    this.app.use(basePath, router);
+                    count++;
+                }
             }
         });
-
         if (showLog) {
             const s = count === 1 ? ' controller' : ' controllers';
             // tslint:disable-next-line
@@ -59,17 +62,21 @@ export class Server {
     }
 
 
-    private getRouter(controller: InstanceType<any> | (() => any), routerLib: () => any): Router {
+    /**
+     * Get a single router object for each controller. Router object extracts
+     * metadata for each class method and each property which is an array function.
+     * @param routerLib
+     * @param controller
+     */
+    private getRouter(routerLib: () => any, controller: InstanceType<any> | (() => any)): Router {
         const router = routerLib();
-
-        // Include prototype functions AND instance-object properties equal to functions
+        const prototype = Object.getPrototypeOf(controller);
         let members = Object.getOwnPropertyNames(controller);
-        members = members.concat(Object.getOwnPropertyNames(controller.__proto__));
+        members = members.concat(Object.getOwnPropertyNames(prototype));
 
-        // Iterate each controller-instance
         members.forEach((member) => {
             const route = controller[member];
-            if (route && route.overnightRouteProperties) {
+            if (route && route.overnightRouteProperties) { // pick up here, use metadata
                 const { middleware, httpVerb, path } = route.overnightRouteProperties;
                 const callBack = (req: Request, res: Response, next: NextFunction) => {
                     return controller[member](req, res, next);
@@ -80,7 +87,6 @@ export class Server {
                     router[httpVerb](path, callBack);
                 }
             }
-            return router;
         });
         return router;
     }

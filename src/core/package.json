@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "express": "^4.16.3",
+    "reflect-metadata": "^0.1.13",
     "tslib": "^1.9.3"
   },
   "devDependencies": {

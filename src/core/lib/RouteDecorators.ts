@@ -36,7 +36,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
     return (target: any, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => {
 
-        const overnightRouteProperties = {
+        const overnightRouteProperties = { // pull metadata and merge this with it
             httpVerb,
             path: path ? ('/' + path) : '',
         };

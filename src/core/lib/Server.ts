@@ -6,7 +6,7 @@
 
 import * as express from 'express';
 import { Application, Request, Response, NextFunction, Router } from 'express';
-
+import { BASE_PATH_KEY } from './ClassDecorators';
 
 export class Server {
 
@@ -46,7 +46,7 @@ export class Server {
         ctlrInstances.forEach((controller) => {
             if (controller && controller.__proto__) {
                 const prototype = Object.getPrototypeOf(controller);
-                const basePath = Reflect.getOwnMetadata('controllerBasePath', prototype);
+                const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
                 if (basePath) {
                     const router = this.getRouter(controller, routerLib);
                     this.app.use(basePath, router);

@@ -13,12 +13,13 @@ includes a package for managing json-web-tokens and showing logs.
 ## Features
 * Define a base route using a @Controller decorator.
 * @Get, @Post, @Put, and @Delete decorators to convert controller methods into Express routes.
-* @Middleware decorator 
+* @Middleware decorator.
 * Server superclass to initialize ExpressJS server and setup controllers.
-* Json-Web-Token management
+* Json-Web-Token management.
 * Easy to configure logging tool.
 * Master repo includes a sample application, if you want to practice with an API calling tool such as Postman.
-* Allows for adding your own custom Router classes if you don't want to use the standard express Router
+* Allows for adding your own custom Router classes if you don't want to use the standard express Router.
+* Decorators also work with arrow functions set as class properties.
 * Fully type safe :)
 
 
@@ -92,7 +93,6 @@ export class UserController {
     // async/await work normally :)
     @Get('practice/async')
     private async getWithAsync(req: Request, res: Response): Promise<void> {
-        
         let msg;
 
         try {

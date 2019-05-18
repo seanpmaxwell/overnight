@@ -43,6 +43,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { LoggerModes } from '@overnightjs/logger';
 
+
 // Set the 
 const logFilePath = path.join(__dirname, '../sampleProject.log');
 process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE; // Can also be CONSOLE, CUSTOM, or OFF
@@ -62,6 +63,7 @@ import { Request, Response } from 'express';
 import { Controller, Get } from '@overnightjs/core';
 import { Logger, LoggerModes } from '@overnightjs/logger';
 
+
 @Controller('api/logger')
 export class LoggerPracticeController {
     
@@ -71,17 +73,15 @@ export class LoggerPracticeController {
         this.logger = new Logger();
     }
 
+
     @Get('console/:msg')
     private printLogsConsole(req: Request, res: Response): void {
-
         this.logger.info(req.params.msg);
         this.logger.imp(req.params.msg);
         this.logger.warn(req.params.msg);
         this.logger.err(req.params.msg);
-
         this.logger.err(new Error('printing out an error'));
         this.logger.err(new Error('printing out an error full'), true); // <-- print the full Error object
-
         res.status(200).json({msg: 'console_mode'});
     }
 }
@@ -132,10 +132,12 @@ import { ICustomLogger } from '@overnightjs/logger';
 export class CustomLoggerTool implements ICustomLogger {
 
     private readonly thirdPartyLoggingApplication: ThirdPartyLoggingApplication;
+    
 
     constructor() {
         this.thirdPartyLoggingApplication = new ThirdPartyLoggingApplication();
     }
+
 
     // Needs to be implemented
     public sendLog(content: any): void {
@@ -152,14 +154,11 @@ constructor() {
 
 @Get('useCustomLogger/:msg')
 private useCustomLogger(req: Request, res: Response): void {
-
     const logger = new Logger(LoggerModes.CUSTOM, '', true, this.customLoggerTool);
     logger.rmTimestamp = true;
-
     logger.info(req.params.msg);
 }
 ````
-
 <br>
 <br>
 <br>

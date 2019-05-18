@@ -14,12 +14,13 @@ includes a package for managing json-web-tokens and showing logs.
 * Define a base route using a @Controller decorator.
 * @Get, @Post, @Put, and @Delete decorators to convert controller methods into Express routes.
 * @Middleware decorator.
+* Decorators also work with arrow functions set as class properties.
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Json-Web-Token management.
 * Easy to configure logging tool.
 * Master repo includes a sample application, if you want to practice with an API calling tool such as Postman.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router.
-* Decorators also work with arrow functions set as class properties.
+* Compatible when transpiling to either es5 or es6.
 * Fully type safe :)
 
 
@@ -109,9 +110,17 @@ export class UserController {
             res.status(200).json({msg: msg});
         }
     }
+    
+    
+    // You don't have to use class methods, you can also use properties whose value is arrow function.
+    // You will have to cast Overnight to the 'any' type to avoid type errors though.
+    @(OvernightJS as any).Get('arrow/:id')
+    private get = (req: Request, res: Response) => {
+        this.logger.info(req.params.id);
+        return res.status(200).json({msg: 'get_arrow_called'});
+    }
 }
 ````
-
 
 #### Import your controller into the server
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 

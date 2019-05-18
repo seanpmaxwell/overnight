@@ -60,18 +60,19 @@ import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
+
 @Controller('api/jwt')
 export class JwtPracticeController {
     
+    
     @Get(':email')
     private getJwt(req: Request, res: Response): void {
-
         const jwtStr = JwtManager.jwt({
             email: req.params.email
         });
-
         res.status(200).json({jwt: jwtStr});
     }
+
 
     @Post('callProtectedRoute')
     @Middleware(JwtManager.middleware)
@@ -97,13 +98,12 @@ const jwtMgr = new JwtManager('secret', '10h');
 @Controller('api/jwt')
 export class JwtPracticeController {
     
+    
     @Get('getJwtAlt/:fullname')
     private getJwtFromHandler(req: Request, res: Response): void {
-
         const jwtStr = jwtMgr.jwt({
             fullName: req.params.fullname
         });
-
         res.status(200).json({jwt: jwtStr});
     }
 
@@ -129,9 +129,8 @@ router.get('users', JwtManager.middleware, (req, res) => {
     console.log(req.payload.email);
 })
 
-app.use('/', router);
+app.use('/', router); 
 ````
-
 <br>
 <br>
 <br>

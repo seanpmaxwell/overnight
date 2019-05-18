@@ -14,13 +14,15 @@ includes a package for managing json-web-tokens and showing logs.
 * Define a base route using a @Controller decorator.
 * @Get, @Post, @Put, and @Delete decorators to convert controller methods into Express routes.
 * @Middleware decorator.
+* Decorators also work with arrow functions set as class properties.
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Json-Web-Token management.
 * Easy to configure logging tool.
 * Master repo includes a sample application, if you want to practice with an API calling tool such as Postman.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router.
-* Decorators also work with arrow functions set as class properties.
+* Compatible when transpiling to either es5 or es6.
 * Fully type safe :)
+
 
 ## Why OvernightJS
 OvernightJS isn't meant to be a replacement for Express. If you're already somewhat familiar with ExpressJS, you can
@@ -33,6 +35,8 @@ application.
 ## Table of Contents
 * [OvernightJS/core](#overnight-core)
 * [Custom Router](#custom-router)
+* [OvernightJS/jwt](#overnight-jwt)
+* [OvernightJS/logger](#overnight-logger)
 
 
 ## Installation
@@ -55,14 +59,17 @@ $ npm install --save-dev @types/express
 import { Request, Response, NextFunction } from 'express';
 import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
 
+
 @Controller('api/users')
 export class UserController {
+    
     
     @Get(':id')
     get(req: Request, res: Response): any {
         console.log(req.params.id);
         return res.status(200).json({msg: 'get_called'});
     }
+    
 
     @Get()
     @Middleware(middleware)
@@ -70,10 +77,12 @@ export class UserController {
         res.status(200).json({msg: 'get_all_called'});
     }
 
+
     @Post()
     private add(req: Request, res: Response): void {
         res.status(200).json({msg: 'add_called'});
     }
+
 
     @Put('update-user')
     @Middleware([middleware1, middleware2])
@@ -81,18 +90,18 @@ export class UserController {
         res.status(200).json({msg: 'update_called'});
     }
 
+
     // Next param is optional
     @Delete('delete/:id')
     private delete(req: Request, res: Response, next: NextFunction): void {
         res.status(200).json({msg: 'delete_called'});
     }
 
+
     // async/await work normally :)
     @Get('practice/async')
     private async getWithAsync(req: Request, res: Response): Promise<void> {
-        
         let msg;
-
         try {
             msg = await this.someMethodWhichReturnsAPromise(req);
         } catch (err) {
@@ -100,6 +109,15 @@ export class UserController {
         } finally {
             res.status(200).json({msg: msg});
         }
+    }
+    
+    
+    // You don't have to use class methods, you can also use properties whose value is arrow function.
+    // You will have to cast Overnight to the 'any' type to avoid type errors though.
+    @(OvernightJS as any).Get('arrow/:id')
+    private get = (req: Request, res: Response) => {
+        this.logger.info(req.params.id);
+        return res.status(200).json({msg: 'get_arrow_called'});
     }
 }
 ````
@@ -125,31 +143,29 @@ import { Server } from '@overnightjs/core';
 import { UserController } from './UserController';
 import { SignupController } from './SignupController';
 
+
 export class SampleServer extends Server {
+    
     
     constructor() {
         super();
-        
-        // Setup express before the controllers
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
-                
         this.setupControllers();
     }
 
+
     private setupControllers(): void {
-        
         const userController = new UserController();
         const signupController = new SignupController();
-        
         const dbConnObj = new SomeDbConnClass('credentials');
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
-
         // This must be called, and can be passed a single controller or an array of 
         // controllers. Optional router object can also be passed as second argument.
         super.addControllers([userController, signupController]);
     }
+
 
     public start(port: number): void {
         this.app.listen(port, () => {
@@ -168,19 +184,14 @@ Without the above decorators we would have to wrap each controller method with s
 class UserController {
     
     public getRoutes(): Router {
-        
         const router = Router();
-        
         router.get('/', your middleware, (req, res) => {
             // Do some stuff in here
         });
-        
         router.get('/anotherRoute', your middleware, (req, res) => {
             // Do some stuff in here
         });
-        
         // Repeat for every single controller method
-        
         return router;
     }
 }
@@ -212,11 +223,13 @@ router, the default express.Router() object is used.
 import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
 
+
 @Controller('api/posts')
 export class PostController {
     
     private readonly INVALID_MSG = 'You entered an invalid post id: ';
     private readonly VALID_MSG = 'You entered the post id: ';
+    
 
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
@@ -224,16 +237,19 @@ export class PostController {
                     .then(ret => res.status(200).json({msg: ret}));
     }
 
+
     private someAsyncFunction(id: number): Promise<string> {
         return new Promise((res, rej) => {
             isNaN(id) ? rej(this.INVALID_MSG + id) : res(this.VALID_MSG + id);
         })
     }
 
+
     @Put(':id')
     private add(req: Request, res: Response): Promise<string> {
         return Promise.resolve('next');
     }
+
 
     @Put('foo')
     private add2(req: Request, res: Response): void {
@@ -248,15 +264,18 @@ import * as customRouter  from 'express-promise-router';
 import { Server } from '@overnightjs/core';
 import { PostController } from './controllers/PostController';
 
+
 export class CustomRouterServer extends Server {
     
     private readonly START_MSG = 'OvernightJS with custom router started on port: ';
+    
     
     constructor() {
         super();
         const postController = new PostController();
         super.addControllers(postController, customRouter);
     }
+
 
     public start(port: number): void {
         this.app.listen(port, () => {

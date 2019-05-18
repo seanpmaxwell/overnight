@@ -175,19 +175,14 @@ Without the above decorators we would have to wrap each controller method with s
 class UserController {
     
     public getRoutes(): Router {
-        
         const router = Router();
-        
         router.get('/', your middleware, (req, res) => {
             // Do some stuff in here
         });
-        
         router.get('/anotherRoute', your middleware, (req, res) => {
             // Do some stuff in here
         });
-        
         // Repeat for every single controller method
-        
         return router;
     }
 }

@@ -61,7 +61,7 @@ export class ArrowFunctionController {
     }
 
 
-    @(OvernightJS as any).Delete('delete/:id')
+    @(OvernightJS as any).Delete(':id')
     private delete = (req: Request, res: Response) => {
         this.logger.info(req.params, true);
         res.status(200).json({msg: 'delete_called'});

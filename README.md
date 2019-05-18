@@ -58,14 +58,17 @@ $ npm install --save-dev @types/express
 import { Request, Response, NextFunction } from 'express';
 import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
 
+
 @Controller('api/users')
 export class UserController {
+    
     
     @Get(':id')
     get(req: Request, res: Response): any {
         console.log(req.params.id);
         return res.status(200).json({msg: 'get_called'});
     }
+    
 
     @Get()
     @Middleware(middleware)
@@ -73,10 +76,12 @@ export class UserController {
         res.status(200).json({msg: 'get_all_called'});
     }
 
+
     @Post()
     private add(req: Request, res: Response): void {
         res.status(200).json({msg: 'add_called'});
     }
+
 
     @Put('update-user')
     @Middleware([middleware1, middleware2])
@@ -84,17 +89,18 @@ export class UserController {
         res.status(200).json({msg: 'update_called'});
     }
 
+
     // Next param is optional
     @Delete('delete/:id')
     private delete(req: Request, res: Response, next: NextFunction): void {
         res.status(200).json({msg: 'delete_called'});
     }
 
+
     // async/await work normally :)
     @Get('practice/async')
     private async getWithAsync(req: Request, res: Response): Promise<void> {
         let msg;
-
         try {
             msg = await this.someMethodWhichReturnsAPromise(req);
         } catch (err) {
@@ -105,6 +111,7 @@ export class UserController {
     }
 }
 ````
+
 
 #### Import your controller into the server
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
@@ -127,31 +134,29 @@ import { Server } from '@overnightjs/core';
 import { UserController } from './UserController';
 import { SignupController } from './SignupController';
 
+
 export class SampleServer extends Server {
+    
     
     constructor() {
         super();
-        
-        // Setup express before the controllers
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
-                
         this.setupControllers();
     }
 
+
     private setupControllers(): void {
-        
         const userController = new UserController();
         const signupController = new SignupController();
-        
         const dbConnObj = new SomeDbConnClass('credentials');
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
-
         // This must be called, and can be passed a single controller or an array of 
         // controllers. Optional router object can also be passed as second argument.
         super.addControllers([userController, signupController]);
     }
+
 
     public start(port: number): void {
         this.app.listen(port, () => {
@@ -214,11 +219,13 @@ router, the default express.Router() object is used.
 import { Request, Response } from 'express';
 import { Controller, Get, Put } from '@overnightjs/core';
 
+
 @Controller('api/posts')
 export class PostController {
     
     private readonly INVALID_MSG = 'You entered an invalid post id: ';
     private readonly VALID_MSG = 'You entered the post id: ';
+    
 
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
@@ -226,16 +233,19 @@ export class PostController {
                     .then(ret => res.status(200).json({msg: ret}));
     }
 
+
     private someAsyncFunction(id: number): Promise<string> {
         return new Promise((res, rej) => {
             isNaN(id) ? rej(this.INVALID_MSG + id) : res(this.VALID_MSG + id);
         })
     }
 
+
     @Put(':id')
     private add(req: Request, res: Response): Promise<string> {
         return Promise.resolve('next');
     }
+
 
     @Put('foo')
     private add2(req: Request, res: Response): void {
@@ -250,15 +260,18 @@ import * as customRouter  from 'express-promise-router';
 import { Server } from '@overnightjs/core';
 import { PostController } from './controllers/PostController';
 
+
 export class CustomRouterServer extends Server {
     
     private readonly START_MSG = 'OvernightJS with custom router started on port: ';
+    
     
     constructor() {
         super();
         const postController = new PostController();
         super.addControllers(postController, customRouter);
     }
+
 
     public start(port: number): void {
         this.app.listen(port, () => {
@@ -336,18 +349,19 @@ import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
+
 @Controller('api/jwt')
 export class JwtPracticeController {
     
+    
     @Get(':email')
     private getJwt(req: Request, res: Response): void {
-
         const jwtStr = JwtManager.jwt({
             email: req.params.email
         });
-
         res.status(200).json({jwt: jwtStr});
     }
+
 
     @Post('callProtectedRoute')
     @Middleware(JwtManager.middleware)
@@ -373,13 +387,12 @@ const jwtMgr = new JwtManager('secret', '10h');
 @Controller('api/jwt')
 export class JwtPracticeController {
     
+    
     @Get('getJwtAlt/:fullname')
     private getJwtFromHandler(req: Request, res: Response): void {
-
         const jwtStr = jwtMgr.jwt({
             fullName: req.params.fullname
         });
-
         res.status(200).json({jwt: jwtStr});
     }
 
@@ -459,6 +472,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { LoggerModes } from '@overnightjs/logger';
 
+
 // Set the 
 const logFilePath = path.join(__dirname, '../sampleProject.log');
 process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE; // Can also be CONSOLE, CUSTOM, or OFF
@@ -478,6 +492,7 @@ import { Request, Response } from 'express';
 import { Controller, Get } from '@overnightjs/core';
 import { Logger, LoggerModes } from '@overnightjs/logger';
 
+
 @Controller('api/logger')
 export class LoggerPracticeController {
     
@@ -487,17 +502,15 @@ export class LoggerPracticeController {
         this.logger = new Logger();
     }
 
+
     @Get('console/:msg')
     private printLogsConsole(req: Request, res: Response): void {
-
         this.logger.info(req.params.msg);
         this.logger.imp(req.params.msg);
         this.logger.warn(req.params.msg);
         this.logger.err(req.params.msg);
-
         this.logger.err(new Error('printing out an error'));
         this.logger.err(new Error('printing out an error full'), true); // <-- print the full Error object
-
         res.status(200).json({msg: 'console_mode'});
     }
 }
@@ -548,10 +561,12 @@ import { ICustomLogger } from '@overnightjs/logger';
 export class CustomLoggerTool implements ICustomLogger {
 
     private readonly thirdPartyLoggingApplication: ThirdPartyLoggingApplication;
+    
 
     constructor() {
         this.thirdPartyLoggingApplication = new ThirdPartyLoggingApplication();
     }
+
 
     // Needs to be implemented
     public sendLog(content: any): void {
@@ -568,10 +583,8 @@ constructor() {
 
 @Get('useCustomLogger/:msg')
 private useCustomLogger(req: Request, res: Response): void {
-
     const logger = new Logger(LoggerModes.CUSTOM, '', true, this.customLoggerTool);
     logger.rmTimestamp = true;
-
     logger.info(req.params.msg);
 }
 ````

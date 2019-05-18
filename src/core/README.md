@@ -113,7 +113,8 @@ export class UserController {
     
     
     // You don't have to use class methods, you can also use properties whose value is arrow function.
-    // You will have to cast Overnight to the 'any' type to avoid type errors though.
+    // You will have to cast Overnight to the 'any' type to avoid type errors though and import
+    // it at the top of your file like this 'import * as OvernightJS from 'overnightjs/core'
     @(OvernightJS as any).Get('arrow/:id')
     private get = (req: Request, res: Response) => {
         this.logger.info(req.params.id);

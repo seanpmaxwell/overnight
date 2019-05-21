@@ -33,17 +33,10 @@ export class Server {
     protected addControllers(controllers: InstanceType<any> | Array<InstanceType<any>>,
                              customRouterLib?: (() => any) | null,
                              showLog?: boolean): void {
-        // Convert to array if single controller
-        let ctlrInstances = [];
-        if (controllers instanceof Array) {
-            ctlrInstances = controllers;
-        } else {
-            ctlrInstances.push(controllers);
-        }
-        // Init route in each controller
         let count = 0;
         const routerLib = customRouterLib || Router;
-        ctlrInstances.forEach((controller) => {
+        controllers = (controllers instanceof Array) ? controllers : [controllers];
+        controllers.forEach((controller: InstanceType<any>) => {
             if (controller && controller.__proto__) {
                 const prototype = Object.getPrototypeOf(controller);
                 const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);

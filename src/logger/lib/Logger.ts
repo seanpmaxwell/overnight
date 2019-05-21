@@ -29,8 +29,7 @@ export class Logger {
         'was provided.';
 
 
-    constructor(mode?: LoggerModeOpts, filePath?: string, rmTimestamp?: boolean,
-                customLogger?: ICustomLogger) {
+    constructor(mode?: LoggerModeOpts, filePath?: string, rmTimestamp?: boolean, customLogger?: ICustomLogger) {
         // Set the mode, 'console' mode is default
         if (mode) {
             this._mode = mode;
@@ -45,7 +44,7 @@ export class Logger {
             const envPath = process.env.OVERNIGHT_LOGGER_FILEPATH;
             this._filePath = envPath || path.join(os.homedir(), this.DEFAULT_FILE_NAME);
         }
-        // Set the timestamp, default
+        // Set the timestamp, default is on
         if (typeof rmTimestamp === 'boolean') {
             this._rmTimestamp = rmTimestamp;
         } else if (rmTimestamp === undefined) {

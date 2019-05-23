@@ -13,7 +13,7 @@ includes a package for managing json-web-tokens and showing logs.
 ## Features
 * Define a base route using a @Controller decorator.
 * @Get, @Post, @Put, and @Delete decorators to convert controller methods into Express routes.
-* @Middleware decorator.
+* @Middleware and @ClassMiddleware decorators.
 * Decorators also work with arrow functions set as class properties.
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Json-Web-Token management.
@@ -59,10 +59,8 @@ $ npm install --save-dev @types/express
 import { Request, Response, NextFunction } from 'express';
 import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
 
-
 @Controller('api/users')
 export class UserController {
-    
     
     @Get(':id')
     get(req: Request, res: Response): any {
@@ -110,16 +108,33 @@ export class UserController {
             res.status(200).json({msg: msg});
         }
     }
-    
-    
-    // You don't have to use class methods, you can also use properties whose value is arrow function.
-    // You will have to cast Overnight to the 'any' type to avoid type errors though and import
-    // it at the top of your file like this 'import * as OvernightJS from 'overnightjs/core'
+}
+````
+
+- You don't have to use class methods, you can also use class properties whose value is an arrow function. You will
+ have to cast Overnight to the 'any' type to avoid type errors though 
+````typescript
+import * as OvernightJS from '@overnightjs/core';
+
+    ...
+
     @(OvernightJS as any).Get('arrow/:id')
     private get = (req: Request, res: Response) => {
         this.logger.info(req.params.id);
         return res.status(200).json({msg: 'get_arrow_called'});
     }
+````
+
+- If want want your middleware to apply to every route in a class use the `@ClassMiddleware` decorator. 
+
+````typescript
+import { Controller, ClassMiddleware } from '@overnightjs/core';
+
+@Controller('api/users')
+@ClassMiddleware([middleware1, middleware2])
+export class UserController {
+    
+    ...
 }
 ````
 
@@ -144,9 +159,7 @@ import { Server } from '@overnightjs/core';
 import { UserController } from './UserController';
 import { SignupController } from './SignupController';
 
-
 export class SampleServer extends Server {
-    
     
     constructor() {
         super();
@@ -154,7 +167,6 @@ export class SampleServer extends Server {
         this.app.use(bodyParser.urlencoded({extended: true}));
         this.setupControllers();
     }
-
 
     private setupControllers(): void {
         const userController = new UserController();
@@ -166,7 +178,6 @@ export class SampleServer extends Server {
         // controllers. Optional router object can also be passed as second argument.
         super.addControllers([userController, signupController]);
     }
-
 
     public start(port: number): void {
         this.app.listen(port, () => {
@@ -265,18 +276,15 @@ import * as customRouter  from 'express-promise-router';
 import { Server } from '@overnightjs/core';
 import { PostController } from './controllers/PostController';
 
-
 export class CustomRouterServer extends Server {
     
     private readonly START_MSG = 'OvernightJS with custom router started on port: ';
-    
     
     constructor() {
         super();
         const postController = new PostController();
         super.addControllers(postController, customRouter);
     }
-
 
     public start(port: number): void {
         this.app.listen(port, () => {
@@ -354,7 +362,6 @@ import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
-
 @Controller('api/jwt')
 export class JwtPracticeController {
     
@@ -392,7 +399,6 @@ const jwtMgr = new JwtManager('secret', '10h');
 @Controller('api/jwt')
 export class JwtPracticeController {
     
-    
     @Get('getJwtAlt/:fullname')
     private getJwtFromHandler(req: Request, res: Response): void {
         const jwtStr = jwtMgr.jwt({
@@ -400,7 +406,6 @@ export class JwtPracticeController {
         });
         res.status(200).json({jwt: jwtStr});
     }
-
 
     @Post('callProtectedRouteAlt')
     @Middleware(jwtMgr.middleware)
@@ -507,7 +512,6 @@ export class LoggerPracticeController {
         this.logger = new Logger();
     }
 
-
     @Get('console/:msg')
     private printLogsConsole(req: Request, res: Response): void {
         this.logger.info(req.params.msg);
@@ -566,12 +570,10 @@ import { ICustomLogger } from '@overnightjs/logger';
 export class CustomLoggerTool implements ICustomLogger {
 
     private readonly thirdPartyLoggingApplication: ThirdPartyLoggingApplication;
-    
 
     constructor() {
         this.thirdPartyLoggingApplication = new ThirdPartyLoggingApplication();
     }
-
 
     // Needs to be implemented
     public sendLog(content: any): void {

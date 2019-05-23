@@ -10,7 +10,7 @@ import { Request, Response } from 'express';
 import { sayHello } from './other/CustomMiddleware';
 
 
-@Controller('api/arrows')
+@Controller('api/say-hello')
 @ClassMiddleware(sayHello)
 export class ClassDecoratorController {
 
@@ -22,7 +22,7 @@ export class ClassDecoratorController {
     }
 
 
-    @Get(':id')
+    @Get()
     private get(req: Request, res: Response): any {
         this.logger.info(req.params.id);
         return res.status(200).json({msg: 'get_called'});

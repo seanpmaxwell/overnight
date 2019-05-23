@@ -5,12 +5,12 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import {BASE_PATH_KEY} from './ClassDecorators';
+import 'reflect-metadata';
 
 
 
 /***********************************************************************************************
- *                                            Routes
+ *                                      Method Decorators
  **********************************************************************************************/
 
 export function Get(path?: string): MethodDecorator {
@@ -54,7 +54,24 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
 
 /***********************************************************************************************
- *                                         Middleware
+ *                                       Class Decorator
+ **********************************************************************************************/
+
+export const BASE_PATH_KEY = 'basePath';
+export const CLASS_MIDDLEWARE_KEY = 'middleware';
+
+export function Controller(path: string): ClassDecorator {
+
+    // tslint:disable-next-line:ban-types
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(BASE_PATH_KEY, '/' + path, target.prototype);
+        return target;
+    };
+}
+
+
+/***********************************************************************************************
+ *                                  Middleware Decorator
  **********************************************************************************************/
 
 type Middlware = (req: Request, res: Response, next: NextFunction) => any;
@@ -62,18 +79,26 @@ type Middlware = (req: Request, res: Response, next: NextFunction) => any;
 
 export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator {
 
-    return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
-        let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
-        if (!routeProperties) {
-            routeProperties = {};
-        }
-        routeProperties = {
-            middleware,
-            ...routeProperties,
-        };
-        Reflect.defineMetadata(propertyKey, routeProperties, target);
-        if (descriptor) {
-            return descriptor;
+    return (target: any, propertyKey?: string | symbol, descriptor?: PropertyDescriptor) => {
+        // Set middleware for class members (properties and methods)
+        if (propertyKey) {
+            let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
+            if (!routeProperties) {
+                routeProperties = {};
+            }
+            routeProperties = {
+                middleware,
+                ...routeProperties,
+            };
+            Reflect.defineMetadata(propertyKey, routeProperties, target);
+            // For class methods that are not arrow functions
+            if (descriptor) {
+                return descriptor;
+            }
+        } else {
+            // For when middleware is used as a class decorator
+            Reflect.defineMetadata(CLASS_MIDDLEWARE_KEY, middleware, target.prototype); // pick up here
+            return target;
         }
     };
 }

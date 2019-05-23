@@ -5,8 +5,9 @@
  */
 
 import * as express from 'express';
-import { Application, Request, Response, NextFunction, Router } from 'express';
-import { BASE_PATH_KEY } from './ClassDecorators';
+import { Application, Request, Response, NextFunction, Router, RequestHandler } from 'express';
+import { BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY } from './decorators';
+
 
 export class Server {
 
@@ -31,17 +32,17 @@ export class Server {
      * @param showLog
      */
     protected addControllers(controllers: InstanceType<any> | Array<InstanceType<any>>,
-                             customRouterLib?: (() => any) | null,
+                             routerLib?: (() => any) | null,
                              showLog?: boolean): void {
+        // Iterate each controller
         let count = 0;
-        const routerLib = customRouterLib || Router;
         controllers = (controllers instanceof Array) ? controllers : [controllers];
         controllers.forEach((controller: InstanceType<any>) => {
             if (controller && controller.__proto__) {
                 const prototype = Object.getPrototypeOf(controller);
                 const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
                 if (basePath) {
-                    const router = this.getRouter(routerLib, controller);
+                    const router = this.getRouter(routerLib || Router, controller);
                     this.app.use(basePath, router);
                     count++;
                 }
@@ -61,7 +62,7 @@ export class Server {
      * @param routerLib
      * @param controller
      */
-    private getRouter(routerLib: () => any, controller: InstanceType<any> | (() => any)): Router {
+    private getRouter(routerLib: (() => any), controller: InstanceType<any>): Router {
         // Get members of both instance and prototype
         const router = routerLib();
         const prototype = Object.getPrototypeOf(controller);
@@ -70,6 +71,7 @@ export class Server {
         // Iterate all members
         members.forEach((member) => {
             const route = controller[member];
+            const classMiddleware = Reflect.getOwnMetadata(CLASS_MIDDLEWARE_KEY, prototype);
             const routeProperties = Reflect.getOwnMetadata(member, prototype);
             if (route && routeProperties) {
                 const { middleware, httpVerb, path } = routeProperties;
@@ -78,6 +80,8 @@ export class Server {
                 };
                 if (middleware) {
                     router[httpVerb](path, middleware, callBack);
+                } else if (classMiddleware) {
+                    router[httpVerb](path, classMiddleware, callBack); // pick up here
                 } else {
                     router[httpVerb](path, callBack);
                 }

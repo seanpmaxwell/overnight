@@ -5,7 +5,7 @@
  */
 
 import * as express from 'express';
-import { Application, Request, Response, NextFunction, Router, RequestHandler } from 'express';
+import { Application, Request, Response, NextFunction } from 'express';
 import { BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY } from './decorators';
 
 
@@ -42,7 +42,7 @@ export class Server {
                 const prototype = Object.getPrototypeOf(controller);
                 const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
                 if (basePath) {
-                    const router = this.getRouter(routerLib || Router, controller);
+                    const router = this.getRouter(routerLib || express.Router, controller);
                     this.app.use(basePath, router);
                     count++;
                 }
@@ -62,26 +62,28 @@ export class Server {
      * @param routerLib
      * @param controller
      */
-    private getRouter(routerLib: (() => any), controller: InstanceType<any>): Router {
-        // Get members of both instance and prototype
+    private getRouter(routerLib: (() => any), controller: InstanceType<any>): express.Router {
         const router = routerLib();
         const prototype = Object.getPrototypeOf(controller);
+        // Set class-wide middleware
+        const classMiddleware = Reflect.getOwnMetadata(CLASS_MIDDLEWARE_KEY, prototype);
+        if (classMiddleware) {
+            router.use(classMiddleware);
+        }
+        // Get members of both instance and prototype
         let members = Object.getOwnPropertyNames(controller);
         members = members.concat(Object.getOwnPropertyNames(prototype));
-        // Iterate all members
+        // Set all routes using class functions and properties whose values are functions
         members.forEach((member) => {
             const route = controller[member];
-            const classMiddleware = Reflect.getOwnMetadata(CLASS_MIDDLEWARE_KEY, prototype);
             const routeProperties = Reflect.getOwnMetadata(member, prototype);
             if (route && routeProperties) {
-                const { middleware, httpVerb, path } = routeProperties;
+                const { routeMiddleware, httpVerb, path } = routeProperties;
                 const callBack = (req: Request, res: Response, next: NextFunction) => {
                     return controller[member](req, res, next);
                 };
-                if (middleware) {
-                    router[httpVerb](path, middleware, callBack);
-                } else if (classMiddleware) {
-                    router[httpVerb](path, classMiddleware, callBack); // pick up here
+                if (routeMiddleware) {
+                    router[httpVerb](path, routeMiddleware, callBack);
                 } else {
                     router[httpVerb](path, callBack);
                 }

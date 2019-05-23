@@ -8,7 +8,7 @@ import * as path from 'path';
 import { Request, Response } from 'express';
 import { Controller, Get } from '@overnightjs/core';
 import { Logger, LoggerModes } from '@overnightjs/logger';
-import CustomLoggerTool from './CustomLoggerTool';
+import CustomLoggerTool from './other/CustomLoggerTool';
 
 
 @Controller('api/logger')

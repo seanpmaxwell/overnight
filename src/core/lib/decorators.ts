@@ -7,6 +7,7 @@
 import { Request, Response, NextFunction } from 'express';
 import 'reflect-metadata';
 
+type Middlware = (req: Request, res: Response, next: NextFunction) => any;
 
 
 /***********************************************************************************************
@@ -69,36 +70,38 @@ export function Controller(path: string): ClassDecorator {
     };
 }
 
+export function ClassMiddleware(middleware: Middlware | Middlware[]): ClassDecorator {
+
+    // tslint:disable-next-line:ban-types
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(CLASS_MIDDLEWARE_KEY, middleware, target.prototype); // pick up here
+        return target;
+    };
+}
+
 
 /***********************************************************************************************
  *                                  Middleware Decorator
  **********************************************************************************************/
 
-type Middlware = (req: Request, res: Response, next: NextFunction) => any;
+
 
 
 export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator {
 
     return (target: any, propertyKey?: string | symbol, descriptor?: PropertyDescriptor) => {
-        // Set middleware for class members (properties and methods)
-        if (propertyKey) {
-            let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
-            if (!routeProperties) {
-                routeProperties = {};
-            }
-            routeProperties = {
-                middleware,
-                ...routeProperties,
-            };
-            Reflect.defineMetadata(propertyKey, routeProperties, target);
-            // For class methods that are not arrow functions
-            if (descriptor) {
-                return descriptor;
-            }
-        } else {
-            // For when middleware is used as a class decorator
-            Reflect.defineMetadata(CLASS_MIDDLEWARE_KEY, middleware, target.prototype); // pick up here
-            return target;
+        let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
+        if (!routeProperties) {
+            routeProperties = {};
+        }
+        routeProperties = {
+            middleware,
+            ...routeProperties,
+        };
+        Reflect.defineMetadata(propertyKey, routeProperties, target);
+        // For class methods that are not arrow functions
+        if (descriptor) {
+            return descriptor;
         }
     };
 }

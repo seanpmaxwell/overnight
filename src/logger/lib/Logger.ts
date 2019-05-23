@@ -29,7 +29,12 @@ export class Logger {
         'was provided.';
 
 
-    constructor(mode?: LoggerModeOpts, filePath?: string, rmTimestamp?: boolean, customLogger?: ICustomLogger) {
+    constructor(
+        mode?: LoggerModeOpts,
+        filePath?: string,
+        rmTimestamp?: boolean,
+        customLogger?: ICustomLogger,
+    ) {
         // Set the mode, 'console' mode is default
         if (mode) {
             this._mode = mode;

@@ -1,6 +1,6 @@
 {
   "name": "sample-project",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Show usage for the OvernightJs library",
   "main": "none",
   "dependencies": {

@@ -23,8 +23,7 @@ class CustomRouterServer extends Server {
     }
 
 
-    public start(): void {
-        const port = 3000;
+    public start(port?: number): void {
         this.app.listen(port, () => {
             this.logger.imp(this.START_MSG + port);
         });

@@ -26,15 +26,12 @@ export class LoggerPracticeController {
     private printLogsConsole(req: Request, res: Response): void {
         process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.CONSOLE;
         const logger = new Logger();
-
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
         logger.warn(req.params.msg);
         logger.err(req.params.msg);
-
         logger.err(new Error('printing out an error'));
         logger.err(new Error('printing out an error full'), true);
-
         res.status(200).json({msg: 'console_mode'});
     }
 
@@ -43,17 +40,13 @@ export class LoggerPracticeController {
     private printLogsFile(req: Request, res: Response): void {
         const logFilePath = path.join(__dirname, '../../sampleProject.log');
         process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
-
         const logger = new Logger(LoggerModes.FILE);
-
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
         logger.warn(req.params.msg);
         logger.err(req.params.msg);
-
         logger.err(new Error('printing out an error'));
         logger.err(new Error('printing out an error full'), true);
-
         res.status(200).json({msg: 'file_mode'});
     }
 
@@ -61,12 +54,10 @@ export class LoggerPracticeController {
     @Get('off/:msg')
     private printLogsOff(req: Request, res: Response): void {
         const logger = new Logger(LoggerModes.OFF);
-
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
         logger.warn(req.params.msg);
         logger.err(req.params.msg);
-
         res.status(200).json({msg: 'off_mode'});
     }
 
@@ -75,14 +66,11 @@ export class LoggerPracticeController {
     private testDefaults(req: Request, res: Response): void {
         process.env.OVERNIGHT_LOGGER_FILEPATH = '';
         process.env.OVERNIGHT_LOGGER_MODE = '';
-
         const logger = new Logger();
-
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
         logger.warn(req.params.msg);
         logger.err(req.params.msg);
-
         res.status(200).json({msg: 'test_defaults'});
     }
 
@@ -91,14 +79,11 @@ export class LoggerPracticeController {
     private defaultFilePath(req: Request, res: Response): void {
         process.env.OVERNIGHT_LOGGER_FILEPATH = '';
         process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE;
-
         const logger = new Logger();
-
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
         logger.warn(req.params.msg);
         logger.err(req.params.msg);
-
         res.status(200).json({msg: 'default_file_path'});
     }
 
@@ -107,12 +92,10 @@ export class LoggerPracticeController {
     private useCustomLogger(req: Request, res: Response): void {
         const logger = new Logger(LoggerModes.CUSTOM, '', true, this.customLoggerTool);
         logger.rmTimestamp = true;
-
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
         logger.warn(req.params.msg);
         logger.err(req.params.msg);
-
         res.status(200).json({msg: 'default_file_path'});
     }
 }

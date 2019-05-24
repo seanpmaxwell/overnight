@@ -60,7 +60,6 @@ export class UserController {
     @Get('practice/async')
     private async getWithAsync(req: Request, res: Response): Promise<void> {
         let msg;
-
         try {
             msg = await this.asyncMethod(req);
         } catch (err) {

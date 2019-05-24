@@ -44,9 +44,6 @@ class NormalRouterServer extends Server {
             res.send(this.FRONT_END_MSG);
         });
         this.app.listen(port, () => {
-            this.logger.rmTimestamp = true;
-            this.logger.info('\n');
-            this.logger.rmTimestamp = false;
             this.logger.imp(this.START_MSG + port);
         });
     }

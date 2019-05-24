@@ -8,6 +8,7 @@ import * as express from 'express';
 import { Application, Request, Response, NextFunction } from 'express';
 import { BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY } from './decorators';
 
+type Controllers = InstanceType<any> | Array<InstanceType<any>>;
 
 export class Server {
 
@@ -31,14 +32,11 @@ export class Server {
      * @param customRouterLib
      * @param showLog
      */
-    protected addControllers(controllers: InstanceType<any> | Array<InstanceType<any>>,
-                             routerLib?: (() => any) | null,
-                             showLog?: boolean): void {
-        // Iterate each controller
+    protected addControllers(controllers: Controllers, routerLib?: (() => any) | null, showLog?: boolean): void {
         let count = 0;
         controllers = (controllers instanceof Array) ? controllers : [controllers];
         controllers.forEach((controller: InstanceType<any>) => {
-            if (controller && controller.__proto__) {
+            if (controller) {
                 const prototype = Object.getPrototypeOf(controller);
                 const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
                 if (basePath) {
@@ -49,9 +47,8 @@ export class Server {
             }
         });
         if (showLog) {
-            const s = count === 1 ? ' controller' : ' controllers';
             // tslint:disable-next-line
-            console.log(count + s + ' configured.');
+            console.log(count + ' controller/s configured.');
         }
     }
 

@@ -19,14 +19,12 @@ class CustomRouterServer extends Server {
     constructor() {
         super();
         this.logger = new Logger();
-        const postController = new PostController();
-        super.addControllers(postController, customRouter);
+        super.addControllers(new PostController(), customRouter);
     }
 
 
     public start(): void {
         const port = 3000;
-
         this.app.listen(port, () => {
             this.logger.imp(this.START_MSG + port);
         });

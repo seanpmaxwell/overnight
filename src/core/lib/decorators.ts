@@ -95,7 +95,7 @@ export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator
             routeProperties = {};
         }
         routeProperties = {
-            middleware,
+            routeMiddleware: middleware,
             ...routeProperties,
         };
         Reflect.defineMetadata(propertyKey, routeProperties, target);

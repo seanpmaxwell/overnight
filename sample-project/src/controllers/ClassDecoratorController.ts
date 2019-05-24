@@ -4,10 +4,10 @@
  * created by Sean Maxwell, 5/23/2019
  */
 
-import { Controller, ClassMiddleware, Get } from '@overnightjs/core';
+import { Controller, ClassMiddleware, Get, Post, Middleware } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import { Request, Response } from 'express';
-import { sayHello } from './other/CustomMiddleware';
+import { sayHello, sayGoodbye } from './other/CustomMiddleware';
 
 
 @Controller('api/say-hello')
@@ -24,7 +24,15 @@ export class ClassDecoratorController {
 
     @Get()
     private get(req: Request, res: Response): any {
-        this.logger.info(req.params.id);
+        this.logger.info('get called');
         return res.status(200).json({msg: 'get_called'});
+    }
+
+
+    @Post()
+    @Middleware(sayGoodbye)
+    private post(req: Request, res: Response): any {
+        this.logger.info('post called');
+        return res.status(200).json({msg: 'post_called'});
     }
 }

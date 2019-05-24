@@ -12,3 +12,9 @@ export function sayHello(req: Request, res: Response, next: NextFunction) {
     console.log('Hello OvernightJS! ' + req.method + ' ' + req.originalUrl);
     next();
 }
+
+export function sayGoodbye(req: Request, res: Response, next: NextFunction) {
+    // tslint:disable-next-line:no-console
+    console.log('Goodbye OvernightJS! ' + req.method + ' ' + req.originalUrl);
+    next();
+}

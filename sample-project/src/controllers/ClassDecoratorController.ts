@@ -14,17 +14,10 @@ import { sayHello, sayGoodbye } from './other/CustomMiddleware';
 @ClassMiddleware(sayHello)
 export class ClassDecoratorController {
 
-    private readonly logger: Logger;
-
-
-    constructor() {
-        this.logger = new Logger();
-    }
-
 
     @Get()
     private get(req: Request, res: Response): any {
-        this.logger.info('get called');
+        Logger.Info('get called');
         return res.status(200).json({msg: 'get_called'});
     }
 
@@ -32,7 +25,7 @@ export class ClassDecoratorController {
     @Post()
     @Middleware(sayGoodbye)
     private post(req: Request, res: Response): any {
-        this.logger.info('post called');
+        Logger.Info('post called');
         return res.status(200).json({msg: 'post_called'});
     }
 }

@@ -12,17 +12,8 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as util from 'util';
-import { LoggerModes, loggerModeArr, ILogType, INFO, IMP, WARN, ERR } from './constants';
-
-
-// All Logger Mode options
-export type LoggerModeOptions = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.CUSTOM |
-    LoggerModes.OFF;
-
-// Interface for custom logging libraries
-export interface ICustomLogger {
-    sendLog(content: any): void;
-}
+import { LoggerModes, loggerModeArr, ILogType, ICustomLogger, LoggerModeOptions, INFO, IMP, WARN,
+    ERR, DEFAULT_LOG_FILE_NAME } from './constants';
 
 
 export class Logger {
@@ -37,13 +28,16 @@ export class Logger {
     private _rmTimestamp = Logger.initRmTimestamp();
     private _customLogger: ICustomLogger | null = null;
 
-    public static readonly DEFAULT_LOG_FILE_NAME = 'overnight.log';
     private static readonly CUSTOM_LOGGER_ERR = 'Custom logger mode set to true, but no ' +
         'custom logger was provided.';
 
 
-    constructor(mode?: LoggerModeOptions, filePath?: string, rmTimestamp?: boolean,
-                customLogger?: ICustomLogger) {
+    constructor(
+        mode?: LoggerModeOptions,
+        filePath?: string,
+        rmTimestamp?: boolean,
+        customLogger?: ICustomLogger,
+    ) {
         if (mode) {
             this._mode = mode;
         }
@@ -65,8 +59,8 @@ export class Logger {
 
 
     private static initFilePath(): string {
-        return process.env.OVERNIGHT_LOGGER_FILEPATH || path.join(os.homedir(),
-            Logger.DEFAULT_LOG_FILE_NAME);
+        const filePath = path.join(os.homedir(), DEFAULT_LOG_FILE_NAME);
+        return process.env.OVERNIGHT_LOGGER_FILEPATH || filePath;
     }
 
 

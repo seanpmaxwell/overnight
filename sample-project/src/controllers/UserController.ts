@@ -13,17 +13,10 @@ import { Logger } from '@overnightjs/logger';
 @Controller('api/users')
 export class UserController {
 
-    private readonly logger: Logger;
-
-
-    constructor() {
-        this.logger = new Logger();
-    }
-
 
     @Get(':id')
     private get(req: Request, res: Response): any {
-        this.logger.info(req.params.id);
+        Logger.Info(req.params.id);
         return res.status(200).json({msg: 'get_called'});
     }
 
@@ -31,28 +24,28 @@ export class UserController {
     @Get('')
     @Middleware(JwtManager.middleware)
     private getAll(req: ISecureRequest, res: Response): void {
-        this.logger.info(req.payload, true);
+        Logger.Info(req.payload, true);
         res.status(200).json({msg: 'get_all_called'});
     }
 
 
     @Post()
     private add(req: Request, res: Response): void {
-        this.logger.info(req.body, true);
+        Logger.Info(req.body, true);
         res.status(200).json({msg: 'add_called'});
     }
 
 
     @Put('update-user')
     private update(req: Request, res: Response): void {
-        this.logger.info(req.body);
+        Logger.Info(req.body);
         res.status(200).json({msg: 'update_called'});
     }
 
 
     @Delete('delete/:id')
     private delete(req: Request, res: Response): void {
-        this.logger.info(req.params, true);
+        Logger.Info(req.params, true);
         res.status(200).json({msg: 'delete_called'});
     }
 
@@ -64,7 +57,7 @@ export class UserController {
             msg = await this.asyncMethod(req);
         } catch (err) {
             msg = err.message;
-            this.logger.err(err, true);
+            Logger.Err(err, true);
         } finally {
             res.status(200).json({msg});
         }

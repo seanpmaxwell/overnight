@@ -13,19 +13,17 @@ import CustomRouterController from './controllers/CustomRouterController';
 class CustomRouterServer extends Server {
 
     private readonly START_MSG = 'OvernightJs with custom router started on port:';
-    private readonly logger: Logger;
 
 
     constructor() {
         super();
-        this.logger = new Logger();
         super.addControllers(new CustomRouterController(), customRouter);
     }
 
 
     public start(port?: number): void {
         this.app.listen(port, () => {
-            this.logger.imp(this.START_MSG + port);
+            Logger.Imp(this.START_MSG + port);
         });
     }
 }

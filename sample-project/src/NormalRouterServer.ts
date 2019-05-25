@@ -14,12 +14,10 @@ class NormalRouterServer extends Server {
 
     private readonly FRONT_END_MSG = 'OvernightJS with standard express router started.';
     private readonly START_MSG = 'OvernightJS with standard express router started on port: ';
-    private readonly logger: Logger;
 
 
     constructor() {
         super();
-        this.logger = new Logger();
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
         this.setupControllers();
@@ -44,7 +42,7 @@ class NormalRouterServer extends Server {
             res.send(this.FRONT_END_MSG);
         });
         this.app.listen(port, () => {
-            this.logger.imp(this.START_MSG + port);
+            Logger.Imp(this.START_MSG + port);
         });
     }
 }

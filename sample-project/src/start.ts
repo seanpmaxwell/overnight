@@ -32,5 +32,4 @@ if (process.argv[2] === 'customRouter') {
 } else {
     server = new NormalRouterServer();
 }
-
 server.start(3000);

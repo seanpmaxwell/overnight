@@ -5,6 +5,9 @@
  */
 
 
+export const DEFAULT_LOG_FILE_NAME = 'overnight.log';
+
+
 /***********************************************************************************************
  *                                       Logger Modes
  **********************************************************************************************/
@@ -18,6 +21,18 @@ export const enum LoggerModes {
 
 export const loggerModeArr = [LoggerModes.CONSOLE, LoggerModes.FILE, LoggerModes.CUSTOM,
     LoggerModes.OFF];
+
+export type LoggerModeOptions = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.CUSTOM |
+    LoggerModes.OFF;
+
+
+/***********************************************************************************************
+ *                                   Customer Logger Interface
+ **********************************************************************************************/
+
+export interface ICustomLogger {
+    sendLog(content: any): void;
+}
 
 
 /***********************************************************************************************

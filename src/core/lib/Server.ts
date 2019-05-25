@@ -32,7 +32,8 @@ export class Server {
      * @param customRouterLib
      * @param showLog
      */
-    protected addControllers(controllers: Controllers, routerLib?: (() => any) | null, showLog?: boolean): void {
+    protected addControllers(controllers: Controllers, routerLib?: (() => any) | null,
+                             showLog?: boolean): void {
         let count = 0;
         controllers = (controllers instanceof Array) ? controllers : [controllers];
         controllers.forEach((controller: InstanceType<any>) => {

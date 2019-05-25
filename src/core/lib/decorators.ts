@@ -8,6 +8,7 @@ import { Request, Response, NextFunction } from 'express';
 import 'reflect-metadata';
 
 type Middlware = (req: Request, res: Response, next: NextFunction) => any;
+type Class = (...args: any[]) => void;
 
 
 /***********************************************************************************************
@@ -60,6 +61,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
 export const BASE_PATH_KEY = 'basePath';
 export const CLASS_MIDDLEWARE_KEY = 'middleware';
+export const CHILDREN_KEY = 'children';
 
 export function Controller(path: string): ClassDecorator {
 
@@ -74,7 +76,16 @@ export function ClassMiddleware(middleware: Middlware | Middlware[]): ClassDecor
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(CLASS_MIDDLEWARE_KEY, middleware, target.prototype); // pick up here
+        Reflect.defineMetadata(CLASS_MIDDLEWARE_KEY, middleware, target.prototype);
+        return target;
+    };
+}
+
+export function Children(middleware: Class | Class[]): ClassDecorator {
+
+    // tslint:disable-next-line:ban-types
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(CLASS_MIDDLEWARE_KEY, middleware, target.prototype);
         return target;
     };
 }

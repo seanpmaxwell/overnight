@@ -7,71 +7,109 @@
  * created by Sean Maxwell Apr 5, 2019
  */
 
-import * as path from 'path';
-import * as os from 'os';
-import * as fs from 'fs';
 import * as colors from 'colors';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 import * as util from 'util';
-import { LoggerModes, ICustomLogger } from './tools';
+import { LoggerModes, loggerModeArr } from './constants';
 
 
-type LoggerModeOpts = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.CUSTOM | LoggerModes.OFF;
+
+export type LoggerModeOptions = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.CUSTOM |
+    LoggerModes.OFF;
+
+export interface ICustomLogger {
+    sendLog(content: any): void;
+}
+
 
 export class Logger {
 
-    private _mode: LoggerModeOpts;
-    private _filePath: string;
-    private _rmTimestamp = false;
+    private static _stMode = Logger.initMode();
+    private static _stFilePath = Logger.initFilePath();
+    private static _stRmTimestamp = Logger.initRmTimestamp();
+
+    private _mode = Logger._stMode;
+    private _filePath = Logger._stFilePath;
+    private _rmTimestamp = Logger._stRmTimestamp;
     private _customLogger: ICustomLogger | null = null;
 
-    private readonly DEFAULT_FILE_NAME = 'overnight.log';
-    private readonly CUSTOM_LOGGER_ERR = 'Use custom logger set to true, but no custom logger ' +
+    public static readonly DEFAULT_LOG_FILE_NAME = 'overnight.log';
+    private readonly CUSTOM_LOGGER_ERR = 'Custom logger mode set to true, but no custom logger ' +
         'was provided.';
 
 
-    constructor(
-        mode?: LoggerModeOpts,
-        filePath?: string,
-        rmTimestamp?: boolean,
-        customLogger?: ICustomLogger,
-    ) {
-        // Set the mode, 'console' mode is default
+    constructor(mode?: LoggerModeOptions, filePath?: string, rmTimestamp?: boolean,
+                customLogger?: ICustomLogger) {
         if (mode) {
             this._mode = mode;
-        } else {
-            const envMode: any = process.env.OVERNIGHT_LOGGER_MODE;
-            this._mode = envMode || LoggerModes.CONSOLE;
         }
-        // Set the file path, home dir is default
         if (filePath) {
             this._filePath = filePath;
-        } else {
-            const envPath = process.env.OVERNIGHT_LOGGER_FILEPATH;
-            this._filePath = envPath || path.join(os.homedir(), this.DEFAULT_FILE_NAME);
         }
-        // Set the timestamp, default is on
-        if (typeof rmTimestamp === 'boolean') {
+        if (rmTimestamp) {
             this._rmTimestamp = rmTimestamp;
-        } else if (rmTimestamp === undefined) {
-            const remove = process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP;
-            if (remove === 'true') {
-                this._rmTimestamp = true;
-            } else if (remove === 'false') {
-                this._rmTimestamp = false;
-            }
         }
-        // Set the custom tool
         if (customLogger) {
             this._customLogger = customLogger;
         }
     }
 
-    public get mode(): LoggerModeOpts {
-        return this._mode;
+
+    /********************************************************************************************
+     *                      Initialize values from env variables
+     ********************************************************************************************/
+
+
+    private static initFilePath(): string {
+        return process.env.OVERNIGHT_LOGGER_FILEPATH || path.join(os.homedir(),
+            Logger.DEFAULT_LOG_FILE_NAME);
     }
 
-    public set mode(mode: LoggerModeOpts) {
+
+    private static initMode(): LoggerModeOptions {
+        let mode = LoggerModes.CONSOLE;
+        loggerModeArr.forEach((val: LoggerModeOptions) => {
+            if (process.env.OVERNIGHT_LOGGER_MODE === val) {
+                mode = val;
+            }
+        });
+        return mode;
+    }
+
+
+    private static initRmTimestamp(): boolean {
+        return process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP === 'true';
+    }
+
+
+    /********************************************************************************************
+     *                                 Getters/Setters
+     ********************************************************************************************/
+
+    public static get mode(): LoggerModeOptions {
+        return this._stMode as LoggerModeOptions;
+    }
+
+    public static set mode(mode: LoggerModeOptions) {
+        this._stMode = mode;
+    }
+
+    public get mode(): LoggerModeOptions {
+        return this.mode;
+    }
+
+    public set mode(mode: LoggerModeOptions) {
         this._mode = mode;
+    }
+
+    public static get filePath(): string {
+        return this._filePath; // pick up here
+    }
+
+    public static set filePath(filePath: string) {
+        this._filePath = filePath;
     }
 
     public get filePath(): string {
@@ -99,6 +137,15 @@ export class Logger {
     }
 
 
+    /********************************************************************************************
+     *                                 Static Methods
+     ********************************************************************************************/
+
+    public static Info(content: any, printFull?: boolean) {
+
+    }
+
+
     public info(content: any, printFull?: boolean): void {
         this.printLog(content, printFull || false, 'green', 'INFO: ');
     }
@@ -119,7 +166,11 @@ export class Logger {
     }
 
 
-    private printLog(content: any, printFull: boolean, color: string, prefix: string): void {
+    /********************************************************************************************
+     *                                   Helpers
+     ********************************************************************************************/
+
+    private static printLog(content: any, printFull: boolean, color: string, prefix: string): void {
         if (this.mode === LoggerModes.OFF) {
             return;
         }

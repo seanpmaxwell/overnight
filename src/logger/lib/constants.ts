@@ -24,24 +24,27 @@ export const loggerModeArr = [LoggerModes.CONSOLE, LoggerModes.FILE, LoggerModes
  *                                       Log type values
  **********************************************************************************************/
 
-interface ILogType {
+export interface ILogType {
     color: 'green' | 'magenta' | 'yellow' | 'red';
-    prepend: 'INFO' | 'IMPORTANT' | 'WARNING' | 'ERROR';
+    prefix: 'INFO' | 'IMPORTANT' | 'WARNING' | 'ERROR';
 }
 
 export const INFO: ILogType = {
     color: 'green',
-    prepend: 'INFO',
+    prefix: 'INFO',
 };
 
 export const IMP: ILogType = {
     color: 'magenta',
-    prepend: 'IMPORTANT',
+    prefix: 'IMPORTANT',
 };
 
 export const WARN: ILogType = {
     color: 'yellow',
-    prepend: 'WARNING',
-}
+    prefix: 'WARNING',
+};
 
-// pick up here
+export const ERR: ILogType = {
+    color: 'red',
+    prefix: 'ERROR',
+};

@@ -7,7 +7,7 @@
 import { Server } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import customRouter from 'express-promise-router';
-import PostController from './controllers/PostController';
+import CustomRouterController from './controllers/CustomRouterController';
 
 
 class CustomRouterServer extends Server {
@@ -19,7 +19,7 @@ class CustomRouterServer extends Server {
     constructor() {
         super();
         this.logger = new Logger();
-        super.addControllers(new PostController(), customRouter);
+        super.addControllers(new CustomRouterController(), customRouter);
     }
 
 

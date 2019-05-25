@@ -11,7 +11,7 @@ import { Controller, Get, Put } from '@overnightjs/core';
 
 
 @Controller('api/posts')
-class PostController {
+class CustomRouterController {
 
 
     @Get(':id')
@@ -44,4 +44,4 @@ class PostController {
     }
 }
 
-export default PostController;
+export default CustomRouterController;

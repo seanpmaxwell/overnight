@@ -12,13 +12,14 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as util from 'util';
-import { LoggerModes, loggerModeArr } from './constants';
+import { LoggerModes, loggerModeArr, ILogType, INFO, IMP, WARN, ERR } from './constants';
 
 
-
+// All Logger Mode options
 export type LoggerModeOptions = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.CUSTOM |
     LoggerModes.OFF;
 
+// Interface for custom logging libraries
 export interface ICustomLogger {
     sendLog(content: any): void;
 }
@@ -26,18 +27,19 @@ export interface ICustomLogger {
 
 export class Logger {
 
-    private static _stMode = Logger.initMode();
-    private static _stFilePath = Logger.initFilePath();
-    private static _stRmTimestamp = Logger.initRmTimestamp();
+    private static _mode = Logger.initMode();
+    private static _filePath = Logger.initFilePath();
+    private static _rmTimestamp = Logger.initRmTimestamp();
+    private static _customLogger: ICustomLogger | null = null;
 
-    private _mode = Logger._stMode;
-    private _filePath = Logger._stFilePath;
-    private _rmTimestamp = Logger._stRmTimestamp;
+    private _mode = Logger.initMode();
+    private _filePath = Logger.initFilePath();
+    private _rmTimestamp = Logger.initRmTimestamp();
     private _customLogger: ICustomLogger | null = null;
 
     public static readonly DEFAULT_LOG_FILE_NAME = 'overnight.log';
-    private readonly CUSTOM_LOGGER_ERR = 'Custom logger mode set to true, but no custom logger ' +
-        'was provided.';
+    private static readonly CUSTOM_LOGGER_ERR = 'Custom logger mode set to true, but no ' +
+        'custom logger was provided.';
 
 
     constructor(mode?: LoggerModeOptions, filePath?: string, rmTimestamp?: boolean,
@@ -69,13 +71,12 @@ export class Logger {
 
 
     private static initMode(): LoggerModeOptions {
-        let mode = LoggerModes.CONSOLE;
-        loggerModeArr.forEach((val: LoggerModeOptions) => {
+        for (const val of loggerModeArr) {
             if (process.env.OVERNIGHT_LOGGER_MODE === val) {
-                mode = val;
+                return val;
             }
-        });
-        return mode;
+        }
+        return LoggerModes.CONSOLE;
     }
 
 
@@ -88,28 +89,32 @@ export class Logger {
      *                                 Getters/Setters
      ********************************************************************************************/
 
+    // Mode
+
     public static get mode(): LoggerModeOptions {
-        return this._stMode as LoggerModeOptions;
+        return Logger._mode;
     }
 
     public static set mode(mode: LoggerModeOptions) {
-        this._stMode = mode;
+        Logger._mode = mode;
     }
 
     public get mode(): LoggerModeOptions {
-        return this.mode;
+        return this._mode;
     }
 
     public set mode(mode: LoggerModeOptions) {
         this._mode = mode;
     }
 
+    // File Path
+
     public static get filePath(): string {
-        return this._filePath; // pick up here
+        return Logger._filePath;
     }
 
     public static set filePath(filePath: string) {
-        this._filePath = filePath;
+        Logger._filePath = filePath;
     }
 
     public get filePath(): string {
@@ -120,12 +125,32 @@ export class Logger {
         this._filePath = filePath;
     }
 
+    // Remove Timestamp
+
+    public static get rmTimestamp(): boolean {
+        return Logger._rmTimestamp;
+    }
+
+    public static set rmTimestamp(rmTimestamp: boolean) {
+        Logger._rmTimestamp = rmTimestamp;
+    }
+
     public get rmTimestamp(): boolean {
         return this._rmTimestamp;
     }
 
     public set rmTimestamp(rmTimestamp: boolean) {
         this._rmTimestamp = rmTimestamp;
+    }
+
+    // Custom Logger
+
+    public static set customLogger(customLogger: ICustomLogger | null) {
+        Logger._customLogger = customLogger;
+    }
+
+    public static get customLogger(): ICustomLogger | null {
+        return Logger._customLogger;
     }
 
     public set customLogger(customLogger: ICustomLogger | null) {
@@ -142,27 +167,58 @@ export class Logger {
      ********************************************************************************************/
 
     public static Info(content: any, printFull?: boolean) {
-
+        Logger.PrintLogHelper(content, printFull || false, INFO);
     }
 
 
+    public static Imp(content: any, printFull?: boolean) {
+        Logger.PrintLogHelper(content, printFull || false, IMP);
+    }
+
+
+    public static Warn(content: any, printFull?: boolean) {
+        Logger.PrintLogHelper(content, printFull || false, WARN);
+    }
+
+
+    public static Err(content: any, printFull?: boolean) {
+        Logger.PrintLogHelper(content, printFull || false, ERR);
+    }
+
+
+    private static PrintLogHelper(content: any, printFull: boolean, logType: ILogType): void {
+        Logger.PrintLog(content, printFull, logType, Logger.mode, Logger.rmTimestamp,
+            Logger.filePath, Logger.customLogger);
+    }
+
+
+    /********************************************************************************************
+     *                                 Non-static Methods
+     ********************************************************************************************/
+
     public info(content: any, printFull?: boolean): void {
-        this.printLog(content, printFull || false, 'green', 'INFO: ');
+        this.printLogHelper(content, printFull || false, INFO);
     }
 
 
     public imp(content: any, printFull?: boolean): void {
-        this.printLog(content, printFull || false, 'magenta', 'IMPORTANT: ');
+        this.printLogHelper(content, printFull || false, IMP);
     }
 
 
     public warn(content: any, printFull?: boolean): void {
-        this.printLog(content, printFull || false, 'yellow', 'WARNING: ');
+        this.printLogHelper(content, printFull || false, WARN);
     }
 
 
     public err(content: any, printFull?: boolean): void {
-        this.printLog(content, printFull || false, 'red', 'ERROR: ');
+        this.printLogHelper(content, printFull || false, ERR);
+    }
+
+
+    private printLogHelper(content: any, printFull: boolean, logType: ILogType): void {
+        Logger.PrintLog(content, printFull, logType, this.mode, this.rmTimestamp, this.filePath,
+            this.customLogger);
     }
 
 
@@ -170,41 +226,65 @@ export class Logger {
      *                                   Helpers
      ********************************************************************************************/
 
-    private static printLog(content: any, printFull: boolean, color: string, prefix: string): void {
-        if (this.mode === LoggerModes.OFF) {
+    /**
+     * Print the actual log using the provided settings.
+     * @param content
+     * @param printFull
+     * @param logType
+     * @param mode
+     * @param rmTimestamp
+     * @param filePath
+     * @constructor
+     */
+    private static PrintLog(
+        content: any,
+        printFull: boolean,
+        logType: ILogType,
+        mode: LoggerModeOptions,
+        rmTimestamp: boolean,
+        filePath: string,
+        customLogger: ICustomLogger | null,
+    ): void {
+
+        if (mode === LoggerModes.OFF) {
             return;
         }
+        // Update content
         if (printFull) {
             content = util.inspect(content);
         }
-        if (!this.rmTimestamp) {
+        if (!rmTimestamp) {
             const time = '[' + new Date().toISOString() + ']: ';
             content = time + content;
         }
-        // Print to console, file, or external tool
-        if (this.mode === LoggerModes.CONSOLE) {
-            content = (colors as any)[color](content);
+        // Print log
+        if (mode === LoggerModes.CONSOLE) {
+            content = (colors as any)[logType.color](content);
             // tslint:disable-next-line
             console.log(content);
-        } else if (this.mode === LoggerModes.FILE) {
-            this.writeToFile(prefix + content + '\n');
-        } else if (this.mode === LoggerModes.CUSTOM) {
-            if (this._customLogger) {
-                this._customLogger.sendLog(content);
+        } else if (mode === LoggerModes.FILE) {
+            Logger.WriteToFile(logType.prefix + content + '\n', filePath);
+        } else if (mode === LoggerModes.CUSTOM) {
+            if (customLogger) {
+                customLogger.sendLog(content);
             } else {
-                throw Error(this.CUSTOM_LOGGER_ERR);
+                throw Error(Logger.CUSTOM_LOGGER_ERR);
             }
         }
     }
 
-
-    private writeToFile(content: string): void {
+    /**
+     * Write logs a file instead of the console.
+     * @param content
+     * @param filePath
+     * @constructor
+     */
+    private static WriteToFile(content: string, filePath: string): void {
         try {
-            const exists = this.checkExists();
-            if (exists) {
-                fs.appendFileSync(this.filePath, content);
+            if (Logger.CheckExists(filePath)) {
+                fs.appendFileSync(filePath, content);
             } else {
-                fs.writeFileSync(this.filePath, content);
+                fs.writeFileSync(filePath, content);
             }
         } catch (err) {
             // tslint:disable-next-line
@@ -213,9 +293,14 @@ export class Logger {
     }
 
 
-    private checkExists(): boolean {
+    /**
+     * Check if a file exists at the file path.
+     * @param filePath
+     * @constructor
+     */
+    private static CheckExists(filePath: string): boolean {
         try {
-            fs.accessSync(this.filePath);
+            fs.accessSync(filePath);
             return true;
         } catch (e) {
             return false;

@@ -1,5 +1,6 @@
 /**
- * Route Decorators for the Overnight web-framework.
+ * Route Decorators for the Overnight web-framework. Link to all routes for ExpressJS:
+ * https://expressjs.com/en/api.html#routing-methods.
  *
  * created by Sean Maxwell Aug 27, 2018
  */

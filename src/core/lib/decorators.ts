@@ -29,6 +29,11 @@ export function Put(path?: string): MethodDecorator {
 }
 
 
+export function Patch(path?: string): MethodDecorator {
+    return helperForRoutes('patch', path);
+}
+
+
 export function Delete(path?: string): MethodDecorator {
     return helperForRoutes('delete', path);
 }

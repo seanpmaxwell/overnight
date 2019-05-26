@@ -52,14 +52,16 @@ export class UserController {
 
     @Get('practice/async')
     private async getWithAsync(req: Request, res: Response): Promise<void> {
-        let msg;
         try {
-            msg = await this.asyncMethod(req);
+            const asyncMsg = await this.asyncMethod(req);
+            res.status(400).json({
+                message: asyncMsg,
+            });
         } catch (err) {
-            msg = err.message;
             Logger.Err(err, true);
-        } finally {
-            res.status(200).json({msg});
+            res.status(400).json({
+                error: err.message,
+            });
         }
     }
 

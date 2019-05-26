@@ -4,14 +4,13 @@
  * created by Sean Maxwell April 6, 2019
  */
 
+import {Controller, Get} from '@overnightjs/core';
+import {Logger, LoggerModes} from '@overnightjs/logger';
+import {Request, Response} from 'express';
 import * as path from 'path';
-import { Request, Response } from 'express';
-import { Controller, Get } from '@overnightjs/core';
-import { Logger, LoggerModes } from '@overnightjs/logger';
 import CustomLoggerTool from './other/CustomLoggerTool';
 
-
-@Controller('api/logger')
+@Controller('logger')
 export class LoggerPracticeController {
 
     private readonly customLoggerTool: CustomLoggerTool;
@@ -21,6 +20,8 @@ export class LoggerPracticeController {
         this.customLoggerTool = new CustomLoggerTool();
     }
 
+
+    // Console
 
     @Get('console/:msg')
     private printLogsConsole(req: Request, res: Response): void {
@@ -36,6 +37,22 @@ export class LoggerPracticeController {
     }
 
 
+    @Get('static/console/:msg')
+    private stPrintLogsConsole(req: Request, res: Response): void {
+        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.CONSOLE;
+        Logger.Info(req.params.msg);
+        Logger.Imp(req.params.msg);
+        Logger.Warn(req.params.msg);
+        Logger.Err(req.params.msg);
+        Logger.Err(new Error('printing out an error'));
+        Logger.Err(new Error('printing out an error full'), true);
+        res.status(200).json({msg: 'console_mode'});
+    }
+
+
+    // File
+
+    // pick up here
     @Get('file/:msg')
     private printLogsFile(req: Request, res: Response): void {
         const logFilePath = path.join(__dirname, '../../sampleProject.log');
@@ -51,6 +68,23 @@ export class LoggerPracticeController {
     }
 
 
+    @Get('static/file/:msg')
+    private stPrintLogsFile(req: Request, res: Response): void {
+        const logFilePath = path.join(__dirname, '../../sampleProject.log');
+        process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
+        Logger.mode = LoggerModes.FILE;
+        Logger.Info(req.params.msg);
+        Logger.Imp(req.params.msg);
+        Logger.Warn(req.params.msg);
+        Logger.Err(req.params.msg);
+        Logger.Err(new Error('printing out an error'));
+        Logger.Err(new Error('printing out an error full'), true);
+        res.status(200).json({msg: 'file_mode'});
+    }
+
+
+    // Off
+
     @Get('off/:msg')
     private printLogsOff(req: Request, res: Response): void {
         const logger = new Logger(LoggerModes.OFF);
@@ -61,6 +95,19 @@ export class LoggerPracticeController {
         res.status(200).json({msg: 'off_mode'});
     }
 
+
+    @Get('static/off/:msg')
+    private stPrintLogsOff(req: Request, res: Response): void {
+        Logger.mode = LoggerModes.OFF;
+        Logger.Info(req.params.msg);
+        Logger.Imp(req.params.msg);
+        Logger.Warn(req.params.msg);
+        Logger.Err(req.params.msg);
+        res.status(200).json({msg: 'off_mode'});
+    }
+
+
+    // Defaults
 
     @Get('defaults/:msg')
     private testDefaults(req: Request, res: Response): void {

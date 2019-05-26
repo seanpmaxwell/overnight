@@ -4,19 +4,19 @@
  * created by Sean Maxwell May 25, 2019
  */
 
-import { Controller } from '@overnightjs/core';
+import { Controller, Get } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
+import { Request, Response } from 'express';
 
 
 @Controller('child-a2')
 export class ChildA2Controller {
 
-    private readonly logger: Logger;
 
-
-    constructor() {
-        this.logger = new Logger();
+    @Get()
+    private get(req: Request, res: Response) {
+        const message = 'Hi I\'m the child A2 controller';
+        Logger.Info(message);
+        return res.status(200).json({message});
     }
-
-
 }

@@ -275,7 +275,8 @@ export class Logger {
      */
     private static WriteToFile(content: string, filePath: string): void {
         try {
-            if (Logger.CheckExists(filePath)) {
+            const fileExists = Logger.CheckExists(filePath);
+            if (fileExists) {
                 fs.appendFileSync(filePath, content);
             } else {
                 fs.writeFileSync(filePath, content);

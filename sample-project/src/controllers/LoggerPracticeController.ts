@@ -39,7 +39,6 @@ export class LoggerPracticeController {
 
     @Get('static/console/:msg')
     private stPrintLogsConsole(req: Request, res: Response): void {
-        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.CONSOLE;
         Logger.Info(req.params.msg);
         Logger.Imp(req.params.msg);
         Logger.Warn(req.params.msg);
@@ -50,9 +49,8 @@ export class LoggerPracticeController {
     }
 
 
-    // File
+    // File Path
 
-    // pick up here
     @Get('file/:msg')
     private printLogsFile(req: Request, res: Response): void {
         const logFilePath = path.join(__dirname, '../../sampleProject.log');
@@ -71,7 +69,7 @@ export class LoggerPracticeController {
     @Get('static/file/:msg')
     private stPrintLogsFile(req: Request, res: Response): void {
         const logFilePath = path.join(__dirname, '../../sampleProject.log');
-        process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
+        Logger.filePath = logFilePath;
         Logger.mode = LoggerModes.FILE;
         Logger.Info(req.params.msg);
         Logger.Imp(req.params.msg);
@@ -80,6 +78,29 @@ export class LoggerPracticeController {
         Logger.Err(new Error('printing out an error'));
         Logger.Err(new Error('printing out an error full'), true);
         res.status(200).json({msg: 'file_mode'});
+    }
+
+
+    @Get('defaultFilePath/:msg')
+    private defaultFilePath(req: Request, res: Response): void {
+        process.env.OVERNIGHT_LOGGER_FILEPATH = '';
+        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE;
+        const logger = new Logger();
+        logger.info(req.params.msg);
+        logger.imp(req.params.msg);
+        logger.warn(req.params.msg);
+        logger.err(req.params.msg);
+        res.status(200).json({msg: 'default_file_path'});
+    }
+
+
+    @Get('static/defaultFilePath/:msg')
+    private stDefaultFilePath(req: Request, res: Response): void {
+        Logger.Info(req.params.msg);
+        Logger.Imp(req.params.msg);
+        Logger.Warn(req.params.msg);
+        Logger.Err(req.params.msg);
+        res.status(200).json({msg: 'default_file_path'});
     }
 
 
@@ -122,18 +143,18 @@ export class LoggerPracticeController {
     }
 
 
-    @Get('defaultFilePath/:msg')
-    private defaultFilePath(req: Request, res: Response): void {
-        process.env.OVERNIGHT_LOGGER_FILEPATH = '';
-        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE;
-        const logger = new Logger();
-        logger.info(req.params.msg);
-        logger.imp(req.params.msg);
-        logger.warn(req.params.msg);
-        logger.err(req.params.msg);
-        res.status(200).json({msg: 'default_file_path'});
+    // Not this could've been changed if other routes are fired first
+    @Get('static/defaults/:msg')
+    private stTestDefaults(req: Request, res: Response): void {
+        Logger.Info(req.params.msg);
+        Logger.Imp(req.params.msg);
+        Logger.Warn(req.params.msg);
+        Logger.Err(req.params.msg);
+        res.status(200).json({msg: 'test_defaults'});
     }
 
+
+    // Custom Logger
 
     @Get('useCustomLogger/:msg')
     private useCustomLogger(req: Request, res: Response): void {
@@ -143,6 +164,20 @@ export class LoggerPracticeController {
         logger.imp(req.params.msg);
         logger.warn(req.params.msg);
         logger.err(req.params.msg);
+        res.status(200).json({msg: 'default_file_path'});
+    }
+
+
+    @Get('static/useCustomLogger/:msg')
+    private stUseCustomLogger(req: Request, res: Response): void {
+        Logger.mode = LoggerModes.CUSTOM;
+        Logger.filePath = '';
+        Logger.rmTimestamp = true;
+        Logger.customLogger = this.customLoggerTool;
+        Logger.Info(req.params.msg);
+        Logger.Imp(req.params.msg);
+        Logger.Warn(req.params.msg);
+        Logger.Err(req.params.msg);
         res.status(200).json({msg: 'default_file_path'});
     }
 }

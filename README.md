@@ -12,7 +12,7 @@ includes a package for managing json-web-tokens and showing logs.
 
 ## Features
 * Define a base route using a @Controller decorator.
-* @Get, @Post, @Put, and @Delete decorators to convert controller methods into Express routes.
+* Decorators to convert controller methods into Express routes (all routes supported i.e. @Get, @Put, ...).
 * @Middleware and @ClassMiddleware decorators.
 * Decorators also work with arrow functions set as class properties.
 * Server superclass to initialize ExpressJS server and setup controllers.
@@ -439,12 +439,12 @@ app.use('/', router);
 
 ## <a name="overnight-logger"></a> OvernightJS/logger
 Despite the abundance of logging tools out there, knowing exactly which is the right one for your 
-web-server, might take more time than you feel like spending. So you can start logging events right 
+web-server might take more time than you feel like spending. So you can start logging events right 
 away, OvernightJS comes with its own logging package. From the environment variables you can easily
 switch your logs to be printed out to the command line, a file, sent through your own custom logging 
 logic, or turned off completely. Logs printed to the console also are printed out in different colors 
-depending on whether they're a warning, error, etc. The file for holdings logs can be specified manually 
-or left as the default. Let's check it out!<br>
+depending on whether they're info, a warning, an error, etc. The file for holdings logs can be specified
+ manually or left as the default. Let's check it out!<br>
 
 ### Installation
 ```batch
@@ -454,25 +454,30 @@ $ npm install --save @overnightjs/logger
 ### Guide
 There's not as much to _/logger_ as there was for _/core_ and _/jwt_, so we're just going to quickly
 go over what each method does and how to set it up. The logger package's main export is the
-`Logger` class. You will have separate instances of `Logger` throughout your project but they will
-all pull from the same environment-variables. The variables you need to set are the mode `OVERNIGHT_LOGGER_MODE`
-and the filepath `OVERNIGHT_LOGGER_FILEPATH`. The mode has 4 settings `'console'`, `'file'`, `'custom'`, and `'off'`. 
+`Logger` class. Overnight can used statically or as an instance with settings configured through a constructor.
+
+- The three environment variables are:
+    - `OVERNIGHT_LOGGER_MODE`: can be `'console'`(default), `'file'`, `'custom'`, and `'off'`.
+    - `OVERNIGHT_LOGGER_FILEPATH`: the file-path for file mode. Default is _home_dir/overnight.log_.
+    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: shows a timestamp next to each log. Can be `'true'`(default) or `'false'`.
+
 _logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
-use them in code. If you do not set the mode, _logger_ will default to using `CONSOLE`. I would recommend 
-using `CONSOLE` for local development, `FILE` for remote development, and `CUSTOM` or `OFF` for production. If you
-want to change the settings in code, you can do so via the constructor or getters/setters.<br>
+use them in code. I would recommend using `CONSOLE` for local development, `FILE` for remote development, 
+and `CUSTOM` or `OFF` for production. If you want to change the settings in code, you can do so via 
+the constructor or getters/setters.
+<br>
 
-Once you've setup logger there are 4 methods to print logs. They are `info`, which prints green, `imp`, 
-which prints magenta, `warn`, which prints yellow, and `err`, which prints red. Each method must be
-passed the content to print as the first param. There is an optional second param which is a `boolean`.
-If you pass `true` as the second param, _logger_ will use node's `util` so that the full object
-gets printed. You should NOT normally use this param, but it is especially useful when debugging errors
-so that you can print out the full error object and observe the stack trace.<br>
 
-_logger_ will by default prepend every log with a datetime stamp. If you want to turn
-this off, set `OVERNIGHT_LOGGER_RM_TIMESTAMP` to `"true"` in the environment files or pass `false` as the
-third argument to the constructor. Like all other settings, the argument to the constructor, will override
-any environment settings.<br>
+- There are 4 functions on Logger to print logs. Each has a static counterpart:
+    - `info` or `Info`: prints green.
+    - `imp` or `Imp`: prints magenta. 
+    - `warn` or `Warn`: prints yellow.
+    - `err` or `Err`: prints red.
+
+There is an optional second param to each method which is a `boolean`. If you pass `true` as the second 
+param, Logger will use node's `util` so that the full object gets printed. You should NOT normally 
+use this param, but it is especially useful when debugging errors so that you can print out the full 
+error object and observe the stack trace.<br>
 
 Let's look at a code sample which sets the environment variables via a start script:
 
@@ -520,6 +525,17 @@ export class LoggerPracticeController {
         this.logger.err(req.params.msg);
         this.logger.err(new Error('printing out an error'));
         this.logger.err(new Error('printing out an error full'), true); // <-- print the full Error object
+        res.status(200).json({msg: 'console_mode'});
+    }
+    
+    @Get('static/console/:msg')
+    private printLogsConsole(req: Request, res: Response): void {
+        Logger.Info(req.params.msg);
+        Logger.Imp(req.params.msg);
+        Logger.Warn(req.params.msg);
+        Logger.Err(req.params.msg);
+        Logger.Err(new Error('printing out an error'));
+        Logger.Err(new Error('printing out an error full'), true); // <-- print the full Error object
         res.status(200).json({msg: 'console_mode'});
     }
 }
@@ -584,9 +600,6 @@ export class CustomLoggerTool implements ICustomLogger {
 
 ````typescript
 // In the controller file
-constructor() {
-    this.customLoggerTool = new CustomLoggerTool();
-}
 
 @Get('useCustomLogger/:msg')
 private useCustomLogger(req: Request, res: Response): void {

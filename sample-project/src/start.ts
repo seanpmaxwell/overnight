@@ -6,6 +6,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import { LoggerModes } from '@overnightjs/logger';
 import NormalRouterServer from './NormalRouterServer';
 import CustomRouterServer from './CustomRouterServer';
 
@@ -14,6 +15,8 @@ import CustomRouterServer from './CustomRouterServer';
 // Set env variables
 const logFilePath = path.join(__dirname, '../sampleProject.log');
 process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
+process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.CONSOLE;
+process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP = 'false';
 
 
 // Remove current log file

@@ -4,9 +4,9 @@
  * created by Sean Maxwell April 6, 2019
  */
 
-import {Controller, Get} from '@overnightjs/core';
-import {Logger, LoggerModes} from '@overnightjs/logger';
-import {Request, Response} from 'express';
+import { Controller, Get } from '@overnightjs/core';
+import { Logger, LoggerModes } from '@overnightjs/logger';
+import { Request, Response } from 'express';
 import * as path from 'path';
 import CustomLoggerTool from './other/CustomLoggerTool';
 

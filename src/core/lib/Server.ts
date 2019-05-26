@@ -5,10 +5,16 @@
  */
 
 import * as express from 'express';
-import { Application, Request, Response, NextFunction } from 'express';
-import { BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY } from './decorators';
+import { Application, Request, Response, Router, NextFunction } from 'express';
+import { BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY, CHILDREN_KEY } from './decorators';
+
 
 type Controllers = InstanceType<any> | Array<InstanceType<any>>;
+
+interface IRouterAndPath {
+    basePath: string | null;
+    router: Router | null;
+}
 
 export class Server {
 
@@ -32,16 +38,19 @@ export class Server {
      * @param customRouterLib
      * @param showLog
      */
-    protected addControllers(controllers: Controllers, routerLib?: (() => any) | null,
-                             showLog?: boolean): void {
+    protected addControllers(
+        controllers: Controllers,
+        routerLibrary?: (() => any) | null,
+        showLog?: boolean,
+    ): void {
+
         let count = 0;
+        const routerLib = routerLibrary ? routerLibrary : express.Router;
         controllers = (controllers instanceof Array) ? controllers : [controllers];
         controllers.forEach((controller: InstanceType<any>) => {
             if (controller) {
-                const prototype = Object.getPrototypeOf(controller);
-                const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
-                if (basePath) {
-                    const router = this.getRouter(routerLib || express.Router, controller);
+                const { basePath, router } = this.getRouter(routerLib, controller);
+                if (basePath && router) {
                     this.app.use(basePath, router);
                     count++;
                 }
@@ -60,18 +69,40 @@ export class Server {
      * @param routerLib
      * @param controller
      */
-    private getRouter(routerLib: (() => any), controller: InstanceType<any>): express.Router {
-        const router = routerLib();
+    private getRouter(routerLibrary: (() => any), controller: InstanceType<any>): IRouterAndPath {
+        const router = routerLibrary();
+
+        // Determine if controller and get base path
         const prototype = Object.getPrototypeOf(controller);
-        // Set class-wide middleware
+        const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
+        if (!basePath) {
+            return {
+                basePath: null,
+                router: null,
+            };
+        }
+
+        // Set controller-wide middleware
         const classMiddleware = Reflect.getOwnMetadata(CLASS_MIDDLEWARE_KEY, prototype);
         if (classMiddleware) {
             router.use(classMiddleware);
         }
+
+        // RecursivelyAdd child-routes if there are any
+        let children = Reflect.getOwnMetadata(CHILDREN_KEY, prototype);
+        if (children) {
+            children = (children instanceof Array) ? children : [children];
+            children.forEach((child: InstanceType<any>) => {
+                const childRouterAndPath = this.getRouter(routerLibrary, child);
+                if (childRouterAndPath.router) {
+                    router.use(childRouterAndPath.basePath, childRouterAndPath.router);
+                }
+            });
+        }
+
         // Get members of both instance and prototype
         let members = Object.getOwnPropertyNames(controller);
         members = members.concat(Object.getOwnPropertyNames(prototype));
-        // Set all routes using class functions and properties whose values are functions
         members.forEach((member) => {
             const route = controller[member];
             const routeProperties = Reflect.getOwnMetadata(member, prototype);
@@ -87,6 +118,10 @@ export class Server {
                 }
             }
         });
-        return router;
+
+        return {
+            basePath,
+            router,
+        };
     }
 }

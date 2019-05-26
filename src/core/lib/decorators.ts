@@ -8,9 +8,6 @@
 import { Request, Response, NextFunction } from 'express';
 import 'reflect-metadata';
 
-type Middlware = (req: Request, res: Response, next: NextFunction) => any;
-type Class = (...args: any[]) => void;
-
 
 /***********************************************************************************************
  *                                      Method Decorators
@@ -155,7 +152,7 @@ export function ClassMiddleware(middleware: Middlware | Middlware[]): ClassDecor
     };
 }
 
-export function Children(middleware: Class | Class[]): ClassDecorator {
+export function Children(middleware: InstanceType<any> | Array<InstanceType<any>>): ClassDecorator {
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
@@ -169,7 +166,7 @@ export function Children(middleware: Class | Class[]): ClassDecorator {
  *                                  Middleware Decorator
  **********************************************************************************************/
 
-
+type Middlware = (req: Request, res: Response, next: NextFunction) => any;
 
 
 export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator {

@@ -9,12 +9,7 @@ import { Logger } from '@overnightjs/logger';
 
 
 @Controller('child-a1')
-class ChildA1Controller {
-
-    private readonly logger: Logger;
+export class ChildA1Controller {
 
 
-    constructor() {
-        this.logger = new Logger();
-    }
 }

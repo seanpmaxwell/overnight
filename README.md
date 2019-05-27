@@ -58,54 +58,74 @@ $ npm install --save-dev @types/express
 #### Create your controller
 
 ````typescript
-import { Request, Response, NextFunction } from 'express';
-import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
+import { OK, BAD_REQUEST } from 'http-status-codes';
+import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
+import { Request, Response } from 'express';
+import { Logger } from '@overnightjs/logger';
 
 @Controller('api/users')
 export class UserController {
-    
+
     @Get(':id')
-    get(req: Request, res: Response): any {
-        console.log(req.params.id);
-        return res.status(200).json({msg: 'get_called'});
+    private get(req: Request, res: Response) {
+        Logger.Info(req.params.id);
+        return res.status(OK).json({
+            message: 'get_called',
+        });
     }
-    
-    @Get()
-    @Middleware(middleware)
-    private getAll(req: Request, res: Response): void {
-        res.status(200).json({msg: 'get_all_called'});
+
+    @Get('')
+    @Middleware([middleware1, middleware2])
+    private getAll(req: ISecureRequest, res: Response) {
+        Logger.Info(req.payload, true);
+        return res.status(OK).json({
+            message: 'get_all_called',
+        });
     }
 
     @Post()
-    private add(req: Request, res: Response): void {
-        res.status(200).json({msg: 'add_called'});
+    private add(req: Request, res: Response) {
+        Logger.Info(req.body, true);
+        return res.status(OK).json({
+            message: 'add_called',
+        });
     }
 
     @Put('update-user')
-    @Middleware([middleware1, middleware2])
-    private update(req: Request, res: Response): void {
-        res.status(200).json({msg: 'update_called'});
+    private update(req: Request, res: Response) {
+        Logger.Info(req.body);
+        return res.status(OK).json({
+            message: 'update_called',
+        });
     }
 
-    // Next param is optional
     @Delete('delete/:id')
-    private delete(req: Request, res: Response, next: NextFunction): void {
-        res.status(200).json({msg: 'delete_called'});
+    private delete(req: Request, res: Response) {
+        Logger.Info(req.params, true);
+        return res.status(OK).json({
+            message: 'delete_called',
+        });
     }
 
-    // async/await work normally :)
     @Get('practice/async')
-    private async getWithAsync(req: Request, res: Response): Promise<void> {
+    private async getWithAsync(req: Request, res: Response) {
         try {
-            const msg = await someAsyncFunction(req);
-            return res.status(200).json({
-                message: msg,
+            const asyncMsg = await this.asyncMethod(req);
+            return res.status(BAD_REQUEST).json({
+                message: asyncMsg,
             });
         } catch (err) {
-            return res.status(400).json({
+            Logger.Err(err, true);
+            return res.status(BAD_REQUEST).json({
                 error: err.message,
             });
         }
+    }
+
+    private asyncMethod(req: Request): Promise<string> {
+        return new Promise((resolve) => {
+            resolve(req.originalUrl + ' called');
+        });
     }
 }
 ````
@@ -254,7 +274,7 @@ import { Controller, Get } from '@overnightjs/core';
 export class PostController {
 
     @Get(':id')
-    private get(req: Request, res: Response): Promise<Response> {
+    private get(req: Request, res: Response) {
         return this.someAsyncFunction(req.params.id)
                     .then(ret => res.status(200).json({msg: ret}));
     }
@@ -356,6 +376,7 @@ process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 - In the controller file
 ````typescript
+import { OK } from 'http-status-codes';
 import { Request, Response } from 'express';
 import { Controller, Get } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
@@ -370,25 +391,29 @@ export class LoggerPracticeController {
     }
 
     @Get('static/console/:msg')
-    private printLogsConsole(req: Request, res: Response): void {
+    private printLogsConsole(req: Request, res: Response) {
         Logger.Info(req.params.msg);
         Logger.Imp(req.params.msg);
         Logger.Warn(req.params.msg);
         Logger.Err(req.params.msg);
         Logger.Err(new Error('printing out an error'));
         Logger.Err(new Error('printing out an error full'), true); // <-- print the full Error object
-        res.status(200).json({msg: 'console_mode'});
+        return res.status(OK).json({
+            message: 'static_console_mode',
+        });
     }
     
     @Get('console/:msg')
-    private printLogsConsole(req: Request, res: Response): void {
+    private printLogsConsole(req: Request, res: Response) {
         this.logger.info(req.params.msg);
         this.logger.imp(req.params.msg);
         this.logger.warn(req.params.msg);
         this.logger.err(req.params.msg);
         this.logger.err(new Error('printing out an error'));
         this.logger.err(new Error('printing out an error full'), true);
-        res.status(200).json({msg: 'console_mode'});
+        return res.status(OK).json({
+            message: 'console_mode',
+        });
     }
 }
 ````
@@ -451,13 +476,18 @@ export class CustomLoggerTool implements ICustomLogger {
 ````
 
 ````typescript
-// In the controller file
+    // In the controller file
+    
+    ...
 
     @Get('useCustomLogger/:msg')
-    private useCustomLogger(req: Request, res: Response): void {
+    private useCustomLogger(req: Request, res: Response) {
         const logger = new Logger(LoggerModes.CUSTOM, '', true, this.customLoggerTool);
         logger.rmTimestamp = true;
         logger.info(req.params.msg);
+        return res.status(OK).json({
+                    message: 'console_mode',
+                });
     }
 ````
 <br>

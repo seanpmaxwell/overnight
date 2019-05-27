@@ -58,54 +58,74 @@ $ npm install --save-dev @types/express
 #### Create your controller
 
 ````typescript
-import {Request, Response, NextFunction} from 'express';
-import {Controller, Get, Post, Put, Delete, Middleware} from '@overnightjs/core';
+import { OK, BAD_REQUEST } from 'http-status-codes';
+import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
+import { Request, Response } from 'express';
+import { Logger } from '@overnightjs/logger';
 
 @Controller('api/users')
 export class UserController {
-    
+
     @Get(':id')
-    get(req: Request, res: Response): any {
-        console.log(req.params.id);
-        return res.status(200).json({msg: 'get_called'});
+    private get(req: Request, res: Response) {
+        Logger.Info(req.params.id);
+        return res.status(OK).json({
+            message: 'get_called',
+        });
     }
-    
-    @Get()
-    @Middleware(middleware)
-    private getAll(req: Request, res: Response): void {
-        res.status(200).json({msg: 'get_all_called'});
+
+    @Get('')
+    @Middleware([middleware1, middleware2])
+    private getAll(req: ISecureRequest, res: Response) {
+        Logger.Info(req.payload, true);
+        return res.status(OK).json({
+            message: 'get_all_called',
+        });
     }
 
     @Post()
-    private add(req: Request, res: Response): void {
-        res.status(200).json({msg: 'add_called'});
+    private add(req: Request, res: Response) {
+        Logger.Info(req.body, true);
+        return res.status(OK).json({
+            message: 'add_called',
+        });
     }
 
     @Put('update-user')
-    @Middleware([middleware1, middleware2])
-    private update(req: Request, res: Response): void {
-        res.status(200).json({msg: 'update_called'});
+    private update(req: Request, res: Response) {
+        Logger.Info(req.body);
+        return res.status(OK).json({
+            message: 'update_called',
+        });
     }
 
-    // Next param is optional
     @Delete('delete/:id')
-    private delete(req: Request, res: Response, next: NextFunction): void {
-        res.status(200).json({msg: 'delete_called'});
+    private delete(req: Request, res: Response) {
+        Logger.Info(req.params, true);
+        return res.status(OK).json({
+            message: 'delete_called',
+        });
     }
 
-    // async/await work normally :)
     @Get('practice/async')
-    private async getWithAsync(req: Request, res: Response): Promise<void> {
+    private async getWithAsync(req: Request, res: Response) {
         try {
-            const msg = await someAsyncFunction(req);
-            return res.status(200).json({
-                message: msg,
+            const asyncMsg = await this.asyncMethod(req);
+            return res.status(BAD_REQUEST).json({
+                message: asyncMsg,
             });
         } catch (err) {
-            return res.status(400).json({
+            Logger.Err(err, true);
+            return res.status(BAD_REQUEST).json({
                 error: err.message,
             });
         }
+    }
+
+    private asyncMethod(req: Request): Promise<string> {
+        return new Promise((resolve) => {
+            resolve(req.originalUrl + ' called');
+        });
     }
 }
 ````
@@ -128,7 +148,7 @@ import * as OvernightJS from '@overnightjs/core';
 - If want want your middleware to apply to every route in a class use the `@ClassMiddleware` decorator. 
 
 ````typescript
-import {Controller, ClassMiddleware} from '@overnightjs/core';
+import { Controller, ClassMiddleware } from '@overnightjs/core';
 
 @Controller('api/users')
 @ClassMiddleware([middleware1, middleware2])
@@ -143,8 +163,8 @@ many levels of nesting you can add. Make sure to instantiate them before adding 
 class level can be added with `@ClassOptions` decorator. 
 
 ````typescript
-import {Controller, ClassOptions, ChildControllers} from '@overnightjs/core';
-import {ChildController1, ChildController2} from '...'
+import { Controller, ClassOptions, ChildControllers } from '@overnightjs/core';
+import { ChildController1, ChildController2 } from '...'
 
 @Controller('api/users')
 @ClassOptions({mergeParams: true})
@@ -162,6 +182,8 @@ export class ParentController {
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
 object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`.
+If you want to print to the console the name of each controller that has been successfully configured,
+set `super.showLogs = true`. 
 <br>
 
 `super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
@@ -171,10 +193,10 @@ or an array of controller-instances, but they must be instantiated first.
 
 ````typescript
 import * as bodyParser from 'body-parser';
-import {Server} from '@overnightjs/core';
-import {Logger} from '@overnightjs/logger';
-import {UserController} from './UserController';
-import {SignupController} from './SignupController';
+import { Server } from '@overnightjs/core';
+import { Logger } from '@overnightjs/logger';
+import { UserController } from './UserController';
+import { SignupController } from './SignupController';
 
 export class SampleServer extends Server {
     
@@ -191,8 +213,10 @@ export class SampleServer extends Server {
         const dbConnObj = new SomeDbConnClass('credentials');
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
-        // This must be called, and can be passed a single controller or an array of 
+        
+        // addControllers() must be called, and can be passed a single controller or an array of 
         // controllers. Optional router object can also be passed as second argument.
+        super.showLogs = (process.env.NODE_ENV === 'development');
         super.addControllers([userController, signupController]);
     }
 
@@ -243,14 +267,14 @@ router, the default express.Router() object is used.
 - Controller using _express-promise-router_:
 
 ````typescript
-import {Request, Response} from 'express';
-import {Controller, Get} from '@overnightjs/core';
+import { Request, Response } from 'express';
+import { Controller, Get } from '@overnightjs/core';
 
 @Controller('api/posts')
 export class PostController {
 
     @Get(':id')
-    private get(req: Request, res: Response): Promise<Response> {
+    private get(req: Request, res: Response) {
         return this.someAsyncFunction(req.params.id)
                     .then(ret => res.status(200).json({msg: ret}));
     }
@@ -267,8 +291,8 @@ export class PostController {
 
 ````typescript
 import * as customRouter  from 'express-promise-router';
-import {Server} from '@overnightjs/core';
-import {PostController} from './controllers/PostController';
+import { Server } from '@overnightjs/core';
+import { PostController } from './controllers/PostController';
 
 export class CustomRouterServer extends Server {
     
@@ -335,7 +359,7 @@ Let's look at a code sample which sets the environment variables via a start scr
 ````typescript
 import * as path from 'path';
 import * as fs from 'fs';
-import {LoggerModes} from '@overnightjs/logger';
+import { LoggerModes } from '@overnightjs/logger';
 
 // Set the 
 const logFilePath = path.join(__dirname, '../sampleProject.log');
@@ -352,9 +376,10 @@ process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 - In the controller file
 ````typescript
-import {Request, Response} from 'express';
-import {Controller, Get} from '@overnightjs/core';
-import {Logger, LoggerModes} from '@overnightjs/logger';
+import { OK } from 'http-status-codes';
+import { Request, Response } from 'express';
+import { Controller, Get } from '@overnightjs/core';
+import { Logger } from '@overnightjs/logger';
 
 @Controller('api/logger')
 export class LoggerPracticeController {
@@ -366,25 +391,29 @@ export class LoggerPracticeController {
     }
 
     @Get('static/console/:msg')
-    private printLogsConsole(req: Request, res: Response): void {
+    private printLogsConsole(req: Request, res: Response) {
         Logger.Info(req.params.msg);
         Logger.Imp(req.params.msg);
         Logger.Warn(req.params.msg);
         Logger.Err(req.params.msg);
         Logger.Err(new Error('printing out an error'));
         Logger.Err(new Error('printing out an error full'), true); // <-- print the full Error object
-        res.status(200).json({msg: 'console_mode'});
+        return res.status(OK).json({
+            message: 'static_console_mode',
+        });
     }
     
     @Get('console/:msg')
-    private printLogsConsole(req: Request, res: Response): void {
+    private printLogsConsole(req: Request, res: Response) {
         this.logger.info(req.params.msg);
         this.logger.imp(req.params.msg);
         this.logger.warn(req.params.msg);
         this.logger.err(req.params.msg);
         this.logger.err(new Error('printing out an error'));
         this.logger.err(new Error('printing out an error full'), true);
-        res.status(200).json({msg: 'console_mode'});
+        return res.status(OK).json({
+            message: 'console_mode',
+        });
     }
 }
 ````
@@ -429,7 +458,7 @@ Logger will call whatever logic you created for `sendLog()`.
 
 ````typescript
 // CustomLoggerTool.ts
-import {ICustomLogger} from '@overnightjs/logger';
+import { ICustomLogger } from '@overnightjs/logger';
 
 export class CustomLoggerTool implements ICustomLogger {
 
@@ -447,13 +476,18 @@ export class CustomLoggerTool implements ICustomLogger {
 ````
 
 ````typescript
-// In the controller file
+    // In the controller file
+    
+    ...
 
     @Get('useCustomLogger/:msg')
-    private useCustomLogger(req: Request, res: Response): void {
+    private useCustomLogger(req: Request, res: Response) {
         const logger = new Logger(LoggerModes.CUSTOM, '', true, this.customLoggerTool);
         logger.rmTimestamp = true;
         logger.info(req.params.msg);
+        return res.status(OK).json({
+                    message: 'console_mode',
+                });
     }
 ````
 <br>
@@ -520,9 +554,9 @@ Just import `JwtManager`.
 
 
 ````typescript
-import {JwtManager, ISecureRequest} from '@overnightjs/jwt';
-import {Controller, Middleware, Get, Post} from '@overnightjs/core';
-import {Request, Response} from 'express';
+import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
+import { Controller, Middleware, Get, Post } from '@overnightjs/core';
+import { Request, Response } from 'express';
 
 @Controller('api/jwt')
 export class JwtPracticeController {
@@ -549,9 +583,9 @@ and set them via the constructor. I love using Option 1 way more, but I thought 
 for people who prefer to import it another way. 
 
 ````typescript
-import {JwtManager, ISecureRequest} from '@overnightjs/jwt';
-import {Controller, Middleware, Get, Post} from '@overnightjs/core';
-import {Request, Response} from 'express';
+import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
+import { Controller, Middleware, Get, Post } from '@overnightjs/core';
+import { Request, Response } from 'express';
 
 const jwtMgr = new JwtManager('secret', '10h');
 

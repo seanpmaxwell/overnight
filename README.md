@@ -15,12 +15,12 @@ It also includes a package for managing json-web-tokens and printing logs.
 * Decorators to convert class methods to Express routes (@Get, @Put, @Post, @Delete etc).
 * @Middleware and @ClassMiddleware decorators.
 * Add options to controllers the same as use would Express routers with @ClassOptions.
-* Decorators also work with arrow functions set as class properties.
+* Method decorators also work with arrow functions set as class properties.
 * Support for child-controllers.
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router.
-* Json-Web-Token management.
 * Easy to configure logging tool.
+* Json-Web-Token management.
 * Master repo includes a sample application, if you want to practice with an API calling tool such as Postman.
 * Compatible with both es5 and es6.
 * Fully type safe :)
@@ -36,8 +36,9 @@ application.
 
 ## Table of Contents
 * [OvernightJS/core](#overnight-core)
-* [OvernightJS/jwt](#overnight-jwt)
 * [OvernightJS/logger](#overnight-logger)
+* [OvernightJS/jwt](#overnight-jwt)
+
 
 
 ## Installation
@@ -95,13 +96,15 @@ export class UserController {
     // async/await work normally :)
     @Get('practice/async')
     private async getWithAsync(req: Request, res: Response): Promise<void> {
-        let msg;
         try {
-            msg = await this.someMethodWhichReturnsAPromise(req);
+            const msg = await someAsyncFunction(req);
+            return res.status(200).json({
+                message: msg,
+            });
         } catch (err) {
-            msg = err;
-        } finally {
-            res.status(200).json({msg: msg});
+            return res.status(400).json({
+                error: err.message,
+            });
         }
     }
 }
@@ -169,6 +172,7 @@ or an array of controller-instances, but they must be instantiated first.
 ````typescript
 import * as bodyParser from 'body-parser';
 import {Server} from '@overnightjs/core';
+import {Logger} from '@overnightjs/logger';
 import {UserController} from './UserController';
 import {SignupController} from './SignupController';
 
@@ -194,7 +198,7 @@ export class SampleServer extends Server {
 
     public start(port: number): void {
         this.app.listen(port, () => {
-            cimp('Server listening on port: ' + port);
+            Logger.Imp('Server listening on port: ' + port);
         })
     }
 }
@@ -209,10 +213,10 @@ class UserController {
     
     public getRoutes(): Router {
         const router = Router();
-        router.get('/', your middleware, (req, res) => {
+        router.get('/', [your middleware], (req, res) => {
             // Do some stuff in here
         });
-        router.get('/anotherRoute', your middleware, (req, res) => {
+        router.get('/anotherRoute', [other middleware], (req, res) => {
             // Do some stuff in here
         });
         // Repeat for every single controller method
@@ -270,8 +274,7 @@ export class CustomRouterServer extends Server {
     
     constructor() {
         super();
-        const postController = new PostController();
-        super.addControllers(postController, customRouter); // <-- customRouter
+        super.addControllers(new PostController(), customRouter); // <-- custom router added here
     }
 
     ...
@@ -281,6 +284,181 @@ export class CustomRouterServer extends Server {
 <br>
 <br>
 
+
+
+## <a name="overnight-logger"></a> OvernightJS/logger
+Despite the abundance of logging tools out there, knowing exactly which is the right one for your 
+web-server might take more time than you feel like spending. So you can start logging events right 
+away, OvernightJS comes with its own logging package. From the environment variables you can easily
+switch your logs to be printed out to the command line, a file, sent through your own custom logging 
+logic, or turned off completely. Logs printed to the console also are printed out in different colors 
+depending on whether they're info, a warning, an error, etc. The file for holdings logs can be specified
+ manually or left as the default. Let's check it out!<br>
+
+### Installation
+```batch
+$ npm install --save @overnightjs/logger
+```
+
+### Guide
+There's not as much to _/logger_ as there was for _/core_ and _/jwt_, so we're just going to quickly
+go over what each method does and how to set it up. The logger package's main export is the
+`Logger` class. Overnight can used statically or as an instance with settings configured through a constructor.
+
+- The three environment variables are:
+    - `OVERNIGHT_LOGGER_MODE`: can be `'console'`(default), `'file'`, `'custom'`, and `'off'`.
+    - `OVERNIGHT_LOGGER_FILEPATH`: the file-path for file mode. Default is _home_dir/overnight.log_.
+    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: shows a timestamp next to each log. Can be `'true'`(default) or 
+    `'false'`.
+
+_logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
+use them in code. I would recommend using `CONSOLE` for local development, `FILE` for remote development, 
+and `CUSTOM` or `OFF` for production. If you want to change the settings in code, you can do so via 
+the constructor or getters/setters.
+<br>
+
+
+- There are 4 functions on Logger to print logs. Each has a static counterpart:
+    - `info` or `Info`: prints green.
+    - `imp` or `Imp`: prints magenta. 
+    - `warn` or `Warn`: prints yellow.
+    - `err` or `Err`: prints red.
+
+There is an optional second param to each method which is a `boolean`. If you pass `true` as the second 
+param, Logger will use node's `util` so that the full object gets printed. You should NOT normally 
+use this param, but it is especially useful when debugging errors so that you can print out the full 
+error object and observe the stack trace.<br>
+
+Let's look at a code sample which sets the environment variables via a start script:
+
+- In the start script
+````typescript
+import * as path from 'path';
+import * as fs from 'fs';
+import {LoggerModes} from '@overnightjs/logger';
+
+// Set the 
+const logFilePath = path.join(__dirname, '../sampleProject.log');
+process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE; // Can also be CONSOLE, CUSTOM, or OFF
+process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
+
+// Remove current log file if it exists
+(function removeFile() {
+    try {
+        fs.unlinkSync(logFilePath);
+    } catch (e) { return; }
+})();
+````
+
+- In the controller file
+````typescript
+import {Request, Response} from 'express';
+import {Controller, Get} from '@overnightjs/core';
+import {Logger, LoggerModes} from '@overnightjs/logger';
+
+@Controller('api/logger')
+export class LoggerPracticeController {
+    
+    private readonly logger: Logger;
+    
+    constructor() {
+        this.logger = new Logger();
+    }
+
+    @Get('static/console/:msg')
+    private printLogsConsole(req: Request, res: Response): void {
+        Logger.Info(req.params.msg);
+        Logger.Imp(req.params.msg);
+        Logger.Warn(req.params.msg);
+        Logger.Err(req.params.msg);
+        Logger.Err(new Error('printing out an error'));
+        Logger.Err(new Error('printing out an error full'), true); // <-- print the full Error object
+        res.status(200).json({msg: 'console_mode'});
+    }
+    
+    @Get('console/:msg')
+    private printLogsConsole(req: Request, res: Response): void {
+        this.logger.info(req.params.msg);
+        this.logger.imp(req.params.msg);
+        this.logger.warn(req.params.msg);
+        this.logger.err(req.params.msg);
+        this.logger.err(new Error('printing out an error'));
+        this.logger.err(new Error('printing out an error full'), true);
+        res.status(200).json({msg: 'console_mode'});
+    }
+}
+````
+
+- The previous code-snippet will  show the following content when printed to a file:
+````
+IMPORTANT: [2019-04-07T19:17:28.799Z]: OvernightJS with standard express router started on port: 3000
+INFO: [2019-04-07T19:18:08.939Z]: hello-logger
+IMPORTANT: [2019-04-07T19:18:08.939Z]: hello-logger
+WARNING: [2019-04-07T19:18:08.939Z]: hello-logger
+ERROR: [2019-04-07T19:18:08.940Z]: hello-logger
+ERROR: [2019-04-07T19:18:08.940Z]: Error: printing out an error
+ERROR: [2019-04-07T19:18:08.956Z]: Error: printing out an error full
+    at class_1.LoggerPracticeController.printLogsFile (/home/seanmaxwell/WebstormProjects/Overnight/sample-project/src/controllers/LoggerPracticeController.ts:49:20)
+    at class_1.descriptor.value [as printLogsFile] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/lib/PropertyDecorators.ts:36:35)
+    at callBack (/home/seanmaxwell/WebstormProjects/Overnight/src/core/lib/Server.ts:78:50)
+    at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
+    at /home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:281:22
+    at param (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:354:14)
+    at param (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:365:14)
+    at Function.process_params (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:410:3)
+    at next (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:174:3)
+    at router (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:317:13)
+````
+
+
+- And this when printed to the console:
+<img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/loggerConsole.png' border='0'>
+
+
+### Using a custom logger 
+For production you'll probably have some third party logging tool like ElasticSearch or Splunk. _logger_ exports
+one interface `ICustomLogger` which has one method `sendLog()` that needs to implemented. If you created a class
+which implements this interface, and add it to Logger through a setter or the constructor, and set the mode to `CUSTOM`, 
+Logger will call whatever logic you created for `sendLog()`.
+
+````typescript
+// CustomLoggerTool.ts
+import {ICustomLogger} from '@overnightjs/logger';
+
+export class CustomLoggerTool implements ICustomLogger {
+
+    private readonly thirdPartyLoggingApplication: ThirdPartyLoggingApplication;
+
+    constructor() {
+        this.thirdPartyLoggingApplication = new ThirdPartyLoggingApplication();
+    }
+
+    // Needs to be implemented
+    public sendLog(content: any): void {
+        this.thirdPartyLoggingApplication.doStuff(content);
+    }
+}
+````
+
+````typescript
+// In the controller file
+
+    @Get('useCustomLogger/:msg')
+    private useCustomLogger(req: Request, res: Response): void {
+        const logger = new Logger(LoggerModes.CUSTOM, '', true, this.customLoggerTool);
+        logger.rmTimestamp = true;
+        logger.info(req.params.msg);
+    }
+````
+<br>
+<br>
+<br>
 
 
 
@@ -377,7 +555,6 @@ import {Request, Response} from 'express';
 
 const jwtMgr = new JwtManager('secret', '10h');
 
-
 @Controller('api/jwt')
 export class JwtPracticeController {
     
@@ -411,183 +588,6 @@ router.get('users', JwtManager.middleware, (req, res) => {
 })
 
 app.use('/', router); 
-````
-<br>
-<br>
-<br>
-
-
-
-
-## <a name="overnight-logger"></a> OvernightJS/logger
-Despite the abundance of logging tools out there, knowing exactly which is the right one for your 
-web-server might take more time than you feel like spending. So you can start logging events right 
-away, OvernightJS comes with its own logging package. From the environment variables you can easily
-switch your logs to be printed out to the command line, a file, sent through your own custom logging 
-logic, or turned off completely. Logs printed to the console also are printed out in different colors 
-depending on whether they're info, a warning, an error, etc. The file for holdings logs can be specified
- manually or left as the default. Let's check it out!<br>
-
-### Installation
-```batch
-$ npm install --save @overnightjs/logger
-```
-
-### Guide
-There's not as much to _/logger_ as there was for _/core_ and _/jwt_, so we're just going to quickly
-go over what each method does and how to set it up. The logger package's main export is the
-`Logger` class. Overnight can used statically or as an instance with settings configured through a constructor.
-
-- The three environment variables are:
-    - `OVERNIGHT_LOGGER_MODE`: can be `'console'`(default), `'file'`, `'custom'`, and `'off'`.
-    - `OVERNIGHT_LOGGER_FILEPATH`: the file-path for file mode. Default is _home_dir/overnight.log_.
-    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: shows a timestamp next to each log. Can be `'true'`(default) or 
-    `'false'`.
-
-_logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
-use them in code. I would recommend using `CONSOLE` for local development, `FILE` for remote development, 
-and `CUSTOM` or `OFF` for production. If you want to change the settings in code, you can do so via 
-the constructor or getters/setters.
-<br>
-
-
-- There are 4 functions on Logger to print logs. Each has a static counterpart:
-    - `info` or `Info`: prints green.
-    - `imp` or `Imp`: prints magenta. 
-    - `warn` or `Warn`: prints yellow.
-    - `err` or `Err`: prints red.
-
-There is an optional second param to each method which is a `boolean`. If you pass `true` as the second 
-param, Logger will use node's `util` so that the full object gets printed. You should NOT normally 
-use this param, but it is especially useful when debugging errors so that you can print out the full 
-error object and observe the stack trace.<br>
-
-Let's look at a code sample which sets the environment variables via a start script:
-
-- In the start script
-````typescript
-import * as path from 'path';
-import * as fs from 'fs';
-import {LoggerModes} from '@overnightjs/logger';
-
-// Set the 
-const logFilePath = path.join(__dirname, '../sampleProject.log');
-process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE; // Can also be CONSOLE, CUSTOM, or OFF
-process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
-
-// Remove current log file if it exists
-(function removeFile() {
-    try {
-        fs.unlinkSync(logFilePath);
-    } catch (e) { return; }
-})();
-````
-
-- In the controller file
-````typescript
-import {Request, Response} from 'express';
-import {Controller, Get} from '@overnightjs/core';
-import {Logger, LoggerModes} from '@overnightjs/logger';
-
-@Controller('api/logger')
-export class LoggerPracticeController {
-    
-    private readonly logger: Logger;
-    
-    constructor() {
-        this.logger = new Logger();
-    }
-
-    @Get('console/:msg')
-    private printLogsConsole(req: Request, res: Response): void {
-        this.logger.info(req.params.msg);
-        this.logger.imp(req.params.msg);
-        this.logger.warn(req.params.msg);
-        this.logger.err(req.params.msg);
-        this.logger.err(new Error('printing out an error'));
-        this.logger.err(new Error('printing out an error full'), true); // <-- print the full Error object
-        res.status(200).json({msg: 'console_mode'});
-    }
-    
-    @Get('static/console/:msg')
-    private printLogsConsole(req: Request, res: Response): void {
-        Logger.Info(req.params.msg);
-        Logger.Imp(req.params.msg);
-        Logger.Warn(req.params.msg);
-        Logger.Err(req.params.msg);
-        Logger.Err(new Error('printing out an error'));
-        Logger.Err(new Error('printing out an error full'), true); // <-- print the full Error object
-        res.status(200).json({msg: 'console_mode'});
-    }
-}
-````
-
-- The previous code-snippet will  show the following content when printed to a file:
-````
-IMPORTANT: [2019-04-07T19:17:28.799Z]: OvernightJS with standard express router started on port: 3000
-INFO: [2019-04-07T19:18:08.939Z]: hello-logger
-IMPORTANT: [2019-04-07T19:18:08.939Z]: hello-logger
-WARNING: [2019-04-07T19:18:08.939Z]: hello-logger
-ERROR: [2019-04-07T19:18:08.940Z]: hello-logger
-ERROR: [2019-04-07T19:18:08.940Z]: Error: printing out an error
-ERROR: [2019-04-07T19:18:08.956Z]: Error: printing out an error full
-    at class_1.LoggerPracticeController.printLogsFile (/home/seanmaxwell/WebstormProjects/Overnight/sample-project/src/controllers/LoggerPracticeController.ts:49:20)
-    at class_1.descriptor.value [as printLogsFile] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/lib/PropertyDecorators.ts:36:35)
-    at callBack (/home/seanmaxwell/WebstormProjects/Overnight/src/core/lib/Server.ts:78:50)
-    at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
-    at next (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/route.js:137:13)
-    at Route.dispatch (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/route.js:112:3)
-    at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
-    at /home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:281:22
-    at param (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:354:14)
-    at param (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:365:14)
-    at Function.process_params (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:410:3)
-    at next (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:275:10)
-    at Function.handle (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:174:3)
-    at router (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:47:12)
-    at Layer.handle [as handle_request] (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/layer.js:95:5)
-    at trim_prefix (/home/seanmaxwell/WebstormProjects/Overnight/src/core/node_modules/express/lib/router/index.js:317:13)
-````
-
-
-- And this when printed to the console:
-<img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/loggerConsole.png' border='0'>
-
-
-### Using a custom logger 
-For production you'll probably have some third party logging tool like ElasticSearch or Splunk. _logger_ exports
-one interface `ICustomLogger` which has one method `sendLog()` that needs to implemented. If you created a class
-which implements this interface, and add it to _logger_ through a setter or the constructor, and set the mode to `CUSTOM`, 
-logger will call whatever logic you created for `sendLog()`.
-
-````typescript
-// CustomLoggerTool.ts
-import {ICustomLogger} from '@overnightjs/logger';
-
-export class CustomLoggerTool implements ICustomLogger {
-
-    private readonly thirdPartyLoggingApplication: ThirdPartyLoggingApplication;
-
-    constructor() {
-        this.thirdPartyLoggingApplication = new ThirdPartyLoggingApplication();
-    }
-
-    // Needs to be implemented
-    public sendLog(content: any): void {
-        this.thirdPartyLoggingApplication.doStuff(content);
-    }
-}
-````
-
-````typescript
-// In the controller file
-
-@Get('useCustomLogger/:msg')
-private useCustomLogger(req: Request, res: Response): void {
-    const logger = new Logger(LoggerModes.CUSTOM, '', true, this.customLoggerTool);
-    logger.rmTimestamp = true;
-    logger.info(req.params.msg);
-}
 ````
 <br>
 <br>

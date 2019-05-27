@@ -111,7 +111,7 @@ export class UserController {
     private async getWithAsync(req: Request, res: Response) {
         try {
             const asyncMsg = await this.asyncMethod(req);
-            return res.status(BAD_REQUEST).json({
+            return res.status(OK).json({
                 message: asyncMsg,
             });
         } catch (err) {

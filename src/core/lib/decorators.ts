@@ -156,7 +156,7 @@ export function Children(middleware: InstanceType<any> | Array<InstanceType<any>
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(CLASS_MIDDLEWARE_KEY, middleware, target.prototype);
+        Reflect.defineMetadata(CHILDREN_KEY, middleware, target.prototype);
         return target;
     };
 }

@@ -5,11 +5,12 @@
  */
 
 import * as express from 'express';
-import { Application, Request, Response, Router, NextFunction } from 'express';
+import { Application, Request, Response, Router, IRouter, NextFunction } from 'express';
 import { BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY, CHILDREN_KEY } from './decorators';
 
 
-type Controllers = InstanceType<any> | Array<InstanceType<any>>;
+type Controller = InstanceType<any>;
+type RouterLib = (() => any) | null;
 
 interface IRouterAndPath {
     basePath: string | null;
@@ -19,6 +20,9 @@ interface IRouterAndPath {
 export class Server {
 
     private readonly _app: Application;
+    private _showLogs = false;
+
+    private readonly LOG_STR = 'Setting up controller ';
 
 
     constructor() {
@@ -29,6 +33,13 @@ export class Server {
         return this._app;
     }
 
+    protected get showLogs(): boolean {
+        return this._showLogs;
+    }
+
+    protected set showLogs(showLogs: boolean) {
+        this._showLogs = showLogs;
+    }
 
     /**
      * If controllers === undefined, search the './controllers' directory. If it is a string,
@@ -38,28 +49,16 @@ export class Server {
      * @param customRouterLib
      * @param showLog
      */
-    protected addControllers(
-        controllers: Controllers,
-        routerLibrary?: (() => any) | null,
-        showLog?: boolean,
-    ): void {
-
-        let count = 0;
-        const routerLib = routerLibrary ? routerLibrary : express.Router;
+    protected addControllers(controllers: Controller | Controller[], routerLib?: RouterLib): void {
         controllers = (controllers instanceof Array) ? controllers : [controllers];
-        controllers.forEach((controller: InstanceType<any>) => {
+        controllers.forEach((controller: Controller) => {
             if (controller) {
-                const { basePath, router } = this.getRouter(routerLib, controller);
+                const { basePath, router } = this.getRouter(routerLib || Router, controller);
                 if (basePath && router) {
                     this.app.use(basePath, router);
-                    count++;
                 }
             }
         });
-        if (showLog) {
-            // tslint:disable-next-line
-            console.log(count + ' controller/s configured.');
-        }
     }
 
 
@@ -69,11 +68,10 @@ export class Server {
      * @param routerLib
      * @param controller
      */
-    private getRouter(routerLibrary: (() => any), controller: InstanceType<any>): IRouterAndPath {
+    private getRouter(routerLibrary: (() => any), controller: Controller): IRouterAndPath {
         const router = routerLibrary();
-
-        // Determine if controller and get base path
         const prototype = Object.getPrototypeOf(controller);
+        // Get base path
         const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
         if (!basePath) {
             return {
@@ -81,26 +79,17 @@ export class Server {
                 router: null,
             };
         }
-
-        // Set controller-wide middleware
+        // Show logs
+        if (this.showLogs) {
+            // tslint:disable-next-line
+            console.log(this.LOG_STR + controller.constructor.name);
+        }
+        // Get middleware
         const classMiddleware = Reflect.getOwnMetadata(CLASS_MIDDLEWARE_KEY, prototype);
         if (classMiddleware) {
             router.use(classMiddleware);
         }
-
-        // RecursivelyAdd child-routes if there are any
-        let children = Reflect.getOwnMetadata(CHILDREN_KEY, prototype);
-        if (children) {
-            children = (children instanceof Array) ? children : [children];
-            children.forEach((child: InstanceType<any>) => {
-                const childRouterAndPath = this.getRouter(routerLibrary, child);
-                if (childRouterAndPath.router) {
-                    router.use(childRouterAndPath.basePath, childRouterAndPath.router);
-                }
-            });
-        }
-
-        // Get members of both instance and prototype
+        // Add paths/functions to router-object
         let members = Object.getOwnPropertyNames(controller);
         members = members.concat(Object.getOwnPropertyNames(prototype));
         members.forEach((member) => {
@@ -118,7 +107,17 @@ export class Server {
                 }
             }
         });
-
+        // Add child controllers
+        let children = Reflect.getOwnMetadata(CHILDREN_KEY, prototype);
+        if (children) {
+            children = (children instanceof Array) ? children : [children];
+            children.forEach((child: Controller) => {
+                const childRouterAndPath = this.getRouter(routerLibrary, child);
+                if (childRouterAndPath.router) {
+                    router.use(childRouterAndPath.basePath, childRouterAndPath.router);
+                }
+            });
+        }
         return {
             basePath,
             router,

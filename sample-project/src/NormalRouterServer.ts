@@ -32,7 +32,8 @@ class NormalRouterServer extends Server {
                 controllerInstances.push(new controller());
             }
         }
-        super.addControllers(controllerInstances, null, true);
+        super.showLogs = true;
+        super.addControllers(controllerInstances, null);
     }
 
 

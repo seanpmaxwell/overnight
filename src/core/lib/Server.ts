@@ -41,6 +41,7 @@ export class Server {
         this._showLogs = showLogs;
     }
 
+
     /**
      * If controllers === undefined, search the './controllers' directory. If it is a string,
      * search that directory instead. If it is an instance-object or array instance-objects,
@@ -78,8 +79,6 @@ export class Server {
         } else {
             router = routerLibrary();
         }
-
-
         // Get base path
         const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
         if (!basePath) {

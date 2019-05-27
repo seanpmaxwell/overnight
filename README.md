@@ -6,21 +6,23 @@
  
 
 ## What is it
-OvernightJS is a simple library to add TypeScript decorators for methods meant to call Express routes. It also
-includes a package for managing json-web-tokens and showing logs. 
+OvernightJS is a simple library to add TypeScript decorators for methods meant to call Express routes.
+It also includes a package for managing json-web-tokens and printing logs. 
 
 
 ## Features
 * Define a base route using a @Controller decorator.
-* Decorators to convert controller methods into Express routes (all routes supported i.e. @Get, @Put, ...).
+* Decorators to convert class methods to Express routes (@Get, @Put, @Post, @Delete etc).
 * @Middleware and @ClassMiddleware decorators.
+* Add options to controllers the same as use would Express routers with @ClassOptions.
 * Decorators also work with arrow functions set as class properties.
+* Support for child-controllers.
 * Server superclass to initialize ExpressJS server and setup controllers.
+* Allows for adding your own custom Router classes if you don't want to use the standard express Router.
 * Json-Web-Token management.
 * Easy to configure logging tool.
 * Master repo includes a sample application, if you want to practice with an API calling tool such as Postman.
-* Allows for adding your own custom Router classes if you don't want to use the standard express Router.
-* Compatible when transpiling to either es5 or es6.
+* Compatible with both es5 and es6.
 * Fully type safe :)
 
 
@@ -34,7 +36,6 @@ application.
 
 ## Table of Contents
 * [OvernightJS/core](#overnight-core)
-* [Custom Router](#custom-router)
 * [OvernightJS/jwt](#overnight-jwt)
 * [OvernightJS/logger](#overnight-logger)
 
@@ -56,8 +57,8 @@ $ npm install --save-dev @types/express
 #### Create your controller
 
 ````typescript
-import { Request, Response, NextFunction } from 'express';
-import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
+import {Request, Response, NextFunction} from 'express';
+import {Controller, Get, Post, Put, Delete, Middleware} from '@overnightjs/core';
 
 @Controller('api/users')
 export class UserController {
@@ -112,7 +113,8 @@ export class UserController {
 ````
 
 - You don't have to use class methods, you can also use class properties whose value is an arrow function. You will
- have to cast Overnight to the 'any' type to avoid type errors though 
+ have to cast Overnight to the 'any' type to avoid type errors though.
+ 
 ````typescript
 import * as OvernightJS from '@overnightjs/core';
 
@@ -128,7 +130,7 @@ import * as OvernightJS from '@overnightjs/core';
 - If want want your middleware to apply to every route in a class use the `@ClassMiddleware` decorator. 
 
 ````typescript
-import { Controller, ClassMiddleware } from '@overnightjs/core';
+import {Controller, ClassMiddleware} from '@overnightjs/core';
 
 @Controller('api/users')
 @ClassMiddleware([middleware1, middleware2])
@@ -138,26 +140,42 @@ export class UserController {
 }
 ````
 
+- Child-controllers can be added with the `@ChildControllers` decorator. There's no limit to how 
+many levels of nesting you can add. Make sure to instantiate them before adding them. Options at the
+class level can be added with `@ClassOptions` decorator. 
+
+````typescript
+import {Controller, ClassOptions, ChildControllers} from '@overnightjs/core';
+import {ChildController1, ChildController2} from '...'
+
+@Controller('api/users')
+@ClassOptions({mergeParams: true})
+@ChildControllers([
+    new ChildController1(), 
+    new ChildController2(),
+])
+export class ParentController {
+    
+    ...
+}
+````
+
 #### Import your controller into the server
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
 object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
-with this variable like you would any normal express Application created with `require('express')()`. 
-The reason the controllers are not imported and setup for you automatically is the server is meant to 
-be a place where you hook everything together. Suppose for example that you want to add the same database 
-connection instance to several of your controllers at once. This setup let's you do that before 
-initializing all of your controller routes.
+with this variable like you would any normal express Application created with `require('express')()`.
 <br>
 
 `super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
 call it after setting up your middleware. You can pass `super.addControllers()` a single controller-instance 
-or an array of controller-instances.
+or an array of controller-instances, but they must be instantiated first.
 <br>
 
 ````typescript
 import * as bodyParser from 'body-parser';
-import { Server } from '@overnightjs/core';
-import { UserController } from './UserController';
-import { SignupController } from './SignupController';
+import {Server} from '@overnightjs/core';
+import {UserController} from './UserController';
+import {SignupController} from './SignupController';
 
 export class SampleServer extends Server {
     
@@ -214,34 +232,24 @@ this.app.use('/api/users', userController.getRoutes());
 ````
 
 This would get really tedious overtime and lead to a lot of boiler plate code.
-<br>
-<br>
-<br>
 
 
-
-
-## <a name="custom-router"></a> Using a Custom Router
+#### <a name="custom-router"></a> Using a Custom Router
 Suppose you don't want to use the built in "Router" object which is provided by Express. Maybe you
-don't like using async/await or having to call `.catch()` if you're not using `try/catch` blocks. Maybe
-you're using a library like _express-promise-router_ to handle the route callbacks. OvernightJS allows
+want use  _express-promise-router_ because you don't like using `try/catch` blocks. OvernightJS allows
 you to pass in a custom router object in the `super.addControllers()` method. Simply pass in your
 custom router as the second param after the controller-instance/s. When you don't specify a custom
 router, the default express.Router() object is used. 
 
 
 - Controller using _express-promise-router_:
-````typescript
-import { Request, Response } from 'express';
-import { Controller, Get, Put } from '@overnightjs/core';
 
+````typescript
+import {Request, Response} from 'express';
+import {Controller, Get} from '@overnightjs/core';
 
 @Controller('api/posts')
 export class PostController {
-    
-    private readonly INVALID_MSG = 'You entered an invalid post id: ';
-    private readonly VALID_MSG = 'You entered the post id: ';
-    
 
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
@@ -249,48 +257,30 @@ export class PostController {
                     .then(ret => res.status(200).json({msg: ret}));
     }
 
-
     private someAsyncFunction(id: number): Promise<string> {
         return new Promise((res, rej) => {
-            isNaN(id) ? rej(this.INVALID_MSG + id) : res(this.VALID_MSG + id);
+            isNaN(id) ? rej('Invalid id') : res('Valid id');
         })
-    }
-
-
-    @Put(':id')
-    private add(req: Request, res: Response): Promise<string> {
-        return Promise.resolve('next');
-    }
-
-
-    @Put('foo')
-    private add2(req: Request, res: Response): void {
-        res.status(200).json({msg: 'Route used: ' + req.url});
     }
 }
 ````
 
 - Add _express-promise-router_ in the `super.addControllers()` method:
+
 ````typescript
 import * as customRouter  from 'express-promise-router';
-import { Server } from '@overnightjs/core';
-import { PostController } from './controllers/PostController';
+import {Server} from '@overnightjs/core';
+import {PostController} from './controllers/PostController';
 
 export class CustomRouterServer extends Server {
-    
-    private readonly START_MSG = 'OvernightJS with custom router started on port: ';
     
     constructor() {
         super();
         const postController = new PostController();
-        super.addControllers(postController, customRouter);
+        super.addControllers(postController, customRouter); // <-- customRouter
     }
 
-    public start(port: number): void {
-        this.app.listen(port, () => {
-            console.log(this.START_MSG + port);
-        })
-    }
+    ...
 }
 ````
 <br>
@@ -358,9 +348,9 @@ Just import `JwtManager`.
 
 
 ````typescript
-import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
-import { Controller, Middleware, Get, Post } from '@overnightjs/core';
-import { Request, Response } from 'express';
+import {JwtManager, ISecureRequest} from '@overnightjs/jwt';
+import {Controller, Middleware, Get, Post} from '@overnightjs/core';
+import {Request, Response} from 'express';
 
 @Controller('api/jwt')
 export class JwtPracticeController {
@@ -389,9 +379,9 @@ and set them via the constructor. I love using Option 1 way more, but I thought 
 for people who prefer to import it another way. 
 
 ````typescript
-import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
-import { Controller, Middleware, Get, Post } from '@overnightjs/core';
-import { Request, Response } from 'express';
+import {JwtManager, ISecureRequest} from '@overnightjs/jwt';
+import {Controller, Middleware, Get, Post} from '@overnightjs/core';
+import {Request, Response} from 'express';
 
 const jwtMgr = new JwtManager('secret', '10h');
 
@@ -485,7 +475,7 @@ Let's look at a code sample which sets the environment variables via a start scr
 ````typescript
 import * as path from 'path';
 import * as fs from 'fs';
-import { LoggerModes } from '@overnightjs/logger';
+import {LoggerModes} from '@overnightjs/logger';
 
 
 // Set the 
@@ -503,9 +493,9 @@ process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 - In the controller file
 ````typescript
-import { Request, Response } from 'express';
-import { Controller, Get } from '@overnightjs/core';
-import { Logger, LoggerModes } from '@overnightjs/logger';
+import {Request, Response} from 'express';
+import {Controller, Get} from '@overnightjs/core';
+import {Logger, LoggerModes} from '@overnightjs/logger';
 
 
 @Controller('api/logger')
@@ -581,7 +571,7 @@ logger will call whatever logic you created for `sendLog()`.
 
 ````typescript
 // CustomLoggerTool.ts
-import { ICustomLogger } from '@overnightjs/logger';
+import {ICustomLogger} from '@overnightjs/logger';
 
 export class CustomLoggerTool implements ICustomLogger {
 

@@ -69,19 +69,16 @@ export class UserController {
         return res.status(200).json({msg: 'get_called'});
     }
     
-
     @Get()
     @Middleware(middleware)
     private getAll(req: Request, res: Response): void {
         res.status(200).json({msg: 'get_all_called'});
     }
 
-
     @Post()
     private add(req: Request, res: Response): void {
         res.status(200).json({msg: 'add_called'});
     }
-
 
     @Put('update-user')
     @Middleware([middleware1, middleware2])
@@ -89,13 +86,11 @@ export class UserController {
         res.status(200).json({msg: 'update_called'});
     }
 
-
     // Next param is optional
     @Delete('delete/:id')
     private delete(req: Request, res: Response, next: NextFunction): void {
         res.status(200).json({msg: 'delete_called'});
     }
-
 
     // async/await work normally :)
     @Get('practice/async')
@@ -204,7 +199,6 @@ export class SampleServer extends Server {
     }
 }
 ````
-
 
 #### See how awesome this is!
 Without the above decorators we would have to wrap each controller method with something like:
@@ -355,7 +349,6 @@ import {Request, Response} from 'express';
 @Controller('api/jwt')
 export class JwtPracticeController {
     
-    
     @Get(':email')
     private getJwt(req: Request, res: Response): void {
         const jwtStr = JwtManager.jwt({
@@ -363,7 +356,6 @@ export class JwtPracticeController {
         });
         res.status(200).json({jwt: jwtStr});
     }
-
 
     @Post('callProtectedRoute')
     @Middleware(JwtManager.middleware)
@@ -449,7 +441,8 @@ go over what each method does and how to set it up. The logger package's main ex
 - The three environment variables are:
     - `OVERNIGHT_LOGGER_MODE`: can be `'console'`(default), `'file'`, `'custom'`, and `'off'`.
     - `OVERNIGHT_LOGGER_FILEPATH`: the file-path for file mode. Default is _home_dir/overnight.log_.
-    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: shows a timestamp next to each log. Can be `'true'`(default) or `'false'`.
+    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: shows a timestamp next to each log. Can be `'true'`(default) or 
+    `'false'`.
 
 _logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
 use them in code. I would recommend using `CONSOLE` for local development, `FILE` for remote development, 
@@ -477,7 +470,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 import {LoggerModes} from '@overnightjs/logger';
 
-
 // Set the 
 const logFilePath = path.join(__dirname, '../sampleProject.log');
 process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE; // Can also be CONSOLE, CUSTOM, or OFF
@@ -496,7 +488,6 @@ process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 import {Request, Response} from 'express';
 import {Controller, Get} from '@overnightjs/core';
 import {Logger, LoggerModes} from '@overnightjs/logger';
-
 
 @Controller('api/logger')
 export class LoggerPracticeController {

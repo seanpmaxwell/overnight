@@ -5,7 +5,7 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RouterOptions } from 'express';
 import 'reflect-metadata';
 
 
@@ -131,8 +131,9 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
  **********************************************************************************************/
 
 export const BASE_PATH_KEY = 'basePath';
-export const CLASS_MIDDLEWARE_KEY = 'middleware';
+export const CLASS_MIDDLEWARE_KEY = 'classMiddleware';
 export const CHILDREN_KEY = 'children';
+export const OPTIONS_KEY = 'classOptions';
 
 export function Controller(path: string): ClassDecorator {
 
@@ -148,6 +149,15 @@ export function ClassMiddleware(middleware: Middlware | Middlware[]): ClassDecor
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
         Reflect.defineMetadata(CLASS_MIDDLEWARE_KEY, middleware, target.prototype);
+        return target;
+    };
+}
+
+export function ClassOptions(options: RouterOptions): ClassDecorator {
+
+    // tslint:disable-next-line:ban-types
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(OPTIONS_KEY, options, target.prototype);
         return target;
     };
 }

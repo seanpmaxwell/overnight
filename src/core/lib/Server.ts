@@ -5,12 +5,12 @@
  */
 
 import * as express from 'express';
-import { Application, Request, Response, Router, IRouter, NextFunction } from 'express';
-import { BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY, CHILDREN_KEY } from './decorators';
+import {Application, Request, Response, Router, NextFunction} from 'express';
+import {BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY, CHILDREN_KEY, OPTIONS_KEY} from './decorators';
 
 
 type Controller = InstanceType<any>;
-type RouterLib = (() => any) | null;
+type RouterLib = ((options?: any) => any);
 
 interface IRouterAndPath {
     basePath: string | null;
@@ -68,9 +68,18 @@ export class Server {
      * @param routerLib
      * @param controller
      */
-    private getRouter(routerLibrary: (() => any), controller: Controller): IRouterAndPath {
-        const router = routerLibrary();
+    private getRouter(routerLibrary: RouterLib, controller: Controller): IRouterAndPath {
         const prototype = Object.getPrototypeOf(controller);
+        const options = Reflect.getOwnMetadata(OPTIONS_KEY, prototype);
+        // Set options
+        let router: any;
+        if (options) {
+            router = routerLibrary(options);
+        } else {
+            router = routerLibrary();
+        }
+
+
         // Get base path
         const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
         if (!basePath) {

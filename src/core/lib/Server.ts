@@ -119,7 +119,7 @@ export class Server {
             }
         });
 
-        // Add child controllers
+        // Recursively add child controllers
         let children = Reflect.getOwnMetadata(CHILDREN_KEY, prototype);
         if (children) {
             children = (children instanceof Array) ? children : [children];

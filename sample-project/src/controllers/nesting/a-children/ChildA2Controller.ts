@@ -7,6 +7,7 @@
 import { Controller, Get } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import { Request, Response } from 'express';
+import { OK } from 'http-status-codes';
 
 
 @Controller('child-a2')
@@ -17,6 +18,6 @@ export class ChildA2Controller {
     private get(req: Request, res: Response) {
         const message = 'Hi I\'m the child A2 controller';
         Logger.Info(message);
-        return res.status(200).json({message});
+        return res.status(OK).json({message});
     }
 }

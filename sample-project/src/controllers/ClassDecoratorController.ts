@@ -4,6 +4,7 @@
  * created by Sean Maxwell, 5/23/2019
  */
 
+import { OK } from 'http-status-codes';
 import { Controller, ClassMiddleware, Get, Post, Middleware } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import { Request, Response } from 'express';
@@ -18,7 +19,9 @@ export class ClassDecoratorController {
     @Get()
     private get(req: Request, res: Response): any {
         Logger.Info('get called');
-        return res.status(200).json({msg: 'get_called'});
+        return res.status(OK).json({
+            message: 'get_called',
+        });
     }
 
 
@@ -26,6 +29,8 @@ export class ClassDecoratorController {
     @Middleware(sayGoodbye)
     private post(req: Request, res: Response): any {
         Logger.Info('post called');
-        return res.status(200).json({msg: 'post_called'});
+        return res.status(OK).json({
+            message: 'post_called',
+        });
     }
 }

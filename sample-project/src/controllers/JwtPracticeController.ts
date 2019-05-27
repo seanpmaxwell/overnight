@@ -7,6 +7,7 @@
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get, Post, Put } from '@overnightjs/core';
 import { Request, Response } from 'express';
+import { OK } from 'http-status-codes';
 
 const jwtMgr = new JwtManager('secret', '10h');
 
@@ -16,33 +17,41 @@ export class JwtPracticeController {
 
 
     @Get(':email')
-    private getJwt(req: Request, res: Response): void {
+    private getJwt(req: Request, res: Response) {
         const jwtStr = JwtManager.jwt({
             email: req.params.email,
         });
-        res.status(200).json({jwt: jwtStr});
+        return res.status(OK).json({
+            jwt: jwtStr,
+        });
     }
 
 
     @Post('callProtectedRoute')
     @Middleware(JwtManager.middleware)
-    private callProtectedRoute(req: ISecureRequest, res: Response): void {
-        res.status(200).json({email: req.payload.email});
+    private callProtectedRoute(req: ISecureRequest, res: Response) {
+        return res.status(OK).json({
+            email: req.payload.email,
+        });
     }
 
 
     @Put('getJwtAlt/:fullname')
-    private getJwtFromHandler(req: Request, res: Response): void {
+    private getJwtFromHandler(req: Request, res: Response) {
         const jwtStr = jwtMgr.jwt({
             fullName: req.params.fullname,
         });
-        res.status(200).json({jwt: jwtStr});
+        return res.status(OK).json({
+            jwt: jwtStr,
+        });
     }
 
 
     @Post('callProtectedRouteAlt')
     @Middleware(jwtMgr.middleware)
-    private callProtectedRouteFromHandler(req: ISecureRequest, res: Response): void {
-        res.status(200).json({fullname: req.payload.fullName});
+    private callProtectedRouteFromHandler(req: ISecureRequest, res: Response) {
+        return res.status(OK).json({
+            fullname: req.payload.fullName,
+        });
     }
 }

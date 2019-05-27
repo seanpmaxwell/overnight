@@ -58,8 +58,8 @@ $ npm install --save-dev @types/express
 #### Create your controller
 
 ````typescript
-import {Request, Response, NextFunction} from 'express';
-import {Controller, Get, Post, Put, Delete, Middleware} from '@overnightjs/core';
+import { Request, Response, NextFunction } from 'express';
+import { Controller, Get, Post, Put, Delete, Middleware } from '@overnightjs/core';
 
 @Controller('api/users')
 export class UserController {
@@ -128,7 +128,7 @@ import * as OvernightJS from '@overnightjs/core';
 - If want want your middleware to apply to every route in a class use the `@ClassMiddleware` decorator. 
 
 ````typescript
-import {Controller, ClassMiddleware} from '@overnightjs/core';
+import { Controller, ClassMiddleware } from '@overnightjs/core';
 
 @Controller('api/users')
 @ClassMiddleware([middleware1, middleware2])
@@ -143,8 +143,8 @@ many levels of nesting you can add. Make sure to instantiate them before adding 
 class level can be added with `@ClassOptions` decorator. 
 
 ````typescript
-import {Controller, ClassOptions, ChildControllers} from '@overnightjs/core';
-import {ChildController1, ChildController2} from '...'
+import { Controller, ClassOptions, ChildControllers } from '@overnightjs/core';
+import { ChildController1, ChildController2 } from '...'
 
 @Controller('api/users')
 @ClassOptions({mergeParams: true})
@@ -162,6 +162,8 @@ export class ParentController {
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
 object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`.
+If you want to print to the console the name of each controller that has been successfully configured,
+set `super.showLogs = true`. 
 <br>
 
 `super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
@@ -171,10 +173,10 @@ or an array of controller-instances, but they must be instantiated first.
 
 ````typescript
 import * as bodyParser from 'body-parser';
-import {Server} from '@overnightjs/core';
-import {Logger} from '@overnightjs/logger';
-import {UserController} from './UserController';
-import {SignupController} from './SignupController';
+import { Server } from '@overnightjs/core';
+import { Logger } from '@overnightjs/logger';
+import { UserController } from './UserController';
+import { SignupController } from './SignupController';
 
 export class SampleServer extends Server {
     
@@ -191,8 +193,10 @@ export class SampleServer extends Server {
         const dbConnObj = new SomeDbConnClass('credentials');
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
-        // This must be called, and can be passed a single controller or an array of 
+        
+        // addControllers() must be called, and can be passed a single controller or an array of 
         // controllers. Optional router object can also be passed as second argument.
+        super.showLogs = (process.env.NODE_ENV === 'development');
         super.addControllers([userController, signupController]);
     }
 
@@ -243,8 +247,8 @@ router, the default express.Router() object is used.
 - Controller using _express-promise-router_:
 
 ````typescript
-import {Request, Response} from 'express';
-import {Controller, Get} from '@overnightjs/core';
+import { Request, Response } from 'express';
+import { Controller, Get } from '@overnightjs/core';
 
 @Controller('api/posts')
 export class PostController {
@@ -267,8 +271,8 @@ export class PostController {
 
 ````typescript
 import * as customRouter  from 'express-promise-router';
-import {Server} from '@overnightjs/core';
-import {PostController} from './controllers/PostController';
+import { Server } from '@overnightjs/core';
+import { PostController } from './controllers/PostController';
 
 export class CustomRouterServer extends Server {
     
@@ -335,7 +339,7 @@ Let's look at a code sample which sets the environment variables via a start scr
 ````typescript
 import * as path from 'path';
 import * as fs from 'fs';
-import {LoggerModes} from '@overnightjs/logger';
+import { LoggerModes } from '@overnightjs/logger';
 
 // Set the 
 const logFilePath = path.join(__dirname, '../sampleProject.log');
@@ -352,9 +356,9 @@ process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 - In the controller file
 ````typescript
-import {Request, Response} from 'express';
-import {Controller, Get} from '@overnightjs/core';
-import {Logger, LoggerModes} from '@overnightjs/logger';
+import { Request, Response } from 'express';
+import { Controller, Get } from '@overnightjs/core';
+import { Logger } from '@overnightjs/logger';
 
 @Controller('api/logger')
 export class LoggerPracticeController {
@@ -429,7 +433,7 @@ Logger will call whatever logic you created for `sendLog()`.
 
 ````typescript
 // CustomLoggerTool.ts
-import {ICustomLogger} from '@overnightjs/logger';
+import { ICustomLogger } from '@overnightjs/logger';
 
 export class CustomLoggerTool implements ICustomLogger {
 
@@ -520,9 +524,9 @@ Just import `JwtManager`.
 
 
 ````typescript
-import {JwtManager, ISecureRequest} from '@overnightjs/jwt';
-import {Controller, Middleware, Get, Post} from '@overnightjs/core';
-import {Request, Response} from 'express';
+import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
+import { Controller, Middleware, Get, Post } from '@overnightjs/core';
+import { Request, Response } from 'express';
 
 @Controller('api/jwt')
 export class JwtPracticeController {
@@ -549,9 +553,9 @@ and set them via the constructor. I love using Option 1 way more, but I thought 
 for people who prefer to import it another way. 
 
 ````typescript
-import {JwtManager, ISecureRequest} from '@overnightjs/jwt';
-import {Controller, Middleware, Get, Post} from '@overnightjs/core';
-import {Request, Response} from 'express';
+import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
+import { Controller, Middleware, Get, Post } from '@overnightjs/core';
+import { Request, Response } from 'express';
 
 const jwtMgr = new JwtManager('secret', '10h');
 

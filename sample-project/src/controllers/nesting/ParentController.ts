@@ -4,6 +4,7 @@
  * created by Sean Maxwell May 25, 2019
  */
 
+import { OK } from 'http-status-codes';
 import { Request, Response } from 'express';
 import { Controller, Children, Get } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
@@ -26,6 +27,6 @@ export class ParentController {
     private get(req: Request, res: Response) {
         const message = 'Hi I\'m the parent controller';
         Logger.Info(message);
-        return res.status(200).json({message});
+        return res.status(OK).json({message});
     }
 }

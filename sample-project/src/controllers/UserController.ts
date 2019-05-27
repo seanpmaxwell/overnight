@@ -4,6 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
+import { OK, BAD_REQUEST } from 'http-status-codes';
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
@@ -15,51 +16,61 @@ export class UserController {
 
 
     @Get(':id')
-    private get(req: Request, res: Response): any {
+    private get(req: Request, res: Response) {
         Logger.Info(req.params.id);
-        return res.status(200).json({msg: 'get_called'});
+        return res.status(OK).json({
+            message: 'get_called',
+        });
     }
 
 
     @Get('')
     @Middleware(JwtManager.middleware)
-    private getAll(req: ISecureRequest, res: Response): void {
+    private getAll(req: ISecureRequest, res: Response) {
         Logger.Info(req.payload, true);
-        res.status(200).json({msg: 'get_all_called'});
+        return res.status(OK).json({
+            message: 'get_all_called',
+        });
     }
 
 
     @Post()
-    private add(req: Request, res: Response): void {
+    private add(req: Request, res: Response) {
         Logger.Info(req.body, true);
-        res.status(200).json({msg: 'add_called'});
+        return res.status(OK).json({
+            message: 'add_called',
+        });
     }
 
 
     @Put('update-user')
-    private update(req: Request, res: Response): void {
+    private update(req: Request, res: Response) {
         Logger.Info(req.body);
-        res.status(200).json({msg: 'update_called'});
+        return res.status(OK).json({
+            message: 'update_called',
+        });
     }
 
 
     @Delete('delete/:id')
-    private delete(req: Request, res: Response): void {
+    private delete(req: Request, res: Response) {
         Logger.Info(req.params, true);
-        res.status(200).json({msg: 'delete_called'});
+        return res.status(OK).json({
+            message: 'delete_called',
+        });
     }
 
 
     @Get('practice/async')
-    private async getWithAsync(req: Request, res: Response): Promise<void> {
+    private async getWithAsync(req: Request, res: Response) {
         try {
             const asyncMsg = await this.asyncMethod(req);
-            res.status(400).json({
+            return res.status(BAD_REQUEST).json({
                 message: asyncMsg,
             });
         } catch (err) {
             Logger.Err(err, true);
-            res.status(400).json({
+            return res.status(BAD_REQUEST).json({
                 error: err.message,
             });
         }

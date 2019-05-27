@@ -5,8 +5,8 @@
  */
 
 import * as express from 'express';
-import {Application, Request, Response, Router, NextFunction} from 'express';
-import {BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY, CHILDREN_KEY, OPTIONS_KEY} from './decorators';
+import { Application, Request, Response, Router, NextFunction } from 'express';
+import { BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY, CHILDREN_KEY, OPTIONS_KEY } from './decorators';
 
 
 type Controller = InstanceType<any>;
@@ -52,9 +52,10 @@ export class Server {
      */
     protected addControllers(controllers: Controller | Controller[], routerLib?: RouterLib): void {
         controllers = (controllers instanceof Array) ? controllers : [controllers];
+        const routerLibrary = routerLib || Router;
         controllers.forEach((controller: Controller) => {
             if (controller) {
-                const { basePath, router } = this.getRouter(routerLib || Router, controller);
+                const { basePath, router } = this.getRouter(routerLibrary, controller);
                 if (basePath && router) {
                     this.app.use(basePath, router);
                 }
@@ -72,6 +73,7 @@ export class Server {
     private getRouter(routerLibrary: RouterLib, controller: Controller): IRouterAndPath {
         const prototype = Object.getPrototypeOf(controller);
         const options = Reflect.getOwnMetadata(OPTIONS_KEY, prototype);
+
         // Set options
         let router: any;
         if (options) {
@@ -97,6 +99,7 @@ export class Server {
         if (classMiddleware) {
             router.use(classMiddleware);
         }
+
         // Add paths/functions to router-object
         let members = Object.getOwnPropertyNames(controller);
         members = members.concat(Object.getOwnPropertyNames(prototype));
@@ -115,6 +118,7 @@ export class Server {
                 }
             }
         });
+
         // Add child controllers
         let children = Reflect.getOwnMetadata(CHILDREN_KEY, prototype);
         if (children) {
@@ -126,6 +130,7 @@ export class Server {
                 }
             });
         }
+
         return {
             basePath,
             router,

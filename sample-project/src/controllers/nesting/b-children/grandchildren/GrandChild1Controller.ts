@@ -4,9 +4,10 @@
  * created by Sean Maxwell May 26, 2019
  */
 
-import {ClassOptions, Controller, Get} from '@overnightjs/core';
-import {Logger} from '@overnightjs/logger';
-import {Request, Response} from 'express';
+import { ClassOptions, Controller, Get } from '@overnightjs/core';
+import { Logger } from '@overnightjs/logger';
+import { Request, Response } from 'express';
+import { OK } from 'http-status-codes';
 
 
 @Controller('grandchild-1')
@@ -19,6 +20,6 @@ export class GrandChild1Controller {
         const message = 'Hi I\'m the grandchild 1 controller';
         Logger.Info(message);
         Logger.Info(req.params, true);
-        return res.status(200).json({message});
+        return res.status(OK).json({message});
     }
 }

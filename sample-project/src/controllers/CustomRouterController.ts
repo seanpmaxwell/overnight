@@ -7,6 +7,7 @@
  */
 
 import { Request, Response } from 'express';
+import { OK } from 'http-status-codes';
 import { Controller, Get, Put } from '@overnightjs/core';
 
 
@@ -17,7 +18,7 @@ class CustomRouterController {
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
         return this.someAsyncFunction(req.params.id)
-                    .then((ret) => res.status(200).json({msg: ret}));
+                    .then((ret) => res.status(OK).json({message: ret}));
     }
 
 
@@ -40,7 +41,7 @@ class CustomRouterController {
 
     @Put('foo')
     private add2(req: Request, res: Response): void {
-        res.status(200).json({msg: 'Route used: ' + req.url});
+        res.status(OK).json({message: 'Route used: ' + req.url});
     }
 }
 

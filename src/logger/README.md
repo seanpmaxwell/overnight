@@ -178,7 +178,7 @@ export class ParentController {
 }
 ````
 
-#### Import your controller into the server
+#### Import your controllers into the server
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
 object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`.
@@ -316,7 +316,7 @@ web-server might take more time than you feel like spending. So you can start lo
 away, OvernightJS comes with its own logging package. From the environment variables you can easily
 switch your logs to be printed out to the command line, a file, sent through your own custom logging 
 logic, or turned off completely. Logs printed to the console also are printed out in different colors 
-depending on whether they're info, a warning, an error, etc. The file for holdings logs can be specified
+depending on whether they're info, a warning, an error, etc. The file for holding logs can be specified
  manually or left as the default. Let's check it out!<br>
 
 ### Installation
@@ -325,9 +325,8 @@ $ npm install --save @overnightjs/logger
 ```
 
 ### Guide
-There's not as much to _/logger_ as there was for _/core_ and _/jwt_, so we're just going to quickly
-go over what each method does and how to set it up. The logger package's main export is the
-`Logger` class. Overnight can used statically or as an instance with settings configured through a constructor.
+The logger package's main export is the `Logger` class. Logger can used statically or as an instance 
+with settings configured through a constructor.
 
 - The three environment variables are:
     - `OVERNIGHT_LOGGER_MODE`: can be `'console'`(default), `'file'`, `'custom'`, and `'off'`.

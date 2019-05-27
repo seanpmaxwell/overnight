@@ -183,7 +183,7 @@ OvernightJS provides a Server superclass which initializes a new ExpressJS appli
 object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`.
 If you want to print to the console the name of each controller that has been successfully configured,
-set `super.showLogs = true`. 
+set `this.showLogs = true`. 
 <br>
 
 `super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
@@ -216,7 +216,7 @@ export class SampleServer extends Server {
         
         // addControllers() must be called, and can be passed a single controller or an array of 
         // controllers. Optional router object can also be passed as second argument.
-        super.showLogs = (process.env.NODE_ENV === 'development');
+        this.showLogs = (process.env.NODE_ENV === 'development');
         super.addControllers([userController, signupController]);
     }
 

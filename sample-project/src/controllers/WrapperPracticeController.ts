@@ -37,7 +37,7 @@ export class WrapperPracticeController {
         } catch (err) {
             Logger.Err(err, true);
             return res.status(BAD_REQUEST).json({
-                error: err.message,
+                error: err,
             });
         }
     }
@@ -54,7 +54,7 @@ export class WrapperPracticeController {
 }
 
 
-@Controller('wrapper-practice')
+@Controller('wrapper-practice-2')
 @ClassWrapper(asyncWrapper)
 export class WrapperPracticeController2 {
 

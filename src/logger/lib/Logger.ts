@@ -59,14 +59,17 @@ export class Logger {
 
 
     private static initFilePath(): string {
-        const filePath = path.join(os.homedir(), DEFAULT_LOG_FILE_NAME);
-        return process.env.OVERNIGHT_LOGGER_FILEPATH || filePath;
+        if (process.env.OVERNIGHT_LOGGER_FILEPATH) {
+            return process.env.OVERNIGHT_LOGGER_FILEPATH;
+        } else {
+            return path.join(os.homedir(), DEFAULT_LOG_FILE_NAME);
+        }
     }
 
 
     private static initMode(): LoggerModeOptions {
+        const mode = (process.env.OVERNIGHT_LOGGER_MODE || '').toLocaleUpperCase();
         for (const val of loggerModeArr) {
-            const mode = (process.env.OVERNIGHT_LOGGER_MODE || '').toLocaleUpperCase();
             if (mode === val) {
                 return val;
             }

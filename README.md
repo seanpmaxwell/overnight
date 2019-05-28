@@ -188,7 +188,7 @@ import { Request, Response } from 'express';
 
 @Controller('wrapper-practice')
 // Or instead of using @Wrapper below you could use @ClassWrapper here
-export class WrapperPracticeController {
+export class WrapperController {
     
     @Get('async-third-party/:id')
     @Wrapper(expressAsyncHandler)

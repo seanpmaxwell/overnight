@@ -15,32 +15,31 @@ import { Logger } from '@overnightjs/logger';
 export class WrapperPracticeController {
 
 
-    @Get("async/:id")
+    @Get('async/:id')
     @Wrapper(asyncWrapper)
     private async asyncGet(req: Request, res: Response) {
-        res.json({ user: req.params.id });
+        const id = // await async function here
+        return res.status(OK).json({
+            user: req.params.id,
+        });
     }
 
 
-    @Get("async/:id")
-    @Wrapper(asyncWrapper)
+    @Get('async/:id')
     private async genericGet(req: Request, res: Response) {
         try {
             if (req.params.id === 'make_it_fail') {
                 throw Error('Method failed on purpose');
             }
-            res.status(OK).json({
+            const id = // await async function here
+            return res.status(OK).json({
                 user: req.params.id,
             });
         } catch (err) {
             Logger.Err(err, true);
-            res.status(BAD_REQUEST).json({
+            return res.status(BAD_REQUEST).json({
                 error: err.message,
             });
         }
     }
-
-
-    // Pick up here, create an asynchronous function
-
 }

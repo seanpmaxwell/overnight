@@ -179,10 +179,27 @@ export class ParentController {
 ````
 
 - You can wrap each class method in a custom-function with the `@Wrapper` decorator. If you use the `@ClassWrapper` then
-every method in that class will be wrapper with the provided method. 
+every method in that class will be wrapped with the provided method. 
 
 ````typescript
+import * as expressAsyncHandler from 'express-async-handler';
+import { OK } from 'http-status-codes';
+import { ClassWrapper, Controller, Get, Wrapper } from '@overnightjs/core';
+import { Request, Response } from 'express';
 
+@Controller('wrapper-practice')
+// Or instead of using @Wrapper below you could use @ClassWrapper here
+export class WrapperPracticeController {
+    
+    @Get('async-third-party/:id')
+    @Wrapper(expressAsyncHandler)
+    private async asyncThirdParty(req: Request, res: Response) {
+        const asyncMsg = await someAsyncFunction();
+        return res.status(OK).json({
+            message: asyncMsg,
+        });
+    }
+}
 ````
 
 #### Import your controllers into the server

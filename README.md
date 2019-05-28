@@ -13,10 +13,11 @@ It also includes a package for managing json-web-tokens and printing logs.
 ## Features
 * Define a base route using a @Controller decorator.
 * Decorators to convert class methods to Express routes (@Get, @Put, @Post, @Delete etc).
-* @Middleware and @ClassMiddleware decorators.
-* Add options to controllers the same as use would Express routers with @ClassOptions.
 * Method decorators also work with arrow functions set as class properties.
-* Support for child-controllers.
+* @Middleware and @ClassMiddleware decorators.
+* Add options to controllers the same as you would Express routers with @ClassOptions.
+* Support for child-controllers with @ChildControllers.
+* @Wrapper and @ClassWrapper decorators to wrap functions. 
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router.
 * Easy to configure logging tool.

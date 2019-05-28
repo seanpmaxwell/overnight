@@ -13,10 +13,11 @@ It also includes a package for managing json-web-tokens and printing logs.
 ## Features
 * Define a base route using a @Controller decorator.
 * Decorators to convert class methods to Express routes (@Get, @Put, @Post, @Delete etc).
-* @Middleware and @ClassMiddleware decorators.
-* Add options to controllers the same as use would Express routers with @ClassOptions.
 * Method decorators also work with arrow functions set as class properties.
-* Support for child-controllers.
+* @Middleware and @ClassMiddleware decorators.
+* Add options to controllers the same as you would Express routers with @ClassOptions.
+* Support for child-controllers with @ChildControllers.
+* @Wrapper and @ClassWrapper decorators to wrap functions. 
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router.
 * Easy to configure logging tool.
@@ -178,12 +179,35 @@ export class ParentController {
 }
 ````
 
+- You can wrap each class method in a custom function with the `@Wrapper` decorator. If you use the `@ClassWrapper`
+decorator then every method in that class will be wrapped with the provided method. 
+
+````typescript
+import * as expressAsyncHandler from 'express-async-handler';
+import { ClassWrapper, Controller, Get, Wrapper } from '@overnightjs/core';
+import { Request, Response } from 'express';
+
+@Controller('wrapper-practice')
+// Or instead of using @Wrapper below you could use @ClassWrapper here
+export class WrapperController {
+    
+    @Get('async-third-party/:id')
+    @Wrapper(expressAsyncHandler)
+    private async asyncThirdParty(req: Request, res: Response) {
+        const asyncMsg = await someAsyncFunction();
+        return res.status(200).json({
+            message: asyncMsg,
+        });
+    }
+}
+````
+
 #### Import your controllers into the server
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
 object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`.
 If you want to print to the console the name of each controller that has been successfully configured,
-set `this.showLogs = true`. 
+set `showLogs` to `true` via the `this.showLogs` setter or the Server `constructor()`. 
 <br>
 
 `super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
@@ -201,7 +225,7 @@ import { SignupController } from './SignupController';
 export class SampleServer extends Server {
     
     constructor() {
-        super();
+        super(process.env.NODE_ENV === 'development'); // setting showLogs to true
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
         this.setupControllers();
@@ -213,11 +237,9 @@ export class SampleServer extends Server {
         const dbConnObj = new SomeDbConnClass('credentials');
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
-        
-        // addControllers() must be called, and can be passed a single controller or an array of 
+        // super.addControllers() must be called, and can be passed a single controller or an array of 
         // controllers. Optional router object can also be passed as second argument.
-        this.showLogs = (process.env.NODE_ENV === 'development');
-        super.addControllers([userController, signupController]);
+        super.addControllers([userController, signupController]/*, optional router here*/);
     }
 
     public start(port: number): void {
@@ -329,14 +351,13 @@ The logger package's main export is the `Logger` class. Logger can used statical
 with settings configured through a constructor.
 
 - The three environment variables are:
-    - `OVERNIGHT_LOGGER_MODE`: can be `'console'`(default), `'file'`, `'custom'`, and `'off'`.
+    - `OVERNIGHT_LOGGER_MODE`: can be `'CONSOLE'`(default), `'FILE'`, `'CUSTOM'`, and `'OFF'`.
     - `OVERNIGHT_LOGGER_FILEPATH`: the file-path for file mode. Default is _home_dir/overnight.log_.
-    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: shows a timestamp next to each log. Can be `'true'`(default) or 
-    `'false'`.
+    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: removes the timestamp next to each log. Can be `'TRUE'` or `'FALSE'`(default).
 
 _logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
-use them in code. I would recommend using `CONSOLE` for local development, `FILE` for remote development, 
-and `CUSTOM` or `OFF` for production. If you want to change the settings in code, you can do so via 
+use them in code. I would recommend using `Console` for local development, `File` for remote development, 
+and `Custom` or `Off` for production. If you want to change the settings in code, you can do so via 
 the constructor or getters/setters.
 <br>
 
@@ -362,7 +383,7 @@ import { LoggerModes } from '@overnightjs/logger';
 
 // Set the 
 const logFilePath = path.join(__dirname, '../sampleProject.log');
-process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE; // Can also be CONSOLE, CUSTOM, or OFF
+process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.File; // Can also be Console, Custom, or Off
 process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 // Remove current log file if it exists
@@ -610,7 +631,7 @@ export class JwtPracticeController {
     @Post('callProtectedRouteAlt')
     @Middleware(jwtMgr.middleware)
     private callProtectedRouteFromHandler(req: ISecureRequest, res: Response) {
-        return res.status(200).json({
+        return res.status(OK).json({
             fullname: req.payload.fullName,
         });
     }

@@ -4,10 +4,10 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
+import { OK } from 'http-status-codes';
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Controller, Middleware, Get, Post, Put } from '@overnightjs/core';
 import { Request, Response } from 'express';
-import { OK } from 'http-status-codes';
 
 const jwtMgr = new JwtManager('secret', '10h');
 

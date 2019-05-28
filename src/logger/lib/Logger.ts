@@ -66,7 +66,8 @@ export class Logger {
 
     private static initMode(): LoggerModeOptions {
         for (const val of loggerModeArr) {
-            if (process.env.OVERNIGHT_LOGGER_MODE === val) {
+            const mode = (process.env.OVERNIGHT_LOGGER_MODE || '').toLocaleUpperCase();
+            if (mode === val) {
                 return val;
             }
         }
@@ -75,7 +76,8 @@ export class Logger {
 
 
     private static initRmTimestamp(): boolean {
-        return process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP === 'true';
+        const rmTimeStamp = (process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP || '').toLocaleUpperCase();
+        return rmTimeStamp === 'TRUE';
     }
 
 

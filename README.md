@@ -327,9 +327,9 @@ The logger package's main export is the `Logger` class. Logger can used statical
 with settings configured through a constructor.
 
 - The three environment variables are:
-    - `OVERNIGHT_LOGGER_MODE`: can be `'CONSOLE'`(default), `'FILE'`, `'CUSTOM'`, and `'OFF'`. Provided values must be uppercase.
+    - `OVERNIGHT_LOGGER_MODE`: can be `'CONSOLE'`(default), `'FILE'`, `'CUSTOM'`, and `'OFF'`.
     - `OVERNIGHT_LOGGER_FILEPATH`: the file-path for file mode. Default is _home_dir/overnight.log_.
-    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: removes the timestamp next to each log. Can be `'true'` or `'false'`(default).
+    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: removes the timestamp next to each log. Can be `'TRUE'` or `'FALSE'`(default).
 
 _logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
 use them in code. I would recommend using `Console` for local development, `File` for remote development, 

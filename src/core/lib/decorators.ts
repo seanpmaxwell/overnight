@@ -134,18 +134,12 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
  *                                       Class Decorator
  **********************************************************************************************/
 
-// export const BASE_PATH_KEY = 'basePath';
-// export const CLASS_MIDDLEWARE_KEY = 'classMiddleware';
-// export const CLASS_WRAPPER_KEY = 'classWrapper';
-// export const CHILDREN_KEY = 'children';
-// export const OPTIONS_KEY = 'classOptions';
-
 export enum ClassKeys {
     BasePath = 'BASE_PATH',
     Middleware = 'MIDDLEWARE',
     Wrapper = 'WRAPPER',
     Children = 'CHILDREN',
-    Options = 'OPTIONS'
+    Options = 'OPTIONS',
 }
 
 export function Controller(path: string): ClassDecorator {

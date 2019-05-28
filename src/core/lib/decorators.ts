@@ -202,7 +202,7 @@ export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator
  *                                  Wrapper Decorator
  **********************************************************************************************/
 
-type WrapperFunction = (request: Request, response: Response, next?: NextFunction) => any;
+type ExpressCallback = (request: Request, response: Response, next?: NextFunction) => any; // pick up here, wrapper functions needs to be function which returns express callback
 
 export function Wrapper(wrapperFunction: WrapperFunction) {
 

@@ -113,7 +113,7 @@ export class Server {
                     return controller[member](req, res, next);
                 };
                 if (wrapper) {
-                    callBack = wrapper(callBack); // pick up here
+                    callBack = wrapper(callBack);
                 }
                 if (routeMiddleware) {
                     router[httpVerb](path, routeMiddleware, callBack);

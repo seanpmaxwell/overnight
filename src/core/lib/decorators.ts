@@ -9,6 +9,12 @@ import { Request, Response, NextFunction, RouterOptions } from 'express';
 import 'reflect-metadata';
 
 
+// Types
+type ExpressCallback = (req: Request, res: Response, next?: NextFunction) => any;
+type Middleware = ExpressCallback;
+type WrapperFunction = (action: ExpressCallback) => any;
+
+
 /***********************************************************************************************
  *                                      Method Decorators
  **********************************************************************************************/
@@ -143,7 +149,7 @@ export function Controller(path: string): ClassDecorator {
     };
 }
 
-export function ClassMiddleware(middleware: Middlware | Middlware[]): ClassDecorator {
+export function ClassMiddleware(middleware: Middleware | Middleware[]): ClassDecorator {
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
@@ -175,10 +181,7 @@ export function Children(middleware: InstanceType<any> | Array<InstanceType<any>
  *                                  Middleware Decorator
  **********************************************************************************************/
 
-type Middlware = (req: Request, res: Response, next: NextFunction) => any;
-
-
-export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator {
+export function Middleware(middleware: Middleware | Middleware[]): MethodDecorator {
 
     return (target: any, propertyKey?: string | symbol, descriptor?: PropertyDescriptor) => {
         let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
@@ -201,8 +204,6 @@ export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator
 /***********************************************************************************************
  *                                  Wrapper Decorator
  **********************************************************************************************/
-
-type ExpressCallback = (request: Request, response: Response, next?: NextFunction) => any; // pick up here, wrapper functions needs to be function which returns express callback
 
 export function Wrapper(wrapperFunction: WrapperFunction) {
 

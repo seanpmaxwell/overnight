@@ -183,7 +183,7 @@ OvernightJS provides a Server superclass which initializes a new ExpressJS appli
 object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 
 with this variable like you would any normal express Application created with `require('express')()`.
 If you want to print to the console the name of each controller that has been successfully configured,
-set `this.showLogs = true`. 
+set `showLogs` to `true` via the `this.showLogs` setter or the Server `constructor()`. 
 <br>
 
 `super.addControllers()` must be called to enable all of the routes in your controller. Make sure to
@@ -201,7 +201,7 @@ import { SignupController } from './SignupController';
 export class SampleServer extends Server {
     
     constructor() {
-        super();
+        super(process.env.NODE_ENV === 'development'); // setting showLogs to true
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
         this.setupControllers();
@@ -213,11 +213,9 @@ export class SampleServer extends Server {
         const dbConnObj = new SomeDbConnClass('credentials');
         signupController.setDbConn(dbConnObj);
         userController.setDbConn(dbConnObj);
-        
-        // addControllers() must be called, and can be passed a single controller or an array of 
+        // super.addControllers() must be called, and can be passed a single controller or an array of 
         // controllers. Optional router object can also be passed as second argument.
-        this.showLogs = (process.env.NODE_ENV === 'development');
-        super.addControllers([userController, signupController]);
+        super.addControllers([userController, signupController]/*, optional router here*/);
     }
 
     public start(port: number): void {
@@ -331,8 +329,7 @@ with settings configured through a constructor.
 - The three environment variables are:
     - `OVERNIGHT_LOGGER_MODE`: can be `'console'`(default), `'file'`, `'custom'`, and `'off'`.
     - `OVERNIGHT_LOGGER_FILEPATH`: the file-path for file mode. Default is _home_dir/overnight.log_.
-    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: shows a timestamp next to each log. Can be `'true'`(default) or 
-    `'false'`.
+    - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: removes the timestamp next to each log. Can be `'true'` or `'false'`(default).
 
 _logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
 use them in code. I would recommend using `CONSOLE` for local development, `FILE` for remote development, 

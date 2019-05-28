@@ -105,7 +105,6 @@ export function Unsubscribe(path?: string): MethodDecorator {
     return helperForRoutes('unsubscribe', path);
 }
 
-
 function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 
     return (target: any, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => {
@@ -192,6 +191,31 @@ export function Middleware(middleware: Middlware | Middlware[]): MethodDecorator
         };
         Reflect.defineMetadata(propertyKey, routeProperties, target);
         // For class methods that are not arrow functions
+        if (descriptor) {
+            return descriptor;
+        }
+    };
+}
+
+
+/***********************************************************************************************
+ *                                  Wrapper Decorator
+ **********************************************************************************************/
+
+type WrapperFunction = (request: Request, response: Response, next?: NextFunction) => any;
+
+export function Wrapper(wrapperFunction: WrapperFunction) {
+
+    return (target: any, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => {
+        let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
+        if (!routeProperties) {
+            routeProperties = {};
+        }
+        routeProperties = {
+            wrapper: wrapperFunction,
+            ...routeProperties,
+        };
+        Reflect.defineMetadata(propertyKey, routeProperties, target);
         if (descriptor) {
             return descriptor;
         }

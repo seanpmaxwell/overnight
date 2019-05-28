@@ -17,7 +17,7 @@ class NormalRouterServer extends Server {
 
 
     constructor() {
-        super();
+        super(true);
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
         this.setupControllers();
@@ -32,7 +32,6 @@ class NormalRouterServer extends Server {
                 controllerInstances.push(new controller());
             }
         }
-        this.showLogs = true;
         super.addControllers(controllerInstances);
     }
 

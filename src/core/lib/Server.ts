@@ -25,8 +25,9 @@ export class Server {
     private readonly LOG_STR = 'Setting up controller ';
 
 
-    constructor() {
+    constructor(showLogs?: boolean) {
         this._app = express();
+        this._showLogs = showLogs || false;
     }
 
     protected get app(): Application {
@@ -107,10 +108,13 @@ export class Server {
             const route = controller[member];
             const routeProperties = Reflect.getOwnMetadata(member, prototype);
             if (route && routeProperties) {
-                const { routeMiddleware, httpVerb, path } = routeProperties;
-                const callBack = (req: Request, res: Response, next: NextFunction) => {
+                const { routeMiddleware, httpVerb, path, wrapper } = routeProperties;
+                let callBack = (req: Request, res: Response, next: NextFunction) => {
                     return controller[member](req, res, next);
                 };
+                if (wrapper) {
+                    callBack = wrapper(callBack); // pick up here
+                }
                 if (routeMiddleware) {
                     router[httpVerb](path, routeMiddleware, callBack);
                 } else {

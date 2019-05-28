@@ -7,6 +7,7 @@
     "colors": "^1.3.3",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
+    "express-async-handler": "^1.1.4",
     "express-promise-router": "^3.0.3",
     "http-status-codes": "^1.3.2",
     "mail-promise": "^1.2.4",

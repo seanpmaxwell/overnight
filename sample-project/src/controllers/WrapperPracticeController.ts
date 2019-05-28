@@ -4,6 +4,8 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
+import * as expressAsyncHandler from 'express-async-handler';
+
 import { OK, BAD_REQUEST } from 'http-status-codes';
 import { Controller, Get, Wrapper } from '@overnightjs/core';
 import { asyncWrapper, asyncFunction } from './other/wrapperFunctions';
@@ -38,5 +40,15 @@ export class WrapperPracticeController {
                 error: err.message,
             });
         }
+    }
+
+
+    @Get('async-third-party/:id')
+    @Wrapper(expressAsyncHandler)
+    private async asyncThirdParty(req: Request, res: Response) {
+        const asyncMsg = await asyncFunction(req.params.id === 'make_it_fail');
+        return res.status(OK).json({
+            message: asyncMsg,
+        });
     }
 }

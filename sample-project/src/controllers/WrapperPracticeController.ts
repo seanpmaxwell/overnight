@@ -7,7 +7,7 @@
 import * as expressAsyncHandler from 'express-async-handler';
 
 import { OK, BAD_REQUEST } from 'http-status-codes';
-import { Controller, Get, Wrapper } from '@overnightjs/core';
+import { ClassWrapper, Controller, Get, Wrapper } from '@overnightjs/core';
 import { asyncWrapper, asyncFunction } from './other/wrapperFunctions';
 import { Request, Response } from 'express';
 import { Logger } from '@overnightjs/logger';
@@ -45,6 +45,30 @@ export class WrapperPracticeController {
 
     @Get('async-third-party/:id')
     @Wrapper(expressAsyncHandler)
+    private async asyncThirdParty(req: Request, res: Response) {
+        const asyncMsg = await asyncFunction(req.params.id === 'make_it_fail');
+        return res.status(OK).json({
+            message: asyncMsg,
+        });
+    }
+}
+
+
+@Controller('wrapper-practice')
+@ClassWrapper(asyncWrapper)
+export class WrapperPracticeController2 {
+
+
+    @Get('async-wrapper/:id')
+    private async asyncGet(req: Request, res: Response) {
+        const asyncMsg = await asyncFunction(req.params.id === 'make_it_fail');
+        return res.status(OK).json({
+            message: asyncMsg,
+        });
+    }
+
+
+    @Get('async-third-party/:id')
     private async asyncThirdParty(req: Request, res: Response) {
         const asyncMsg = await asyncFunction(req.params.id === 'make_it_fail');
         return res.status(OK).json({

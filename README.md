@@ -178,6 +178,13 @@ export class ParentController {
 }
 ````
 
+- You can wrap each class method in a custom-function with the `@Wrapper` decorator. If you use the `@ClassWrapper` then
+every method in that class will be wrapper with the provided method. 
+
+````typescript
+
+````
+
 #### Import your controllers into the server
 OvernightJS provides a Server superclass which initializes a new ExpressJS application. The express 
 object is accessed using `this.app`, which is a protected, readonly class variable. You can interact 

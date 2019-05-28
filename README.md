@@ -366,7 +366,7 @@ import { LoggerModes } from '@overnightjs/logger';
 
 // Set the 
 const logFilePath = path.join(__dirname, '../sampleProject.log');
-process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.File; // Can also be console, custom, or off
+process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.File; // Can also be Console, Custom, or Off
 process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 // Remove current log file if it exists

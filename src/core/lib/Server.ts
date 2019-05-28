@@ -6,7 +6,7 @@
 
 import * as express from 'express';
 import { Application, Request, Response, Router, NextFunction } from 'express';
-import { BASE_PATH_KEY, CLASS_MIDDLEWARE_KEY, CHILDREN_KEY, OPTIONS_KEY } from './decorators';
+import { ClassKeys } from './decorators';
 
 
 type Controller = InstanceType<any>;
@@ -73,7 +73,7 @@ export class Server {
      */
     private getRouter(routerLibrary: RouterLib, controller: Controller): IRouterAndPath {
         const prototype = Object.getPrototypeOf(controller);
-        const options = Reflect.getOwnMetadata(OPTIONS_KEY, prototype);
+        const options = Reflect.getOwnMetadata(ClassKeys.Options, prototype);
 
         // Set options
         let router: any;
@@ -83,7 +83,7 @@ export class Server {
             router = routerLibrary();
         }
         // Get base path
-        const basePath = Reflect.getOwnMetadata(BASE_PATH_KEY, prototype);
+        const basePath = Reflect.getOwnMetadata(ClassKeys.BasePath, prototype);
         if (!basePath) {
             return {
                 basePath: null,
@@ -96,10 +96,12 @@ export class Server {
             console.log(this.LOG_STR + controller.constructor.name);
         }
         // Get middleware
-        const classMiddleware = Reflect.getOwnMetadata(CLASS_MIDDLEWARE_KEY, prototype);
+        const classMiddleware = Reflect.getOwnMetadata(ClassKeys.Middleware, prototype);
         if (classMiddleware) {
             router.use(classMiddleware);
         }
+        // Get class-wrapper
+        const classWrapper = Reflect.getOwnMetadata(ClassKeys.Wrapper, prototype);
 
         // Add paths/functions to router-object
         let members = Object.getOwnPropertyNames(controller);
@@ -108,12 +110,15 @@ export class Server {
             const route = controller[member];
             const routeProperties = Reflect.getOwnMetadata(member, prototype);
             if (route && routeProperties) {
-                const { routeMiddleware, httpVerb, path, wrapper } = routeProperties;
+                const { routeMiddleware, httpVerb, path, routeWrapper } = routeProperties;
                 let callBack = (req: Request, res: Response, next: NextFunction) => {
                     return controller[member](req, res, next);
                 };
-                if (wrapper) {
-                    callBack = wrapper(callBack);
+                if (classWrapper) {
+                    callBack = classWrapper(callBack);
+                }
+                if (routeWrapper) {
+                    callBack = routeWrapper(callBack);
                 }
                 if (routeMiddleware) {
                     router[httpVerb](path, routeMiddleware, callBack);
@@ -124,7 +129,7 @@ export class Server {
         });
 
         // Recursively add child controllers
-        let children = Reflect.getOwnMetadata(CHILDREN_KEY, prototype);
+        let children = Reflect.getOwnMetadata(ClassKeys.Children, prototype);
         if (children) {
             children = (children instanceof Array) ? children : [children];
             children.forEach((child: Controller) => {

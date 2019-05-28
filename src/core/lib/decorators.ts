@@ -134,16 +134,25 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
  *                                       Class Decorator
  **********************************************************************************************/
 
-export const BASE_PATH_KEY = 'basePath';
-export const CLASS_MIDDLEWARE_KEY = 'classMiddleware';
-export const CHILDREN_KEY = 'children';
-export const OPTIONS_KEY = 'classOptions';
+// export const BASE_PATH_KEY = 'basePath';
+// export const CLASS_MIDDLEWARE_KEY = 'classMiddleware';
+// export const CLASS_WRAPPER_KEY = 'classWrapper';
+// export const CHILDREN_KEY = 'children';
+// export const OPTIONS_KEY = 'classOptions';
+
+export enum ClassKeys {
+    BasePath = 'BASE_PATH',
+    Middleware = 'MIDDLEWARE',
+    Wrapper = 'WRAPPER',
+    Children = 'CHILDREN',
+    Options = 'OPTIONS'
+}
 
 export function Controller(path: string): ClassDecorator {
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(BASE_PATH_KEY, '/' + path, target.prototype);
+        Reflect.defineMetadata(ClassKeys.BasePath, '/' + path, target.prototype);
         return target;
     };
 }
@@ -152,7 +161,16 @@ export function ClassMiddleware(middleware: Middleware | Middleware[]): ClassDec
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(CLASS_MIDDLEWARE_KEY, middleware, target.prototype);
+        Reflect.defineMetadata(ClassKeys.Middleware, middleware, target.prototype);
+        return target;
+    };
+}
+
+export function ClassWrapper(wrapperFunction: WrapperFunction): ClassDecorator {
+
+    // tslint:disable-next-line:ban-types
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(ClassKeys.Wrapper, wrapperFunction, target.prototype);
         return target;
     };
 }
@@ -161,7 +179,7 @@ export function ClassOptions(options: RouterOptions): ClassDecorator {
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(OPTIONS_KEY, options, target.prototype);
+        Reflect.defineMetadata(ClassKeys.Options, options, target.prototype);
         return target;
     };
 }
@@ -170,7 +188,7 @@ export function Children(middleware: InstanceType<any> | Array<InstanceType<any>
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(CHILDREN_KEY, middleware, target.prototype);
+        Reflect.defineMetadata(ClassKeys.Children, middleware, target.prototype);
         return target;
     };
 }
@@ -212,7 +230,7 @@ export function Wrapper(wrapperFunction: WrapperFunction) {
             routeProperties = {};
         }
         routeProperties = {
-            wrapper: wrapperFunction,
+            routeWrapper: wrapperFunction,
             ...routeProperties,
         };
         Reflect.defineMetadata(propertyKey, routeProperties, target);

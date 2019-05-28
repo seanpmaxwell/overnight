@@ -27,7 +27,7 @@ export class LoggerPracticeController {
 
     @Get('console/:msg')
     private printLogsConsole(req: Request, res: Response) {
-        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.CONSOLE;
+        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.Console;
         const logger = new Logger();
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
@@ -61,7 +61,7 @@ export class LoggerPracticeController {
     private printLogsFile(req: Request, res: Response) {
         const logFilePath = path.join(__dirname, '../../sampleProject.log');
         process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
-        const logger = new Logger(LoggerModes.FILE);
+        const logger = new Logger(LoggerModes.File);
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
         logger.warn(req.params.msg);
@@ -78,7 +78,7 @@ export class LoggerPracticeController {
     private stPrintLogsFile(req: Request, res: Response) {
         const logFilePath = path.join(__dirname, '../../sampleProject.log');
         Logger.filePath = logFilePath;
-        Logger.mode = LoggerModes.FILE;
+        Logger.mode = LoggerModes.File;
         Logger.Info(req.params.msg);
         Logger.Imp(req.params.msg);
         Logger.Warn(req.params.msg);
@@ -96,7 +96,7 @@ export class LoggerPracticeController {
     @Get('defaultFilePath/:msg')
     private defaultFilePath(req: Request, res: Response) {
         process.env.OVERNIGHT_LOGGER_FILEPATH = '';
-        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE;
+        process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.File;
         const logger = new Logger();
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
@@ -124,7 +124,7 @@ export class LoggerPracticeController {
 
     @Get('off/:msg')
     private printLogsOff(req: Request, res: Response) {
-        const logger = new Logger(LoggerModes.OFF);
+        const logger = new Logger(LoggerModes.Off);
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
         logger.warn(req.params.msg);
@@ -137,7 +137,7 @@ export class LoggerPracticeController {
 
     @Get('static/off/:msg')
     private stPrintLogsOff(req: Request, res: Response) {
-        Logger.mode = LoggerModes.OFF;
+        Logger.mode = LoggerModes.Off;
         Logger.Info(req.params.msg);
         Logger.Imp(req.params.msg);
         Logger.Warn(req.params.msg);
@@ -182,7 +182,7 @@ export class LoggerPracticeController {
 
     @Get('useCustomLogger/:msg')
     private useCustomLogger(req: Request, res: Response) {
-        const logger = new Logger(LoggerModes.CUSTOM, '', true, this.customLoggerTool);
+        const logger = new Logger(LoggerModes.Custom, '', true, this.customLoggerTool);
         logger.rmTimestamp = true;
         logger.info(req.params.msg);
         logger.imp(req.params.msg);
@@ -196,7 +196,7 @@ export class LoggerPracticeController {
 
     @Get('static/useCustomLogger/:msg')
     private stUseCustomLogger(req: Request, res: Response) {
-        Logger.mode = LoggerModes.CUSTOM;
+        Logger.mode = LoggerModes.Custom;
         Logger.filePath = '';
         Logger.rmTimestamp = true;
         Logger.customLogger = this.customLoggerTool;

@@ -70,7 +70,7 @@ export class Logger {
                 return val;
             }
         }
-        return LoggerModes.CONSOLE;
+        return LoggerModes.Console;
     }
 
 
@@ -240,7 +240,7 @@ export class Logger {
         customLogger: ICustomLogger | null,
     ): void {
 
-        if (mode === LoggerModes.OFF) {
+        if (mode === LoggerModes.Off) {
             return;
         }
         // Update content
@@ -252,13 +252,13 @@ export class Logger {
             content = time + content;
         }
         // Print log
-        if (mode === LoggerModes.CONSOLE) {
+        if (mode === LoggerModes.Console) {
             content = (colors as any)[logType.color](content);
             // tslint:disable-next-line
             console.log(content);
-        } else if (mode === LoggerModes.FILE) {
+        } else if (mode === LoggerModes.File) {
             Logger.WriteToFile(logType.prefix + content + '\n', filePath);
-        } else if (mode === LoggerModes.CUSTOM) {
+        } else if (mode === LoggerModes.Custom) {
             if (customLogger) {
                 customLogger.sendLog(content);
             } else {

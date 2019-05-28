@@ -327,13 +327,13 @@ The logger package's main export is the `Logger` class. Logger can used statical
 with settings configured through a constructor.
 
 - The three environment variables are:
-    - `OVERNIGHT_LOGGER_MODE`: can be `'console'`(default), `'file'`, `'custom'`, and `'off'`.
+    - `OVERNIGHT_LOGGER_MODE`: can be `'CONSOLE'`(default), `'FILE'`, `'CUSTOM'`, and `'OFF'`. Provided values must be uppercase.
     - `OVERNIGHT_LOGGER_FILEPATH`: the file-path for file mode. Default is _home_dir/overnight.log_.
     - `OVERNIGHT_LOGGER_RM_TIMESTAMP`: removes the timestamp next to each log. Can be `'true'` or `'false'`(default).
 
 _logger_ has an export `LoggerModes` which is an enum that provides all the modes if you want to
-use them in code. I would recommend using `CONSOLE` for local development, `FILE` for remote development, 
-and `CUSTOM` or `OFF` for production. If you want to change the settings in code, you can do so via 
+use them in code. I would recommend using `Console` for local development, `File` for remote development, 
+and `Custom` or `Off` for production. If you want to change the settings in code, you can do so via 
 the constructor or getters/setters.
 <br>
 
@@ -359,7 +359,7 @@ import { LoggerModes } from '@overnightjs/logger';
 
 // Set the 
 const logFilePath = path.join(__dirname, '../sampleProject.log');
-process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.FILE; // Can also be CONSOLE, CUSTOM, or OFF
+process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.File; // Can also be console, custom, or off
 process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
 
 // Remove current log file if it exists
@@ -607,7 +607,7 @@ export class JwtPracticeController {
     @Post('callProtectedRouteAlt')
     @Middleware(jwtMgr.middleware)
     private callProtectedRouteFromHandler(req: ISecureRequest, res: Response) {
-        return res.status(200).json({
+        return res.status(OK).json({
             fullname: req.payload.fullName,
         });
     }

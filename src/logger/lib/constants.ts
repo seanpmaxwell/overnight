@@ -13,17 +13,17 @@ export const DEFAULT_LOG_FILE_NAME = 'overnight.log';
  **********************************************************************************************/
 
 export const enum LoggerModes {
-    CONSOLE = 'console',
-    FILE = 'file',
-    CUSTOM = 'custom',
-    OFF = 'off',
+    Console = 'CONSOLE',
+    File = 'FILE',
+    Custom = 'CUSTOM',
+    Off = 'OFF',
 }
 
-export const loggerModeArr = [LoggerModes.CONSOLE, LoggerModes.FILE, LoggerModes.CUSTOM,
-    LoggerModes.OFF];
+export const loggerModeArr = [LoggerModes.Console, LoggerModes.File, LoggerModes.Custom,
+    LoggerModes.Off];
 
-export type LoggerModeOptions = LoggerModes.CONSOLE | LoggerModes.FILE | LoggerModes.CUSTOM |
-    LoggerModes.OFF;
+export type LoggerModeOptions = LoggerModes.Console | LoggerModes.File | LoggerModes.Custom |
+    LoggerModes.Off;
 
 
 /***********************************************************************************************

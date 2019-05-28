@@ -5,27 +5,27 @@
  * created by Sean Maxwell 5/28/2019
  */
 
-import { Request, Response, NextFunction } from 'express';
-
-// Callback type
-type ExpressCallback = (request: Request, response: Response, next?: NextFunction) => any;
+import { RequestHandler, Request, Response, NextFunction } from 'express';
 
 
 
 // Wrapper Function
-export const asyncWrapper = (action: ExpressCallback) => {
+export const asyncWrapper = (action: RequestHandler) => {
 
-    return (req: Request, res: Response, next?: NextFunction) => {
-        const fnReturn = action(req, res, next);
-        return Promise.resolve(fnReturn).catch(next);
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            return await action(req, res, next);
+        } catch (error) {
+            next(error);
+        }
     }
 };
 
 
 // Wrapper Function
-export const genericWrapper = (action: ExpressCallback) => {
+export const genericWrapper = (action: RequestHandler) => {
 
-    return (req: Request, res: Response, next?: NextFunction) => {
+    return (req: Request, res: Response, next: NextFunction) => {
         return action(req, res, next);
     }
 };

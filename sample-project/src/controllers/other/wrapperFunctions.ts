@@ -31,4 +31,11 @@ export const genericWrapper = (action: RequestHandler) => {
 };
 
 
-// Wait some
+// Wait some time, 1 to 500 milliseconds
+export const asyncFunction = (fail?: boolean) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            fail ? reject('Method failed') : resolve('Method passed');
+        }, Math.floor(Math.random() * 500) + 1);
+    });
+};

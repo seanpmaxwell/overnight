@@ -6,21 +6,21 @@
 
 import { OK, BAD_REQUEST } from 'http-status-codes';
 import { Controller, Get, Wrapper } from '@overnightjs/core';
-import { asyncWrapper } from './other/wrapperFunctions';
+import { asyncWrapper, asyncFunction } from './other/wrapperFunctions';
 import { Request, Response } from 'express';
 import { Logger } from '@overnightjs/logger';
 
 
-@Controller('wrapper')
+@Controller('wrapper-practice')
 export class WrapperPracticeController {
 
 
-    @Get('async/:id')
+    @Get('async-wrapper/:id')
     @Wrapper(asyncWrapper)
     private async asyncGet(req: Request, res: Response) {
-        const id = // await async function here
+        const asyncMsg = await asyncFunction(req.params.id === 'make_it_fail');
         return res.status(OK).json({
-            user: req.params.id,
+            message: asyncMsg,
         });
     }
 
@@ -28,12 +28,9 @@ export class WrapperPracticeController {
     @Get('async/:id')
     private async genericGet(req: Request, res: Response) {
         try {
-            if (req.params.id === 'make_it_fail') {
-                throw Error('Method failed on purpose');
-            }
-            const id = // await async function here
+            const asyncMsg = await asyncFunction(req.params.id === 'make_it_fail');
             return res.status(OK).json({
-                user: req.params.id,
+                message: asyncMsg,
             });
         } catch (err) {
             Logger.Err(err, true);

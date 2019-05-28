@@ -5,14 +5,13 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import { Request, Response, NextFunction, RouterOptions } from 'express';
+import { RequestHandler, RouterOptions } from 'express';
 import 'reflect-metadata';
 
 
 // Types
-type ExpressCallback = (req: Request, res: Response, next?: NextFunction) => any;
-type Middleware = ExpressCallback;
-type WrapperFunction = (action: ExpressCallback) => any;
+type Middleware = RequestHandler;
+type WrapperFunction = (action: RequestHandler) => any;
 
 
 /***********************************************************************************************

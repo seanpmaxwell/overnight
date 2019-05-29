@@ -53,7 +53,7 @@ export class Server {
      */
     protected addControllers(controllers: Controller | Controller[], routerLib?: RouterLib): void {
         controllers = (controllers instanceof Array) ? controllers : [controllers];
-        const routerLibrary = routerLib || Router;
+        const routerLibrary = routerLib | Router;
         controllers.forEach((controller: Controller) => {
             if (controller) {
                 const { basePath, router } = this.getRouter(routerLibrary, controller);

@@ -79,8 +79,7 @@ export class Logger {
 
 
     private static initRmTimestamp(): boolean {
-        const rmTimestamp = (process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP || '').toLocaleUpperCase();
-        return rmTimestamp === 'TRUE';
+        return Boolean(process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP);
     }
 
 

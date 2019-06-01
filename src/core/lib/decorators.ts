@@ -9,9 +9,11 @@ import { RequestHandler, RouterOptions } from 'express';
 import 'reflect-metadata';
 
 
+
 // Types
 type Middleware = RequestHandler;
-type WrapperFunction = (action: RequestHandler) => any;
+type WrapperFunction = ((action: any) => any);
+type Controller = InstanceType<any>;
 
 
 /***********************************************************************************************
@@ -178,11 +180,11 @@ export function ClassOptions(options: RouterOptions): ClassDecorator {
     };
 }
 
-export function Children(middleware: InstanceType<any> | Array<InstanceType<any>>): ClassDecorator {
+export function Children(controllers: Controller | Controller[]): ClassDecorator {
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(ClassKeys.Children, middleware, target.prototype);
+        Reflect.defineMetadata(ClassKeys.Children, controllers, target.prototype);
         return target;
     };
 }

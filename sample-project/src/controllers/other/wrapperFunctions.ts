@@ -18,7 +18,7 @@ export const asyncWrapper = (action: RequestHandler) => {
         } catch (error) {
             next(error);
         }
-    }
+    };
 };
 
 
@@ -27,7 +27,7 @@ export const genericWrapper = (action: RequestHandler) => {
 
     return (req: Request, res: Response, next: NextFunction) => {
         return action(req, res, next);
-    }
+    };
 };
 
 

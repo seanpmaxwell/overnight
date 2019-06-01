@@ -54,6 +54,7 @@ export class WrapperPracticeController {
 }
 
 
+// tslint:disable-next-line:max-classes-per-file
 @Controller('wrapper-practice-2')
 @ClassWrapper(asyncWrapper)
 export class WrapperPracticeController2 {

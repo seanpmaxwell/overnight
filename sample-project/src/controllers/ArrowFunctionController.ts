@@ -22,7 +22,7 @@ export class ArrowFunctionController {
         return res.status(OK).json({
             message: 'get_called',
         });
-    };
+    }
 
 
     @(OvernightJS as any).Get('jwt/:email')
@@ -43,7 +43,7 @@ export class ArrowFunctionController {
         return res.status(OK).json({
             message: 'get_all_called',
         });
-    };
+    }
 
 
     @(OvernightJS as any).Post()
@@ -52,7 +52,7 @@ export class ArrowFunctionController {
         res.status(OK).json({
             message: 'add_called',
         });
-    };
+    }
 
 
     @(OvernightJS as any).Put('update-user')
@@ -61,7 +61,7 @@ export class ArrowFunctionController {
         res.status(OK).json({
             message: 'update_called',
         });
-    };
+    }
 
 
     @(OvernightJS as any).Delete(':id')

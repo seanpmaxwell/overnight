@@ -208,4 +208,20 @@ export class LoggerPracticeController {
             message: 'static_default_file_path',
         });
     }
+
+
+    // Remove timestamp
+
+    @Get('remove-timestamp/:msg')
+    private removeTimestamp(req: Request, res: Response) {
+        process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP = '';
+        const logger = new Logger();
+        logger.info(req.params.msg);
+        logger.imp(req.params.msg);
+        logger.warn(req.params.msg);
+        logger.err(req.params.msg);
+        return res.status(OK).json({
+            message: req.params.msg,
+        });
+    }
 }

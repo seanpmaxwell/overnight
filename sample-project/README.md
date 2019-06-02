@@ -662,3 +662,11 @@ app.use('/', router);
 
 ## That's All!!
 Please star this repo if you found it useful. Happy web-deving :)
+<br>
+<br>
+<br>
+
+
+## License
+
+[MIT](LICENSE)

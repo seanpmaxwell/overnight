@@ -653,20 +653,11 @@ router.get('users', JwtManager.middleware, (req, res) => {
 
 app.use('/', router); 
 ````
-<br>
-<br>
-<br>
-
-
 
 
 ## That's All!!
 Please star this repo if you found it useful. Happy web-deving :)
-<br>
-<br>
-<br>
 
 
 ## License
-
 [MIT](LICENSE)

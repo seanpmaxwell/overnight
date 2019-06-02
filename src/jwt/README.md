@@ -3,6 +3,11 @@
 > TypeScript decorators for the ExpressJS Web Server!
 
 <img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/overnightjs.png' border='0'>
+<br>
+
+[![NPM Version][npm-image]][npm-url]
+[![Linux Build][travis-image]][travis-url]
+[![Windows Build][appveyor-image]][appveyor-url]
  
 
 ## What is it
@@ -661,3 +666,12 @@ Please star this repo if you found it useful. Happy web-deving :)
 
 ## License
 [MIT](LICENSE)
+
+[npm-image]: https://img.shields.io/npm/v/express-generator.svg
+[npm-url]: https://npmjs.org/package/express-generator
+[travis-image]: https://img.shields.io/travis/expressjs/generator/master.svg?label=linux
+[travis-url]: https://travis-ci.org/expressjs/generator
+[appveyor-image]: https://img.shields.io/appveyor/ci/dougwilson/generator/master.svg?label=windows
+[appveyor-url]: https://ci.appveyor.com/project/dougwilson/generator
+[downloads-image]: https://img.shields.io/npm/dm/express-generator.svg
+[downloads-url]: https://npmjs.org/package/express-generator

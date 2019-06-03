@@ -254,6 +254,10 @@ export class SampleServer extends Server {
 }
 ````
 
+**IMPORTANT NOTE:** If you initialize environment variables from some script which imports the 
+Server script, those environment variables must be configured before importing the Server script
+or else they could end up undefined for nested controllers.
+
 #### See how awesome this is!
 Without the above decorators we would have to wrap each controller method with something like:
 

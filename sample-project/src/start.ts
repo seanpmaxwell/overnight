@@ -26,7 +26,7 @@ process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP = 'false';
 
 
 
-// Import and start Server, remember, server must
+// Import and start Server. Remember, server must
 // be imported after configuring env variables
 import NormalRouterServer from './NormalRouterServer';
 import CustomRouterServer from './CustomRouterServer';

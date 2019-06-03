@@ -17,7 +17,6 @@ process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.Console;
 process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP = 'false';
 
 
-
 // Remove current log file
 (function removeFile() {
     try {
@@ -27,7 +26,8 @@ process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP = 'false';
 
 
 
-// Start Server
+// Import and start Server, remember, server must
+// be imported after configuring env variables
 import NormalRouterServer from './NormalRouterServer';
 import CustomRouterServer from './CustomRouterServer';
 

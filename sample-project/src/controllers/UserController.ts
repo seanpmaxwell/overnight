@@ -4,6 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
+import { check, validationResult } from 'express-validator';
 import { OK, BAD_REQUEST } from 'http-status-codes';
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
@@ -81,5 +82,22 @@ export class UserController {
         return new Promise((resolve) => {
             resolve(req.originalUrl + ' called');
         });
+    }
+
+
+    @Get('debug/express-validators')
+    @Middleware(check('name').exists())
+    private async practiceValidators(req: Request, res: Response) {
+        try {
+            validationResult(req).throw();
+            return res.status(OK).json({
+                message: 'Hello from NodeJS ' + req.body.name,
+            });
+        } catch (err) {
+            Logger.Err(err, true);
+            return res.status(BAD_REQUEST).json({
+                error: err.message,
+            });
+        }
     }
 }

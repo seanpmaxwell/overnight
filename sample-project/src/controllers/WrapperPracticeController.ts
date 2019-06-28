@@ -8,9 +8,9 @@ import * as expressAsyncHandler from 'express-async-handler';
 
 import { OK, BAD_REQUEST } from 'http-status-codes';
 import { ClassWrapper, Controller, Get, Wrapper } from '@overnightjs/core';
+import { Logger } from '@overnightjs/logger';
 import { asyncWrapper, asyncFunction } from './other/wrapperFunctions';
 import { Request, Response } from 'express';
-import { Logger } from '@overnightjs/logger';
 
 
 @Controller('wrapper-practice')

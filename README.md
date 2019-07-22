@@ -150,7 +150,7 @@ import * as OvernightJS from '@overnightjs/core';
     }
 ````
 
-- If want want your middleware to apply to every route in a class use the `@ClassMiddleware` decorator. 
+- If you want your middleware to apply to every route in a class use the `@ClassMiddleware` decorator. 
 
 ````typescript
 import { Controller, ClassMiddleware } from '@overnightjs/core';

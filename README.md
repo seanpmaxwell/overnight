@@ -20,7 +20,7 @@ It also includes a package for managing json-web-tokens and printing logs.
 * Method decorators also work with arrow functions set as class properties.
 * @Middleware and @ClassMiddleware decorators.
 * Add options to controllers the same as you would Express routers with @ClassOptions.
-* Support for child-controllers with @ChildControllers.
+* Support for child-controllers with @Children.
 * @Wrapper and @ClassWrapper decorators to wrap functions. 
 * Server superclass to initialize ExpressJS server and setup controllers.
 * Allows for adding your own custom Router classes if you don't want to use the standard express Router.
@@ -163,17 +163,17 @@ export class UserController {
 }
 ````
 
-- Child-controllers can be added with the `@ChildControllers` decorator. There's no limit to how 
+- Child-controllers can be added with the `@Children` decorator. There's no limit to how 
 many levels of nesting you can add. Make sure to instantiate them before adding them. Options at the
 class level can be added with `@ClassOptions` decorator. 
 
 ````typescript
-import { Controller, ClassOptions, ChildControllers } from '@overnightjs/core';
+import { Controller, ClassOptions, Children } from '@overnightjs/core';
 import { ChildController1, ChildController2 } from '...'
 
 @Controller('api/users')
 @ClassOptions({mergeParams: true})
-@ChildControllers([
+@Children([
     new ChildController1(), 
     new ChildController2(),
 ])

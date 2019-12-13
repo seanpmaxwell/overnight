@@ -180,6 +180,18 @@ export function ClassOptions(options: RouterOptions): ClassDecorator {
     };
 }
 
+export function Children(controllers: Controller | Controller[]): ClassDecorator {
+
+    // tslint:disable-next-line: no-console
+    console.log('Warning: @Children decorator is deprecated. Use ChildControllers instead.');
+
+    // tslint:disable-next-line:ban-types
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(ClassKeys.Children, controllers, target.prototype);
+        return target;
+    };
+}
+
 export function ChildControllers(controllers: Controller | Controller[]): ClassDecorator {
 
     // tslint:disable-next-line:ban-types

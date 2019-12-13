@@ -7,7 +7,7 @@
  */
 
 import { Request, Response } from 'express';
-import { OK } from 'http-status-codes';
+import { OK, BAD_REQUEST } from 'http-status-codes';
 import { Controller, Get, Put } from '@overnightjs/core';
 
 
@@ -18,13 +18,14 @@ class CustomRouterController {
     @Get(':id')
     private get(req: Request, res: Response): Promise<Response> {
         return this.someAsyncFunction(req.params.id)
-                    .then((ret) => res.status(OK).json({message: ret}));
+                    .then((ret) => res.status(OK).json({message: ret}))
+                    .catch((error) => res.status(BAD_REQUEST).json({ message: error }));
     }
 
 
-    private someAsyncFunction(id: number): Promise<string> {
+    private someAsyncFunction(id: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            if (isNaN(id)) {
+            if (isNaN(parseInt(id))) {
                 reject('You entered an invalid post id: ' + id);
             } else {
                 resolve('You entered the post id: ' + id);

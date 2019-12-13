@@ -8,6 +8,7 @@ import * as bodyParser from 'body-parser';
 import * as controllers from './controllers';
 import { Server } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
+import { Request, Response } from 'express';
 
 
 class NormalRouterServer extends Server {
@@ -38,7 +39,7 @@ class NormalRouterServer extends Server {
 
     public start(port?: number): void {
         port = port || 3000;
-        this.app.get('*', (req, res) => {
+        this.app.get('*', (req: Request, res: Response) => {
             res.send(this.FRONT_END_MSG);
         });
         this.app.listen(port, () => {

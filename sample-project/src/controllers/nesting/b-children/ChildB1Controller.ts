@@ -4,7 +4,7 @@
  * created by Sean Maxwell May 26, 2019
  */
 
-import { Controller, Get, Children, ClassOptions } from '@overnightjs/core';
+import { Controller, Get, ChildControllers, ClassOptions } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import { Request, Response } from 'express';
 import { OK } from 'http-status-codes';
@@ -15,7 +15,7 @@ import { GrandChild3Controller } from './grandchildren/GrandChild3Controller';
 
 @Controller('child-b1/:name')
 @ClassOptions({mergeParams: true})
-@Children([
+@ChildControllers([
     new GrandChild1Controller(),
     new GrandChild2Controller(),
     new GrandChild3Controller(),

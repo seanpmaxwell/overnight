@@ -180,7 +180,7 @@ export function ClassOptions(options: RouterOptions): ClassDecorator {
     };
 }
 
-export function Children(controllers: Controller | Controller[]): ClassDecorator {
+export function ChildControllers(controllers: Controller | Controller[]): ClassDecorator {
 
     // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {

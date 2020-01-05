@@ -19,6 +19,7 @@ It also includes a package for managing json-web-tokens and printing logs.
 * Decorators to convert class methods to Express routes (@Get, @Put, @Post, @Delete etc).
 * Method decorators also work with arrow functions set as class properties.
 * @Middleware and @ClassMiddleware decorators.
+* @ErrorMiddleware and @ErrorMiddleware decorators to handle request errors.
 * Add options to controllers the same as you would Express routers with @ClassOptions.
 * Support for child-controllers with @ChildControllers.
 * @Wrapper and @ClassWrapper decorators to wrap functions. 
@@ -150,7 +151,7 @@ import * as OvernightJS from '@overnightjs/core';
     }
 ````
 
-- If want want your middleware to apply to every route in a class use the `@ClassMiddleware` decorator. 
+- If you want your middleware to apply to every route in a class use the `@ClassMiddleware` decorator. 
 
 ````typescript
 import { Controller, ClassMiddleware } from '@overnightjs/core';
@@ -159,6 +160,22 @@ import { Controller, ClassMiddleware } from '@overnightjs/core';
 @ClassMiddleware([middleware1, middleware2])
 export class UserController {
     
+    ...
+}
+````
+
+- You can set the `@ErrorMiddleware` / `@ClassErrorMiddleware` decorators to use [Express error handling](https://expressjs.com/en/guide/error-handling.html). 
+
+````typescript
+import { Controller, ErrorMiddleware, ClassErrorMiddleware } from '@overnightjs/core';
+
+@Controller('api/users')
+@ClassErrorMiddleware(errorMiddleware1)
+export class UserController {
+    
+	@Get(':id')
+	@ErrorMiddleware(errorMiddleware2)
+    private get(req: Request, res: Response)
     ...
 }
 ````

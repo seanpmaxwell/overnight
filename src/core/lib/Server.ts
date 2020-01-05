@@ -5,7 +5,7 @@
  */
 
 import * as express from 'express';
-import { Application, Request, Response, Router, NextFunction } from 'express';
+import { Application, Request, Response, Router, NextFunction, ErrorRequestHandler, RequestHandler } from 'express';
 import { ClassKeys } from './decorators';
 
 
@@ -64,6 +64,17 @@ export class Server {
         });
     }
 
+    private wrapErrorMiddleware(errorMiddleware: ErrorRequestHandler, requestHandler: RequestHandler) {
+        const wrapped = (req: Request, res: Response, next: NextFunction) => {
+            try {
+                requestHandler(req, res, next);
+            } catch (error) {
+                errorMiddleware(error, req, res, next);
+            }
+        };
+        return wrapped;
+    }
+
 
     /**
      * Get a single router object for each controller. Router object extracts
@@ -110,7 +121,7 @@ export class Server {
             const route = controller[member];
             const routeProperties = Reflect.getOwnMetadata(member, prototype);
             if (route && routeProperties) {
-                const { routeMiddleware, httpVerb, path, routeWrapper } = routeProperties;
+                const { routeMiddleware, routeErrorMiddleware, httpVerb, path, routeWrapper } = routeProperties;
                 let callBack = (req: Request, res: Response, next: NextFunction) => {
                     return controller[member](req, res, next);
                 };
@@ -119,6 +130,9 @@ export class Server {
                 }
                 if (routeWrapper) {
                     callBack = routeWrapper(callBack);
+                }
+                if (routeErrorMiddleware) {
+                    callBack = this.wrapErrorMiddleware(routeErrorMiddleware, callBack)
                 }
                 if (routeMiddleware) {
                     router[httpVerb](path, routeMiddleware, callBack);
@@ -138,6 +152,12 @@ export class Server {
                     router.use(childRouterAndPath.basePath, childRouterAndPath.router);
                 }
             });
+        }
+
+        // Get error middleware
+        const classErrorMiddleware = Reflect.getOwnMetadata(ClassKeys.ErrorMiddleware, prototype);
+        if (classErrorMiddleware) {
+            router.use(classErrorMiddleware);
         }
 
         return {

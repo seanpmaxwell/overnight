@@ -5,13 +5,13 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import { RequestHandler, RouterOptions } from 'express';
+import { RequestHandler, ErrorRequestHandler, RouterOptions } from 'express';
 import 'reflect-metadata';
-
 
 
 // Types
 type Middleware = RequestHandler;
+type ErrorMiddleware = ErrorRequestHandler;
 type WrapperFunction = ((action: any) => any);
 type Controller = InstanceType<any>;
 
@@ -139,6 +139,7 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
 export enum ClassKeys {
     BasePath = 'BASE_PATH',
     Middleware = 'MIDDLEWARE',
+    ErrorMiddleware = 'ERROR_MIDDLEWARE',
     Wrapper = 'WRAPPER',
     Children = 'CHILDREN',
     Options = 'OPTIONS',
@@ -161,6 +162,16 @@ export function ClassMiddleware(middleware: Middleware | Middleware[]): ClassDec
         return target;
     };
 }
+
+export function ClassErrorMiddleware(middleware: ErrorMiddleware | ErrorMiddleware[]): ClassDecorator {
+
+    // tslint:disable-next-line:ban-types
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(ClassKeys.ErrorMiddleware, middleware, target.prototype);
+        return target;
+    };
+}
+
 
 export function ClassWrapper(wrapperFunction: WrapperFunction): ClassDecorator {
 
@@ -224,6 +235,30 @@ export function Middleware(middleware: Middleware | Middleware[]): MethodDecorat
         }
     };
 }
+
+/***********************************************************************************************
+ *                                  Error Middleware Decorator
+ **********************************************************************************************/
+
+export function ErrorMiddleware(middleware: ErrorMiddleware): MethodDecorator {
+
+    return (target: any, propertyKey?: string | symbol, descriptor?: PropertyDescriptor) => {
+        let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
+        if (!routeProperties) {
+            routeProperties = {};
+        }
+        routeProperties = {
+            routeErrorMiddleware: middleware,
+            ...routeProperties,
+        };
+        Reflect.defineMetadata(propertyKey, routeProperties, target);
+        // For class methods that are not arrow functions
+        if (descriptor) {
+            return descriptor;
+        }
+    };
+}
+
 
 
 /***********************************************************************************************

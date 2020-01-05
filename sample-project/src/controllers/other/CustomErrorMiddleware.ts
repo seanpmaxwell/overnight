@@ -13,7 +13,7 @@ export function logErrorAndStop(error: Error, req: Request, res: Response, next:
     console.log('Error occured in the controller class ', error.message);
     // tslint:disable-next-line:no-console
     console.log('Stopping request processing');
-    res.status(INTERNAL_SERVER_ERROR).json({ message: "Internal server error", route: req.originalUrl });
+    res.status(INTERNAL_SERVER_ERROR).json({ message: 'Internal server error', route: req.originalUrl });
 }
 
 export function logErrorAndContinue(error: Error, req: Request, res: Response, next: NextFunction) {

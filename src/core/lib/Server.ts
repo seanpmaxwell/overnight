@@ -64,6 +64,7 @@ export class Server {
         });
     }
 
+
     private wrapErrorMiddleware(errorMiddleware: ErrorRequestHandler, requestHandler: RequestHandler) {
         const wrapped = (req: Request, res: Response, next: NextFunction) => {
             try {
@@ -132,7 +133,7 @@ export class Server {
                     callBack = routeWrapper(callBack);
                 }
                 if (routeErrorMiddleware) {
-                    callBack = this.wrapErrorMiddleware(routeErrorMiddleware, callBack)
+                    callBack = this.wrapErrorMiddleware(routeErrorMiddleware, callBack);
                 }
                 if (routeMiddleware) {
                     router[httpVerb](path, routeMiddleware, callBack);

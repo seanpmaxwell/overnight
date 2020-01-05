@@ -2,7 +2,7 @@
   "extends": "tslint:recommended",
   "rules": {
     "max-line-length": {
-      "options": [100]
+      "options": [120]
     },
     "lines-between-class-members": [true, 2],
     "member-ordering": false,
@@ -13,7 +13,7 @@
   },
   "jsRules": {
     "max-line-length": {
-      "options": [100]
+      "options": [120]
     }
   }
 }

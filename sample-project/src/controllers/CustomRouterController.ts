@@ -25,7 +25,7 @@ class CustomRouterController {
 
     private someAsyncFunction(id: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            if (isNaN(parseInt(id))) {
+            if (isNaN(parseInt(id, 10))) {
                 reject('You entered an invalid post id: ' + id);
             } else {
                 resolve('You entered the post id: ' + id);

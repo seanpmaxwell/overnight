@@ -6,3 +6,4 @@ export * from './ClassDecoratorController';
 export * from './nesting/ParentController';
 export * from './WrapperPracticeController';
 export * from './ErrorDecoratorController';
+export * from './RegExpController';

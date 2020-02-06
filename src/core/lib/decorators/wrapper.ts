@@ -6,19 +6,13 @@
  */
 
 import {WrapperFunction} from './types';
+import * as ReflectHelpers from './reflect-helpers';
 
-export function Wrapper(wrapperFunction: WrapperFunction) {
+export function Wrapper(wrapperFunction: WrapperFunction): MethodDecorator {
 
-    return (target: any, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => {
-        let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
-        if (!routeProperties) {
-            routeProperties = {};
-        }
-        routeProperties = {
-            routeWrapper: wrapperFunction,
-            ...routeProperties,
-        };
-        Reflect.defineMetadata(propertyKey, routeProperties, target);
+    // tslint:disable-next-line:ban-types
+    return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
+        ReflectHelpers.addToMetadata(target, propertyKey, {routeWrapper: wrapperFunction});
         if (descriptor) {
             return descriptor;
         }

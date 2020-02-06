@@ -6,19 +6,13 @@
  */
 
 import { Middleware } from './types';
+import * as ReflectHelpers from './reflect-helpers';
 
 export function Middleware(middleware: Middleware | Middleware[]): MethodDecorator {
 
-    return (target: any, propertyKey?: string | symbol, descriptor?: PropertyDescriptor) => {
-        let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
-        if (!routeProperties) {
-            routeProperties = {};
-        }
-        routeProperties = {
-            routeMiddleware: middleware,
-            ...routeProperties,
-        };
-        Reflect.defineMetadata(propertyKey, routeProperties, target);
+    // tslint:disable-next-line:ban-types
+    return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
+        ReflectHelpers.addToMetadata(target, propertyKey, {routeMiddleware: middleware});
         // For class methods that are not arrow functions
         if (descriptor) {
             return descriptor;

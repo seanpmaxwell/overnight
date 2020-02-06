@@ -5,6 +5,8 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
+import * as ReflectHelpers from './reflect-helpers';
+
 export function Checkout(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('checkout', path);
 }
@@ -99,30 +101,27 @@ export function Unsubscribe(path?: string | RegExp): MethodDecorator {
 
 function helperForRoutes(httpVerb: string, path?: string | RegExp): MethodDecorator {
 
-    return (target: any, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => {
-        let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
-        if (!routeProperties) {
-            routeProperties = {};
-        }
-        routeProperties = {
-            httpVerb,
-            ...routeProperties,
-        };
+    // tslint:disable-next-line:ban-types
+    return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
+        let newPath: string | RegExp;
         if (path === undefined) {
-            routeProperties.path = '';
+            newPath = '';
         } else if (path instanceof RegExp) {
             if (path.toString().charAt(1) === '^') {
                 //  /^api$/ -> //api$/
-                routeProperties.path = new RegExp('/' + path.toString().slice(2).replace(/\/$/, ''));
+                newPath = new RegExp('/' + path.toString().slice(2).replace(/\/$/, ''));
             } else {
                 //  /api/ -> //.*api/
-                routeProperties.path = new RegExp('/.*' + path.toString().slice(1).replace(/\/$/, ''));
+                newPath = new RegExp('/.*' + path.toString().slice(1).replace(/\/$/, ''));
             }
         } else {
             // path is a string
-            routeProperties.path = '/' + path;
+            newPath = '/' + path;
         }
-        Reflect.defineMetadata(propertyKey, routeProperties, target);
+        ReflectHelpers.addToMetadata(target, propertyKey, {
+            httpVerb,
+            path: newPath,
+        });
         if (descriptor) {
             return descriptor;
         }

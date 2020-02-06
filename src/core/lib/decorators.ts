@@ -20,99 +20,99 @@ type Controller = InstanceType<any>;
  *                                      Method Decorators
  **********************************************************************************************/
 
-export function Checkout(path?: string): MethodDecorator {
+export function Checkout(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('checkout', path);
 }
 
-export function Copy(path?: string): MethodDecorator {
+export function Copy(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('copy', path);
 }
 
-export function Delete(path?: string): MethodDecorator {
+export function Delete(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('delete', path);
 }
 
-export function Get(path?: string): MethodDecorator {
+export function Get(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('get', path);
 }
 
-export function Head(path?: string): MethodDecorator {
+export function Head(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('head', path);
 }
 
-export function Lock(path?: string): MethodDecorator {
+export function Lock(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('lock', path);
 }
 
-export function Merge(path?: string): MethodDecorator {
+export function Merge(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('merge', path);
 }
 
-export function Mkactivity(path?: string): MethodDecorator {
+export function Mkactivity(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('mkactivity', path);
 }
 
-export function Mkcol(path?: string): MethodDecorator {
+export function Mkcol(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('mkcol', path);
 }
 
-export function Move(path?: string): MethodDecorator {
+export function Move(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('move', path);
 }
 
-export function MSearch(path?: string): MethodDecorator {
+export function MSearch(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('m-search', path);
 }
 
-export function Notify(path?: string): MethodDecorator {
+export function Notify(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('notify', path);
 }
 
-export function Options(path?: string): MethodDecorator {
+export function Options(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('options', path);
 }
 
-export function Patch(path?: string): MethodDecorator {
+export function Patch(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('patch', path);
 }
 
-export function Post(path?: string): MethodDecorator {
+export function Post(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('post', path);
 }
 
-export function Purge(path?: string): MethodDecorator {
+export function Purge(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('purge', path);
 }
 
-export function Put(path?: string): MethodDecorator {
+export function Put(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('put', path);
 }
 
-export function Report(path?: string): MethodDecorator {
+export function Report(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('report', path);
 }
 
-export function Search(path?: string): MethodDecorator {
+export function Search(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('search', path);
 }
 
-export function Subscribe(path?: string): MethodDecorator {
+export function Subscribe(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('subscribe', path);
 }
 
-export function Trace(path?: string): MethodDecorator {
+export function Trace(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('trace', path);
 }
 
-export function Unlock(path?: string): MethodDecorator {
+export function Unlock(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('unlock', path);
 }
 
-export function Unsubscribe(path?: string): MethodDecorator {
+export function Unsubscribe(path?: string | RegExp): MethodDecorator {
     return helperForRoutes('unsubscribe', path);
 }
 
-function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
+function helperForRoutes(httpVerb: string, path?: string | RegExp): MethodDecorator {
 
     return (target: any, propertyKey: string | symbol, descriptor?: PropertyDescriptor) => {
         let routeProperties = Reflect.getOwnMetadata(propertyKey, target);
@@ -121,9 +121,22 @@ function helperForRoutes(httpVerb: string, path?: string): MethodDecorator {
         }
         routeProperties = {
             httpVerb,
-            path: path ? ('/' + path) : '',
             ...routeProperties,
         };
+        if (path === undefined) {
+            routeProperties.path = '';
+        } else if (path instanceof RegExp) {
+            if (path.toString().charAt(1) === '^') {
+                //  /^api$/ -> //api$/
+                routeProperties.path = new RegExp('/' + path.toString().slice(2).replace(/\/$/, ''));
+            } else {
+                //  /api/ -> //.*api/
+                routeProperties.path = new RegExp('/.*' + path.toString().slice(1).replace(/\/$/, ''));
+            }
+        } else {
+            // path is a string
+            routeProperties.path = '/' + path;
+        }
         Reflect.defineMetadata(propertyKey, routeProperties, target);
         if (descriptor) {
             return descriptor;

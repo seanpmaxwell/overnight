@@ -6,16 +6,7 @@
  */
 
 import {RouterOptions} from 'express';
-import {ErrorMiddleware, Middleware, WrapperFunction, Controller} from './types';
-
-export enum ClassKeys {
-    BasePath = 'BASE_PATH',
-    Middleware = 'MIDDLEWARE',
-    ErrorMiddleware = 'ERROR_MIDDLEWARE',
-    Wrapper = 'WRAPPER',
-    Children = 'CHILDREN',
-    Options = 'OPTIONS',
-}
+import {ErrorMiddleware, Middleware, WrapperFunction, Controller, ClassKeys} from './types';
 
 export function Controller(path: string): ClassDecorator {
     return <TFunction extends Function>(target: TFunction) => {

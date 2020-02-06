@@ -7,7 +7,7 @@
 import 'reflect-metadata';
 import * as express from 'express';
 import { Application, Request, Response, Router, NextFunction, ErrorRequestHandler, RequestHandler } from 'express';
-import { ClassKeys } from './decorators';
+import { ClassKeys } from './decorators/types';
 
 
 type Controller = InstanceType<any>;

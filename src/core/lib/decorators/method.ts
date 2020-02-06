@@ -6,100 +6,101 @@
  */
 
 import * as ReflectHelpers from './reflect-helpers';
+import {HttpVerb} from './types';
 
 export function Checkout(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('checkout', path);
+    return helperForRoutes(HttpVerb.CHECKOUT, path);
 }
 
 export function Copy(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('copy', path);
+    return helperForRoutes(HttpVerb.COPY, path);
 }
 
 export function Delete(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('delete', path);
+    return helperForRoutes(HttpVerb.DELETE, path);
 }
 
 export function Get(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('get', path);
+    return helperForRoutes(HttpVerb.GET, path);
 }
 
 export function Head(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('head', path);
+    return helperForRoutes(HttpVerb.HEAD, path);
 }
 
 export function Lock(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('lock', path);
+    return helperForRoutes(HttpVerb.LOCK, path);
 }
 
 export function Merge(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('merge', path);
+    return helperForRoutes(HttpVerb.MERGE, path);
 }
 
 export function Mkactivity(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('mkactivity', path);
+    return helperForRoutes(HttpVerb.MKACTIVITY, path);
 }
 
 export function Mkcol(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('mkcol', path);
+    return helperForRoutes(HttpVerb.MKCOL, path);
 }
 
 export function Move(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('move', path);
+    return helperForRoutes(HttpVerb.MOVE, path);
 }
 
 export function MSearch(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('m-search', path);
+    return helperForRoutes(HttpVerb.MSEARCH, path);
 }
 
 export function Notify(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('notify', path);
+    return helperForRoutes(HttpVerb.NOTIFY, path);
 }
 
 export function Options(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('options', path);
+    return helperForRoutes(HttpVerb.OPTIONS, path);
 }
 
 export function Patch(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('patch', path);
+    return helperForRoutes(HttpVerb.PATCH, path);
 }
 
 export function Post(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('post', path);
+    return helperForRoutes(HttpVerb.POST, path);
 }
 
 export function Purge(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('purge', path);
+    return helperForRoutes(HttpVerb.PURGE, path);
 }
 
 export function Put(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('put', path);
+    return helperForRoutes(HttpVerb.PUT, path);
 }
 
 export function Report(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('report', path);
+    return helperForRoutes(HttpVerb.REPORT, path);
 }
 
 export function Search(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('search', path);
+    return helperForRoutes(HttpVerb.SEARCH, path);
 }
 
 export function Subscribe(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('subscribe', path);
+    return helperForRoutes(HttpVerb.SUBSCRIBE, path);
 }
 
 export function Trace(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('trace', path);
+    return helperForRoutes(HttpVerb.TRACE, path);
 }
 
 export function Unlock(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('unlock', path);
+    return helperForRoutes(HttpVerb.UNLOCK, path);
 }
 
 export function Unsubscribe(path?: string | RegExp): MethodDecorator {
-    return helperForRoutes('unsubscribe', path);
+    return helperForRoutes(HttpVerb.UNSUBSCRIBE, path);
 }
 
-function helperForRoutes(httpVerb: string, path?: string | RegExp): MethodDecorator {
+function helperForRoutes(httpVerb: HttpVerb, path?: string | RegExp): MethodDecorator {
     return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
         let newPath: string | RegExp;
         if (path === undefined) {

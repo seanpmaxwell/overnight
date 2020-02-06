@@ -113,6 +113,13 @@ export class UserController {
         });
     }
 
+    @Get(/ane/) // Rexes supported. Matches /lane, /cane, etc.
+    public getAne(req: Request, res: Response): any {
+        return res.status(OK).json({
+            message: '/ane/',
+        });
+    }
+
     @Get('practice/async')
     private async getWithAsync(req: Request, res: Response) {
         try {

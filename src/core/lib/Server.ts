@@ -4,6 +4,7 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
+import 'reflect-metadata';
 import * as express from 'express';
 import { Application, Request, Response, Router, NextFunction, ErrorRequestHandler, RequestHandler } from 'express';
 import { ClassKeys } from './decorators';

@@ -9,8 +9,6 @@ import {WrapperFunction} from './types';
 import * as ReflectHelpers from './reflect-helpers';
 
 export function Wrapper(wrapperFunction: WrapperFunction): MethodDecorator {
-
-    // tslint:disable-next-line:ban-types
     return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
         ReflectHelpers.addToMetadata(target, propertyKey, {routeWrapper: wrapperFunction});
         if (descriptor) {

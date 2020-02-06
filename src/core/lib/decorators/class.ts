@@ -18,8 +18,6 @@ export enum ClassKeys {
 }
 
 export function Controller(path: string): ClassDecorator {
-
-    // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
         Reflect.defineMetadata(ClassKeys.BasePath, '/' + path, target.prototype);
         return target;
@@ -27,8 +25,6 @@ export function Controller(path: string): ClassDecorator {
 }
 
 export function ClassMiddleware(middleware: Middleware | Middleware[]): ClassDecorator {
-
-    // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
         Reflect.defineMetadata(ClassKeys.Middleware, middleware, target.prototype);
         return target;
@@ -36,8 +32,6 @@ export function ClassMiddleware(middleware: Middleware | Middleware[]): ClassDec
 }
 
 export function ClassErrorMiddleware(middleware: ErrorMiddleware | ErrorMiddleware[]): ClassDecorator {
-
-    // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
         Reflect.defineMetadata(ClassKeys.ErrorMiddleware, middleware, target.prototype);
         return target;
@@ -46,8 +40,6 @@ export function ClassErrorMiddleware(middleware: ErrorMiddleware | ErrorMiddlewa
 
 
 export function ClassWrapper(wrapperFunction: WrapperFunction): ClassDecorator {
-
-    // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
         Reflect.defineMetadata(ClassKeys.Wrapper, wrapperFunction, target.prototype);
         return target;
@@ -55,8 +47,6 @@ export function ClassWrapper(wrapperFunction: WrapperFunction): ClassDecorator {
 }
 
 export function ClassOptions(options: RouterOptions): ClassDecorator {
-
-    // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
         Reflect.defineMetadata(ClassKeys.Options, options, target.prototype);
         return target;
@@ -67,8 +57,6 @@ export function Children(controllers: Controller | Controller[]): ClassDecorator
 
     // tslint:disable-next-line: no-console
     console.log('Warning: @Children decorator is deprecated. Use ChildControllers instead.');
-
-    // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
         Reflect.defineMetadata(ClassKeys.Children, controllers, target.prototype);
         return target;
@@ -76,8 +64,6 @@ export function Children(controllers: Controller | Controller[]): ClassDecorator
 }
 
 export function ChildControllers(controllers: Controller | Controller[]): ClassDecorator {
-
-    // tslint:disable-next-line:ban-types
     return <TFunction extends Function>(target: TFunction) => {
         Reflect.defineMetadata(ClassKeys.Children, controllers, target.prototype);
         return target;

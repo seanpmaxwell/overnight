@@ -100,8 +100,6 @@ export function Unsubscribe(path?: string | RegExp): MethodDecorator {
 }
 
 function helperForRoutes(httpVerb: string, path?: string | RegExp): MethodDecorator {
-
-    // tslint:disable-next-line:ban-types
     return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
         let newPath: string | RegExp;
         if (path === undefined) {

@@ -18,7 +18,7 @@ export function Middleware(middleware: Middleware | Middleware[]): MethodDecorat
     };
 }
 
-export function ErrorMiddleware(middleware: ErrorMiddleware): MethodDecorator & PropertyDecorator {
+export function ErrorMiddleware(middleware: ErrorMiddleware | ErrorMiddleware[]): MethodDecorator & PropertyDecorator {
     return <Function>(target: Object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
         ReflectHelpers.addToMetadata(target, propertyKey, {routeErrorMiddleware: middleware});
         // For class methods that are not arrow functions

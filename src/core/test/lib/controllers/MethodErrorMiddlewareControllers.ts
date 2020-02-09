@@ -55,41 +55,42 @@ export class MethodErrorMiddlewareController {
     }
 
 
-    // @Get('path2')
-    // @ErrorMiddleware([MethodErrorMiddlewareController.errorMiddleware0])
-    // private path2(_req: Request, _res: Response): Response {
-    //     throw Error();
-    // }
-    //
-    //
-    // public static async validateAddArrayOfErrorMiddlewareOfLength1(): Promise<void> {
-    //     await assertRequest('/methodErrorMiddleware/path2', HttpVerb.GET, {
-    //         body: {
-    //             middlewares: ['middleware0'],
-    //         },
-    //         status: OK,
-    //     });
-    // }
-    //
-    // @Get('path3')
-    // @ErrorMiddleware([
-    //     MethodErrorMiddlewareController.errorMiddleware2,
-    //     MethodErrorMiddlewareController.errorMiddleware1,
-    //     MethodErrorMiddlewareController.errorMiddleware0,
-    // ])
-    // private path3(_req: Request, _res: Response): Response {
-    //     throw Error();
-    // }
-    //
-    //
-    // public static async validateAddArrayOfErrorMiddleware(): Promise<void> {
-    //     await assertRequest('/methodErrorMiddleware/path3', HttpVerb.GET, {
-    //         body: {
-    //             middlewares: ['middleware2', 'middleware1', 'middleware0'],
-    //         },
-    //         status: OK,
-    //     });
-    // }
+    @Get('path2')
+    @ErrorMiddleware([MethodErrorMiddlewareController.errorMiddleware0])
+    private path2(_req: Request, _res: Response): Response {
+        throw Error();
+    }
+
+
+    public static async validateAddArrayOfErrorMiddlewareOfLength1(): Promise<void> {
+        await assertRequest('/methodErrorMiddleware/path2', HttpVerb.GET, {
+            body: {
+                errorMiddlewares: ['errorMiddleware0'],
+            },
+            status: OK,
+        });
+    }
+
+
+    @Get('path3')
+    @ErrorMiddleware([
+        MethodErrorMiddlewareController.errorMiddleware2,
+        MethodErrorMiddlewareController.errorMiddleware1,
+        MethodErrorMiddlewareController.errorMiddleware0,
+    ])
+    private path3(_req: Request, _res: Response): Response {
+        throw Error();
+    }
+
+
+    public static async validateAddArrayOfErrorMiddleware(): Promise<void> {
+        await assertRequest('/methodErrorMiddleware/path3', HttpVerb.GET, {
+            body: {
+                errorMiddlewares: ['errorMiddleware2', 'errorMiddleware1', 'errorMiddleware0'],
+            },
+            status: OK,
+        });
+    }
 
 
     @Get('path4')

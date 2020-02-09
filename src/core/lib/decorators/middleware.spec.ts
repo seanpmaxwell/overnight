@@ -85,13 +85,13 @@ describe('Error Middleware Decorators', () => {
             await MethodErrorMiddlewareController.validateAddSingleErrorMiddleware();
         });
 
-        // it('should be able to add an array of error middleware of length 1', async () => {
-        //     await MethodErrorMiddlewareController.validate();
-        // });
-        //
-        // it('should be able to add an array of error middleware of length greater than 1', async () => {
-        //     await MethodErrorMiddlewareController.validate();
-        // });
+        it('should be able to add an array of error middleware of length 1', async () => {
+            await MethodErrorMiddlewareController.validateAddArrayOfErrorMiddlewareOfLength1();
+        });
+
+        it('should be able to add an array of error middleware of length greater than 1', async () => {
+            await MethodErrorMiddlewareController.validateAddArrayOfErrorMiddleware();
+        });
 
         it('should be able to decorate properties that are functions', async () => {
             await MethodErrorMiddlewareController.validateErrorMiddlewareOnProperty();

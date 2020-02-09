@@ -134,7 +134,13 @@ export class Server {
                     callBack = routeWrapper(callBack);
                 }
                 if (routeErrorMiddleware) {
-                    callBack = this.wrapErrorMiddleware(routeErrorMiddleware, callBack);
+                    if (routeErrorMiddleware instanceof Array) {
+                        routeErrorMiddleware.forEach((errorMiddleware) => {
+                            callBack = this.wrapErrorMiddleware(errorMiddleware, callBack);
+                        });
+                    } else {
+                        callBack = this.wrapErrorMiddleware(routeErrorMiddleware, callBack);
+                    }
                 }
                 if (routeMiddleware) {
                     router[httpVerb](path, routeMiddleware, callBack);

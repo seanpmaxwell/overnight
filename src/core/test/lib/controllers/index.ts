@@ -1,4 +1,5 @@
 export * from './AllHttpVerbsController';
+export * from './AllVerbController';
 export * from './ClassErrorMiddlewareControllers';
 export * from './ClassMiddlewareControllers';
 export * from './ClassOptionsControllers';

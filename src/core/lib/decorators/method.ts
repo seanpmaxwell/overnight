@@ -8,6 +8,11 @@
 import * as ReflectHelpers from './reflect-helpers';
 import {HttpVerb} from './types';
 
+
+export function All(path?: string | RegExp): MethodDecorator & PropertyDecorator {
+    return helperForRoutes('all', path);
+}
+
 export function Checkout(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.CHECKOUT, path);
 }
@@ -100,7 +105,7 @@ export function Unsubscribe(path?: string | RegExp): MethodDecorator & PropertyD
     return helperForRoutes(HttpVerb.UNSUBSCRIBE, path);
 }
 
-function helperForRoutes(httpVerb: HttpVerb, path?: string | RegExp): MethodDecorator & PropertyDecorator {
+function helperForRoutes(httpVerb: HttpVerb | 'all', path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return <Function>(target: Object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
         let newPath: string | RegExp;
         if (path === undefined) {

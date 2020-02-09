@@ -2,6 +2,7 @@ import * as http from 'http';
 
 import {
     AllHttpVerbsController,
+    AllVerbController,
     HeadController,
     RegExpController,
     SimpleController,
@@ -17,6 +18,7 @@ describe('Method Decorators', () => {
         app = new TestingServer(false);
         app.addControllers([
             new AllHttpVerbsController(),
+            new AllVerbController(),
             new HeadController(),
             new SimpleController(),
             new RegExpController(),
@@ -26,6 +28,10 @@ describe('Method Decorators', () => {
 
     it('should include all HTTP verbs (except @Head) as simple decorators', async () => {
         await AllHttpVerbsController.validateAll();
+    });
+
+    it('should allow @All to be used for all HTTP verbs', async () => {
+        await AllVerbController.validateAll();
     });
 
     it('should use @Head function for HEAD when declared before @Get on the same route', async () => {

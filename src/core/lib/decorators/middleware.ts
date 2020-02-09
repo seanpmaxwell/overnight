@@ -5,7 +5,7 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import { Middleware, ErrorMiddleware } from './types';
+import {Middleware, ErrorMiddleware, ClassKeys} from './types';
 import * as ReflectHelpers from './reflect-helpers';
 
 export function Middleware(middleware: Middleware | Middleware[]): MethodDecorator {
@@ -25,5 +25,19 @@ export function ErrorMiddleware(middleware: ErrorMiddleware): MethodDecorator {
         if (descriptor) {
             return descriptor;
         }
+    };
+}
+
+export function ClassMiddleware(middleware: Middleware | Middleware[]): ClassDecorator {
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(ClassKeys.Middleware, middleware, target.prototype);
+        return target;
+    };
+}
+
+export function ClassErrorMiddleware(middleware: ErrorMiddleware | ErrorMiddleware[]): ClassDecorator {
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(ClassKeys.ErrorMiddleware, middleware, target.prototype);
+        return target;
     };
 }

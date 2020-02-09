@@ -6,33 +6,11 @@
  */
 
 import {RouterOptions} from 'express';
-import {ErrorMiddleware, Middleware, WrapperFunction, Controller, ClassKeys} from './types';
+import {Controller, ClassKeys} from './types';
 
 export function Controller(path: string): ClassDecorator {
     return <TFunction extends Function>(target: TFunction) => {
         Reflect.defineMetadata(ClassKeys.BasePath, '/' + path, target.prototype);
-        return target;
-    };
-}
-
-export function ClassMiddleware(middleware: Middleware | Middleware[]): ClassDecorator {
-    return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(ClassKeys.Middleware, middleware, target.prototype);
-        return target;
-    };
-}
-
-export function ClassErrorMiddleware(middleware: ErrorMiddleware | ErrorMiddleware[]): ClassDecorator {
-    return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(ClassKeys.ErrorMiddleware, middleware, target.prototype);
-        return target;
-    };
-}
-
-
-export function ClassWrapper(wrapperFunction: WrapperFunction): ClassDecorator {
-    return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(ClassKeys.Wrapper, wrapperFunction, target.prototype);
         return target;
     };
 }
@@ -60,4 +38,3 @@ export function ChildControllers(controllers: Controller | Controller[]): ClassD
         return target;
     };
 }
-

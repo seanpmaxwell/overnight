@@ -5,7 +5,7 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import {WrapperFunction} from './types';
+import {ClassKeys, WrapperFunction} from './types';
 import * as ReflectHelpers from './reflect-helpers';
 
 export function Wrapper(wrapperFunction: WrapperFunction): MethodDecorator {
@@ -14,5 +14,12 @@ export function Wrapper(wrapperFunction: WrapperFunction): MethodDecorator {
         if (descriptor) {
             return descriptor;
         }
+    };
+}
+
+export function ClassWrapper(wrapperFunction: WrapperFunction): ClassDecorator {
+    return <TFunction extends Function>(target: TFunction) => {
+        Reflect.defineMetadata(ClassKeys.Wrapper, wrapperFunction, target.prototype);
+        return target;
     };
 }

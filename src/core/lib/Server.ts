@@ -31,15 +31,15 @@ export class Server {
         this._showLogs = showLogs || false;
     }
 
-    protected get app(): Application {
+    public get app(): Application {
         return this._app;
     }
 
-    protected get showLogs(): boolean {
+    public get showLogs(): boolean {
         return this._showLogs;
     }
 
-    protected set showLogs(showLogs: boolean) {
+    public set showLogs(showLogs: boolean) {
         this._showLogs = showLogs;
     }
 
@@ -52,7 +52,7 @@ export class Server {
      * @param customRouterLib
      * @param showLog
      */
-    protected addControllers(controllers: Controller | Controller[], routerLib?: RouterLib): void {
+    public addControllers(controllers: Controller | Controller[], routerLib?: RouterLib): void {
         controllers = (controllers instanceof Array) ? controllers : [controllers];
         const routerLibrary = routerLib || Router;
         controllers.forEach((controller: Controller) => {

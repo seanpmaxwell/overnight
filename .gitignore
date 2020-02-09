@@ -15,3 +15,7 @@
 **/src/**/*.js
 **/src/**/*.js.map
 **/lib/**/*.d.ts
+
+# Test Coverage output files
+.nyc_output
+coverage

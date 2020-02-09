@@ -8,100 +8,100 @@
 import * as ReflectHelpers from './reflect-helpers';
 import {HttpVerb} from './types';
 
-export function Checkout(path?: string | RegExp): MethodDecorator {
+export function Checkout(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.CHECKOUT, path);
 }
 
-export function Copy(path?: string | RegExp): MethodDecorator {
+export function Copy(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.COPY, path);
 }
 
-export function Delete(path?: string | RegExp): MethodDecorator {
+export function Delete(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.DELETE, path);
 }
 
-export function Get(path?: string | RegExp): MethodDecorator {
+export function Get(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.GET, path);
 }
 
-export function Head(path?: string | RegExp): MethodDecorator {
+export function Head(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.HEAD, path);
 }
 
-export function Lock(path?: string | RegExp): MethodDecorator {
+export function Lock(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.LOCK, path);
 }
 
-export function Merge(path?: string | RegExp): MethodDecorator {
+export function Merge(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.MERGE, path);
 }
 
-export function Mkactivity(path?: string | RegExp): MethodDecorator {
+export function Mkactivity(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.MKACTIVITY, path);
 }
 
-export function Mkcol(path?: string | RegExp): MethodDecorator {
+export function Mkcol(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.MKCOL, path);
 }
 
-export function Move(path?: string | RegExp): MethodDecorator {
+export function Move(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.MOVE, path);
 }
 
-export function MSearch(path?: string | RegExp): MethodDecorator {
+export function MSearch(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.MSEARCH, path);
 }
 
-export function Notify(path?: string | RegExp): MethodDecorator {
+export function Notify(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.NOTIFY, path);
 }
 
-export function Options(path?: string | RegExp): MethodDecorator {
+export function Options(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.OPTIONS, path);
 }
 
-export function Patch(path?: string | RegExp): MethodDecorator {
+export function Patch(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.PATCH, path);
 }
 
-export function Post(path?: string | RegExp): MethodDecorator {
+export function Post(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.POST, path);
 }
 
-export function Purge(path?: string | RegExp): MethodDecorator {
+export function Purge(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.PURGE, path);
 }
 
-export function Put(path?: string | RegExp): MethodDecorator {
+export function Put(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.PUT, path);
 }
 
-export function Report(path?: string | RegExp): MethodDecorator {
+export function Report(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.REPORT, path);
 }
 
-export function Search(path?: string | RegExp): MethodDecorator {
+export function Search(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.SEARCH, path);
 }
 
-export function Subscribe(path?: string | RegExp): MethodDecorator {
+export function Subscribe(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.SUBSCRIBE, path);
 }
 
-export function Trace(path?: string | RegExp): MethodDecorator {
+export function Trace(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.TRACE, path);
 }
 
-export function Unlock(path?: string | RegExp): MethodDecorator {
+export function Unlock(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.UNLOCK, path);
 }
 
-export function Unsubscribe(path?: string | RegExp): MethodDecorator {
+export function Unsubscribe(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes(HttpVerb.UNSUBSCRIBE, path);
 }
 
-function helperForRoutes(httpVerb: HttpVerb, path?: string | RegExp): MethodDecorator {
-    return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
+function helperForRoutes(httpVerb: HttpVerb, path?: string | RegExp): MethodDecorator & PropertyDecorator {
+    return <Function>(target: Object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
         let newPath: string | RegExp;
         if (path === undefined) {
             newPath = '';

@@ -8,8 +8,8 @@
 import {Middleware, ErrorMiddleware, ClassKeys} from './types';
 import * as ReflectHelpers from './reflect-helpers';
 
-export function Middleware(middleware: Middleware | Middleware[]): MethodDecorator {
-    return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
+export function Middleware(middleware: Middleware | Middleware[]): MethodDecorator & PropertyDecorator {
+    return <Function>(target: Object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
         ReflectHelpers.addToMetadata(target, propertyKey, {routeMiddleware: middleware});
         // For class methods that are not arrow functions
         if (descriptor) {
@@ -18,8 +18,8 @@ export function Middleware(middleware: Middleware | Middleware[]): MethodDecorat
     };
 }
 
-export function ErrorMiddleware(middleware: ErrorMiddleware): MethodDecorator {
-    return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
+export function ErrorMiddleware(middleware: ErrorMiddleware): MethodDecorator & PropertyDecorator {
+    return <Function>(target: Object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
         ReflectHelpers.addToMetadata(target, propertyKey, {routeErrorMiddleware: middleware});
         // For class methods that are not arrow functions
         if (descriptor) {

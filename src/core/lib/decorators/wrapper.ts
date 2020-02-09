@@ -8,8 +8,8 @@
 import {ClassKeys, WrapperFunction} from './types';
 import * as ReflectHelpers from './reflect-helpers';
 
-export function Wrapper(wrapperFunction: WrapperFunction): MethodDecorator {
-    return <Function>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
+export function Wrapper(wrapperFunction: WrapperFunction): MethodDecorator & PropertyDecorator {
+    return <Function>(target: Object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
         ReflectHelpers.addToMetadata(target, propertyKey, {routeWrapper: wrapperFunction});
         if (descriptor) {
             return descriptor;

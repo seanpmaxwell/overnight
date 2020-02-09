@@ -8,6 +8,7 @@ export * from './HeadController';
 export * from './MethodMiddlewareController';
 export * from './MethodErrorMiddlewareControllers';
 export * from './MethodWrapperController';
+export * from './MultipleVerbDecoratorsController';
 export * from './ParentsAndChildControllers';
 export * from './ParentsAndChildren';
 export * from './RegExpController';

@@ -7,7 +7,8 @@
 import 'reflect-metadata';
 import * as express from 'express';
 import { Application, Request, Response, Router, NextFunction, ErrorRequestHandler, RequestHandler } from 'express';
-import { ClassKeys } from './decorators/types';
+
+import {ClassKeys, HttpVerb} from './decorators/types';
 
 
 type Controller = InstanceType<any>;
@@ -123,7 +124,7 @@ export class Server {
             const route = controller[member];
             const routeProperties = Reflect.getOwnMetadata(member, prototype);
             if (route && routeProperties) {
-                const { routeMiddleware, routeErrorMiddleware, httpVerb, path, routeWrapper } = routeProperties;
+                const { routeMiddleware, routeErrorMiddleware, httpVerbs, routeWrapper } = routeProperties;
                 let callBack = (req: Request, res: Response, next: NextFunction) => {
                     return controller[member](req, res, next);
                 };
@@ -143,9 +144,13 @@ export class Server {
                     }
                 }
                 if (routeMiddleware) {
-                    router[httpVerb](path, routeMiddleware, callBack);
+                    httpVerbs.forEach((verbAndPath: {httpVerb: HttpVerb | 'any', path: string | RegExp}) => {
+                        router[verbAndPath.httpVerb](verbAndPath.path, routeMiddleware, callBack);
+                    });
                 } else {
-                    router[httpVerb](path, callBack);
+                    httpVerbs.forEach((verbAndPath: {httpVerb: HttpVerb | 'any', path: string | RegExp}) => {
+                        router[verbAndPath.httpVerb](verbAndPath.path, callBack);
+                    });
                 }
             }
         });

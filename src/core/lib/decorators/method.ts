@@ -5,7 +5,6 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import * as ReflectHelpers from './reflect-helpers';
 import {HttpVerb} from './types';
 
 
@@ -122,10 +121,19 @@ function helperForRoutes(httpVerb: HttpVerb | 'all', path?: string | RegExp): Me
             // path is a string
             newPath = '/' + path;
         }
-        ReflectHelpers.addToMetadata(target, propertyKey, {
+
+        let metadata = Reflect.getOwnMetadata(propertyKey, target);
+        if (!metadata) {
+            metadata = {};
+        }
+        if (!metadata.httpVerbs) {
+            metadata.httpVerbs = [];
+        }
+        metadata.httpVerbs.push({
             httpVerb,
             path: newPath,
         });
+        Reflect.defineMetadata(propertyKey, metadata, target);
         if (descriptor) {
             return descriptor;
         }

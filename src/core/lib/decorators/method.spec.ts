@@ -4,6 +4,7 @@ import {
     AllHttpVerbsController,
     AllVerbController,
     HeadController,
+    MultipleVerbDecoratorsController,
     RegExpController,
     SimpleController,
 } from '../../test/lib/controllers';
@@ -14,20 +15,25 @@ let app: TestingServer;
 let server: http.Server;
 
 describe('Method Decorators', () => {
-    beforeEach(() => {
+    before(() => {
         app = new TestingServer(false);
         app.addControllers([
             new AllHttpVerbsController(),
             new AllVerbController(),
             new HeadController(),
+            new MultipleVerbDecoratorsController(),
             new SimpleController(),
             new RegExpController(),
         ]);
         server = app.start(port);
     });
 
-    it('should include all HTTP verbs (except @Head) as simple decorators', async () => {
+    it('should allow any HTTP verb (except @Head) as a simple decorator', async () => {
         await AllHttpVerbsController.validateAll();
+    });
+
+    it('should allow multiple HTTP verb decorators', async () => {
+        await MultipleVerbDecoratorsController.validateAll();
     });
 
     it('should allow @All to be used for all HTTP verbs', async () => {
@@ -52,7 +58,7 @@ describe('Method Decorators', () => {
         });
     });
 
-    afterEach(() => {
+    after(() => {
         server.close();
     });
 });

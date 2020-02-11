@@ -5,21 +5,25 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import {ClassKeys, WrapperFunction} from './types';
-import * as ReflectHelpers from './reflect-helpers';
+import {classMetadataKey, IClassMetadata, IMethodMetadata, WrapperFunction} from './types';
 
-export function Wrapper(wrapperFunction: WrapperFunction): MethodDecorator & PropertyDecorator {
-    return <Function>(target: Object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
-        ReflectHelpers.addToMetadata(target, propertyKey, {routeWrapper: wrapperFunction});
-        if (descriptor) {
-            return descriptor;
-        }
+export function Wrapper(wrapper: WrapperFunction): MethodDecorator & PropertyDecorator {
+    return (target: Object, propertyKey: string | symbol): void => {
+        addWrapperToMetadata(target, propertyKey, wrapper);
     };
 }
 
-export function ClassWrapper(wrapperFunction: WrapperFunction): ClassDecorator {
-    return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(ClassKeys.Wrapper, wrapperFunction, target.prototype);
-        return target;
+export function ClassWrapper(wrapper: WrapperFunction): ClassDecorator {
+    return <TFunction extends Function>(target: TFunction): void => {
+        addWrapperToMetadata(target.prototype, classMetadataKey, wrapper);
     };
+}
+
+export function addWrapperToMetadata(target: Object, metadataKey: any, wrapper: WrapperFunction): void {
+    let metadata: IClassMetadata | IMethodMetadata | undefined = Reflect.getOwnMetadata(metadataKey, target);
+    if (!metadata) {
+        metadata = {};
+    }
+    metadata.wrapper = wrapper;
+    Reflect.defineMetadata(metadataKey, metadata, target);
 }

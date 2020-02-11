@@ -5,21 +5,37 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import { RequestHandler, ErrorRequestHandler } from 'express';
+import {RequestHandler, ErrorRequestHandler, IRouter, RouterOptions} from 'express';
+import {PathParams} from 'express-serve-static-core';
 
-// Types
 export type Middleware = RequestHandler;
 export type ErrorMiddleware = ErrorRequestHandler;
-export type WrapperFunction = ((action: any) => any);
-export type Controller = InstanceType<any>;
+export type WrapperFunction = ((methodOrProperty: any) => RequestHandler);
+export type Controller = any;
+export type RouterLib = ((options?: RouterOptions) => IRouter);
 
-export enum ClassKeys {
-    BasePath = 'BASE_PATH',
-    Middleware = 'MIDDLEWARE',
-    ErrorMiddleware = 'ERROR_MIDDLEWARE',
-    Wrapper = 'WRAPPER',
-    Children = 'CHILDREN',
-    Options = 'OPTIONS',
+export interface IMethodMetadata {
+    httpRoutes?: IHttpRoute[];
+    errorMiddlewares?: ErrorMiddleware[];
+    middlewares?: Middleware[];
+    wrapper?: WrapperFunction;
+}
+
+export interface IClassMetadata {
+    basePath?: PathParams;
+    childControllers?: Controller[];
+    errorMiddlewares?: ErrorMiddleware[];
+    middlewares?: Middleware[];
+    options?: RouterOptions;
+    wrapper?: WrapperFunction;
+}
+
+export const classMetadataKey: symbol = Symbol('Class Metadata Key');
+
+export type HttpDecorator = HttpVerb | 'all';
+export interface IHttpRoute {
+    httpDecorator: HttpDecorator;
+    path: string | RegExp;
 }
 
 export enum HttpVerb {

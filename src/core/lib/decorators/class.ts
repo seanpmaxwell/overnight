@@ -6,35 +6,64 @@
  */
 
 import {RouterOptions} from 'express';
-import {Controller, ClassKeys} from './types';
+import {classMetadataKey, Controller, IClassMetadata} from './types';
 
 export function Controller(path: string): ClassDecorator {
-    return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(ClassKeys.BasePath, '/' + path, target.prototype);
-        return target;
+    return <TFunction extends Function>(target: TFunction): void => {
+        addBasePathToClassMetadata(target.prototype, '/' + path);
     };
 }
 
 export function ClassOptions(options: RouterOptions): ClassDecorator {
-    return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(ClassKeys.Options, options, target.prototype);
-        return target;
+    return <TFunction extends Function>(target: TFunction): void => {
+        addClassOptionsToClassMetadata(target.prototype, options);
     };
 }
 
-export function Children(controllers: Controller | Controller[]): ClassDecorator {
-
+export function Children(children: Controller | Controller[]): ClassDecorator {
     // tslint:disable-next-line: no-console
     console.log('Warning: @Children decorator is deprecated. Use ChildControllers instead.');
-    return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(ClassKeys.Children, controllers, target.prototype);
-        return target;
+    return <TFunction extends Function>(target: TFunction): void => {
+        addChildControllersToClassMetadata(target.prototype, children);
     };
 }
 
-export function ChildControllers(controllers: Controller | Controller[]): ClassDecorator {
-    return <TFunction extends Function>(target: TFunction) => {
-        Reflect.defineMetadata(ClassKeys.Children, controllers, target.prototype);
-        return target;
+export function ChildControllers(children: Controller | Controller[]): ClassDecorator {
+    return <TFunction extends Function>(target: TFunction): void => {
+        addChildControllersToClassMetadata(target.prototype, children);
     };
+}
+
+export function addBasePathToClassMetadata(target: Object, basePath: string): void {
+    let metadata: IClassMetadata | undefined = Reflect.getOwnMetadata(classMetadataKey, target);
+    if (!metadata) {
+        metadata = {};
+    }
+    metadata.basePath = basePath;
+    Reflect.defineMetadata(classMetadataKey, metadata, target);
+}
+
+export function addClassOptionsToClassMetadata(target: Object, options: RouterOptions): void {
+    let metadata: IClassMetadata | undefined = Reflect.getOwnMetadata(classMetadataKey, target);
+    if (!metadata) {
+        metadata = {};
+    }
+    metadata.options = options;
+    Reflect.defineMetadata(classMetadataKey, metadata, target);
+}
+
+export function addChildControllersToClassMetadata(target: Object, childControllers: Controller | Controller[]): void {
+    let metadata: IClassMetadata | undefined = Reflect.getOwnMetadata(classMetadataKey, target);
+    if (!metadata) {
+        metadata = {};
+    }
+    if (!metadata.childControllers) {
+        metadata.childControllers = [];
+    }
+    if (childControllers instanceof Array) {
+        metadata.childControllers.push(...(childControllers));
+    } else {
+        metadata.childControllers.push(childControllers);
+    }
+    Reflect.defineMetadata(classMetadataKey, metadata, target);
 }

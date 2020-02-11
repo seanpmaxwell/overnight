@@ -5,8 +5,7 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import {HttpVerb} from './types';
-
+import {HttpDecorator, HttpVerb, IMethodMetadata} from './types';
 
 export function All(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes('all', path);
@@ -104,38 +103,42 @@ export function Unsubscribe(path?: string | RegExp): MethodDecorator & PropertyD
     return helperForRoutes(HttpVerb.UNSUBSCRIBE, path);
 }
 
-function helperForRoutes(httpVerb: HttpVerb | 'all', path?: string | RegExp): MethodDecorator & PropertyDecorator {
-    return <Function>(target: Object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
+function helperForRoutes(httpVerb: HttpDecorator, path?: string | RegExp): MethodDecorator & PropertyDecorator {
+    return (target: Object, propertyKey: string | symbol): void => {
         let newPath: string | RegExp;
         if (path === undefined) {
             newPath = '';
         } else if (path instanceof RegExp) {
-            if (path.toString().charAt(1) === '^') {
-                //  /^api$/ -> //api$/
-                newPath = new RegExp('/' + path.toString().slice(2).replace(/\/$/, ''));
-            } else {
-                //  /api/ -> //.*api/
-                newPath = new RegExp('/.*' + path.toString().slice(1).replace(/\/$/, ''));
-            }
-        } else {
-            // path is a string
+            newPath = addForwardSlashToFrontOfRegex(path);
+        } else { // assert (path instanceof string)
             newPath = '/' + path;
         }
-
-        let metadata = Reflect.getOwnMetadata(propertyKey, target);
-        if (!metadata) {
-            metadata = {};
-        }
-        if (!metadata.httpVerbs) {
-            metadata.httpVerbs = [];
-        }
-        metadata.httpVerbs.push({
-            httpVerb,
-            path: newPath,
-        });
-        Reflect.defineMetadata(propertyKey, metadata, target);
-        if (descriptor) {
-            return descriptor;
-        }
+        addHttpVerbToMethodMetadata(target, propertyKey, httpVerb, newPath);
     };
+}
+
+function addForwardSlashToFrontOfRegex(regex: RegExp): RegExp {
+    if (regex.toString().charAt(1) === '^') {
+        //  /^api$/ -> //api$/
+        return RegExp('/' + regex.toString().slice(2).replace(/\/$/, ''));
+    } else {
+        //  /api/ -> //.*api/
+        return new RegExp('/.*' + regex.toString().slice(1).replace(/\/$/, ''));
+    }
+}
+
+// tslint:disable-next-line:max-line-length
+export function addHttpVerbToMethodMetadata(target: Object, metadataKey: any, httpDecorator: HttpDecorator, path: string | RegExp): void {
+    let metadata: IMethodMetadata | undefined = Reflect.getOwnMetadata(metadataKey, target);
+    if (!metadata) {
+        metadata = {};
+    }
+    if (!metadata.httpRoutes) {
+        metadata.httpRoutes = [];
+    }
+    metadata.httpRoutes.push({
+        httpDecorator,
+        path,
+    });
+    Reflect.defineMetadata(metadataKey, metadata, target);
 }

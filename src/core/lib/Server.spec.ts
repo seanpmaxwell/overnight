@@ -1,5 +1,6 @@
 import {assert} from 'chai';
 import * as http from 'http';
+import 'mocha';
 
 import {AllHttpVerbsController, RegExpController, SimpleController} from '../test/lib/controllers';
 import {port} from '../test/lib/helpers';

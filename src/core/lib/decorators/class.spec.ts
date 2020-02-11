@@ -1,4 +1,5 @@
 import * as http from 'http';
+import 'mocha';
 
 import {
     CaseInsensitiveController,

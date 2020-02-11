@@ -5,7 +5,7 @@ import {
     OverridingClassWrapperController,
     RetypingClassWrapperController,
     TransparentClassWrapperController,
-    MethodWrapperController,
+    MethodWrapperController, ClassWrapperForBigMethodsController,
 } from '../../test/lib/controllers';
 import {port} from '../../test/lib/helpers';
 import TestingServer from '../../test/lib/TestingServer';
@@ -33,8 +33,12 @@ describe('Wrapper Decorators', () => {
             await MethodWrapperController.validateRetypingWrapper();
         });
 
-        it('should be able to decorate properties that are functions', async () => {
+        it('should be able to wrap properties that are functions', async () => {
             await MethodWrapperController.validateWrapperOnProperty();
+        });
+
+        it('should be able to wrap methods with more than 3 parameters', async () => {
+            await MethodWrapperController.validateWrapperOnMethodWithMoreThan3Parameters();
         });
 
         after(() => {
@@ -63,6 +67,12 @@ describe('Wrapper Decorators', () => {
             app.addControllers(new RetypingClassWrapperController());
             server = app.start(port);
             await RetypingClassWrapperController.validateRetypingClassWrapper();
+        });
+
+        it('should be able to wrap methods with more than 3 parameters', async () => {
+            app.addControllers(new ClassWrapperForBigMethodsController());
+            server = app.start(port);
+            await ClassWrapperForBigMethodsController.validateClassWrapperForBigMethods();
         });
 
         afterEach(() => {

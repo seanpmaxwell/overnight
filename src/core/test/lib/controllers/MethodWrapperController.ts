@@ -9,7 +9,7 @@ import {OK} from 'http-status-codes';
 
 import {assertRequest} from '../helpers';
 import {Controller, Get, Wrapper} from '../../../lib';
-import {HttpVerb} from '../../../lib/decorators/types';
+import {HttpVerb, WrapperFunction} from '../../../lib/decorators/types';
 
 @Controller('wrapper')
 export class MethodWrapperController {
@@ -105,6 +105,34 @@ export class MethodWrapperController {
         await assertRequest('/wrapper/path4', HttpVerb.GET, {
             body: {
                 message: 'path4',
+            },
+            status: OK,
+        });
+    }
+
+
+    @Get('path5')
+    @Wrapper(MethodWrapperController.returnAsMessage(1, 1, 1, 1))
+    private path5(num1: number, num2: number, num3: number, num4: number): number {
+        return num1 + num2 + num3 + num4;
+    }
+
+
+    private static returnAsMessage(...args: any): WrapperFunction {
+        return (method: Function): RequestHandler => {
+            return (req: Request, res: Response): Response => {
+                return res.status(200).json({
+                    message: method(...args) + ' arguments',
+                });
+            };
+        };
+    }
+
+
+    public static async validateWrapperOnMethodWithMoreThan3Parameters(): Promise<void> {
+        await assertRequest('/wrapper/path5', HttpVerb.GET, {
+            body: {
+                message: '4 arguments',
             },
             status: OK,
         });

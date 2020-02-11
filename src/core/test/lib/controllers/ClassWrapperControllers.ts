@@ -9,7 +9,7 @@ import {OK} from 'http-status-codes';
 
 import {assertRequest} from '../helpers';
 import {ClassWrapper, Controller, Get} from '../../../lib';
-import {HttpVerb} from '../../../lib/decorators/types';
+import {HttpVerb, WrapperFunction} from '../../../lib/decorators/types';
 
 @Controller('transparentClassWrapper')
 @ClassWrapper((handler: RequestHandler) => {
@@ -91,6 +91,36 @@ export class RetypingClassWrapperController {
         await assertRequest('/retypingClassWrapper/path1', HttpVerb.GET, {
             body: {
                 message: 2,
+            },
+            status: OK,
+        });
+    }
+}
+
+// tslint:disable-next-line:max-classes-per-file
+@Controller('classWrapperForBigMethods')
+@ClassWrapper(((...args: any): WrapperFunction => {
+    return (method: Function): RequestHandler => {
+        return (req: Request, res: Response): Response => {
+            return res.status(200).json({
+                message: method(...args),
+            });
+        };
+    };
+})(1, 1, 1, 1))
+export class ClassWrapperForBigMethodsController {
+
+
+    @Get()
+    private get(num1: number, num2: number, num3: number, num4: number): number {
+        return num1 + num2 + num3 + num4;
+    }
+
+
+    public static async validateClassWrapperForBigMethods(): Promise<void> {
+        await assertRequest('/classWrapperForBigMethods', HttpVerb.GET, {
+            body: {
+                message: 4,
             },
             status: OK,
         });

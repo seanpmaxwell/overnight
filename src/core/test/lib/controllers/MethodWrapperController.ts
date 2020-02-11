@@ -39,7 +39,7 @@ export class MethodWrapperController {
 
     @Get('path2')
     // Overriding wrapper
-    @Wrapper((_) => {
+    @Wrapper((_: any) => {
         return MethodWrapperController.path2Actual;
     })
     private path2Ignored(_: Request, res: Response): Response {

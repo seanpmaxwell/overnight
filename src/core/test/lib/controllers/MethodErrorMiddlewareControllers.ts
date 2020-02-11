@@ -4,7 +4,7 @@
  * created by Joey Kilpatrick, 2/8/2020
  */
 
-import {NextFunction, Request, RequestHandler, Response} from 'express';
+import {Request, RequestHandler, Response} from 'express';
 import {OK} from 'http-status-codes';
 
 import {assertRequest} from '../helpers';
@@ -17,7 +17,7 @@ export class MethodErrorMiddlewareController {
     private static errorMiddlewares: string[] = [];
 
 
-    private static errorMiddleware0 = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    private static errorMiddleware0 = (err: Error, _req: Request, res: Response): void => {
         MethodErrorMiddlewareController.errorMiddlewares.push('errorMiddleware0');
         res.status(OK).json({
             errorMiddlewares: MethodErrorMiddlewareController.errorMiddlewares,
@@ -26,13 +26,13 @@ export class MethodErrorMiddlewareController {
     }
 
 
-    private static errorMiddleware1 = (err: Error, _req: Request, _res: Response, _next: NextFunction) => {
+    private static errorMiddleware1 = (err: Error, _req: Request, _res: Response): void => {
         MethodErrorMiddlewareController.errorMiddlewares.push('errorMiddleware1');
         throw Error();
     }
 
 
-    private static errorMiddleware2 = (err: Error, _req: Request, _res: Response, _next: NextFunction) => {
+    private static errorMiddleware2 = (err: Error, _req: Request, _res: Response): void => {
         MethodErrorMiddlewareController.errorMiddlewares.push('errorMiddleware2');
         throw Error();
     }

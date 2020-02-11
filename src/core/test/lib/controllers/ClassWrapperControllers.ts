@@ -38,7 +38,7 @@ export class TransparentClassWrapperController {
 
 // tslint:disable-next-line:max-classes-per-file
 @Controller('overridingClassWrapper')
-@ClassWrapper((_) => {
+@ClassWrapper((_: any) => {
     return OverridingClassWrapperController.path1Actual;
 })
 export class OverridingClassWrapperController {

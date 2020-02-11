@@ -17,19 +17,19 @@ export class MethodMiddlewareController {
     private static middlewares: string[] = [];
 
 
-    private static middleware0(_req: Request, _res: Response, next: NextFunction) {
+    private static middleware0(_req: Request, _res: Response, next: NextFunction): void {
         MethodMiddlewareController.middlewares = ['middleware0'];
         next();
     }
 
 
-    private static middleware1(_req: Request, _res: Response, next: NextFunction) {
+    private static middleware1(_req: Request, _res: Response, next: NextFunction): void {
         MethodMiddlewareController.middlewares.push('middleware1');
         next();
     }
 
 
-    private static middleware2(_req: Request, _res: Response, next: NextFunction) {
+    private static middleware2(_req: Request, _res: Response, next: NextFunction): void {
         MethodMiddlewareController.middlewares.push('middleware2');
         next();
     }

@@ -13,19 +13,19 @@ import {HttpVerb} from '../../../lib/decorators/types';
 
 let middlewares: string[] = [];
 
-function middleware0(_req: Request, _res: Response, next: NextFunction) {
+function middleware0(_req: Request, _res: Response, next: NextFunction): void {
     middlewares = ['middleware0'];
     next();
 }
 
 
-function middleware1(_req: Request, _res: Response, next: NextFunction) {
+function middleware1(_req: Request, _res: Response, next: NextFunction): void {
     middlewares.push('middleware1');
     next();
 }
 
 
-function middleware2(_req: Request, _res: Response, next: NextFunction) {
+function middleware2(_req: Request, _res: Response, next: NextFunction): void {
     middlewares.push('middleware2');
     next();
 }

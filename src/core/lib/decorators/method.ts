@@ -5,7 +5,7 @@
  * created by Sean Maxwell Aug 27, 2018
  */
 
-import {HttpDecorator, HttpVerb, IMethodMetadata} from './types';
+import {HttpDecorator, HttpVerb, IHttpRoute, IMethodMetadata} from './types';
 
 export function All(path?: string | RegExp): MethodDecorator & PropertyDecorator {
     return helperForRoutes('all', path);
@@ -136,9 +136,11 @@ export function addHttpVerbToMethodMetadata(target: Object, metadataKey: any, ht
     if (!metadata.httpRoutes) {
         metadata.httpRoutes = [];
     }
-    metadata.httpRoutes.push({
+    const newArr: IHttpRoute[] = [{
         httpDecorator,
         path,
-    });
+    }];
+    newArr.push(...metadata.httpRoutes);
+    metadata.httpRoutes = newArr;
     Reflect.defineMetadata(metadataKey, metadata, target);
 }

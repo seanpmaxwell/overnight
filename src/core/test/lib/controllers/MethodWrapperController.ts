@@ -90,10 +90,10 @@ export class MethodWrapperController {
     }
 
 
-    @Get('path4')
     @Wrapper((handler: RequestHandler) => {
         return handler;
     })
+    @Get('path4')
     private path4: RequestHandler = (req: Request, res: Response): Response => {
         return res.status(OK).json({
             message: 'path4',

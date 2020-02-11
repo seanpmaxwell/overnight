@@ -108,5 +108,28 @@ export class MethodErrorMiddlewareController {
             status: OK,
         });
     }
+
+
+    @Get('path5')
+    @ErrorMiddleware(MethodErrorMiddlewareController.errorMiddleware2)
+    @ErrorMiddleware(MethodErrorMiddlewareController.errorMiddleware1)
+    @ErrorMiddleware(MethodErrorMiddlewareController.errorMiddleware0)
+    private path5(_: Request, _res: Response): Response {
+        throw Error();
+    }
+
+
+    public static async validateMultipleErrorMiddlewareDecorators(): Promise<void> {
+        await assertRequest('/methodErrorMiddleware/path5', HttpVerb.GET, {
+            body: {
+                errorMiddlewares: [
+                    'errorMiddleware2',
+                    'errorMiddleware1',
+                    'errorMiddleware0',
+                ],
+            },
+            status: OK,
+        });
+    }
 }
 

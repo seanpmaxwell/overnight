@@ -49,8 +49,8 @@ export class CaseSensitiveController {
 }
 
 // tslint:disable-next-line:max-classes-per-file
-@Controller('caseInsensitiveController')
 @ClassOptions({caseSensitive: false})
+@Controller('caseInsensitiveController')
 export class CaseInsensitiveController {
 
 

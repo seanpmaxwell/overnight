@@ -161,3 +161,47 @@ export class ParentOfArrayOfChildren {
         });
     }
 }
+
+// tslint:disable-next-line:max-classes-per-file
+@Controller('parent4')
+@Children(new Child1())
+@Children(new Child2())
+@Children(new Child3())
+export class ParentOfMultipleChildrenDecorators {
+
+
+    @Get()
+    public get(_req: Request, res: Response): Response {
+        return res.status(OK).json({
+            message: 'parent4',
+        });
+    }
+
+
+    public static async validateAll(): Promise<void> {
+        await assertRequest('/parent4', HttpVerb.GET, {
+            body: {
+                message: 'parent4',
+            },
+            status: OK,
+        });
+        await assertRequest('/parent4/child1', HttpVerb.GET, {
+            body: {
+                message: 'child1',
+            },
+            status: OK,
+        });
+        await assertRequest('/parent4/child2', HttpVerb.GET, {
+            body: {
+                message: 'child2',
+            },
+            status: OK,
+        });
+        await assertRequest('/parent4/child3', HttpVerb.GET, {
+            body: {
+                message: 'child3',
+            },
+            status: OK,
+        });
+    }
+}

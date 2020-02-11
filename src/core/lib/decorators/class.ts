@@ -60,10 +60,13 @@ export function addChildControllersToClassMetadata(target: Object, childControll
     if (!metadata.childControllers) {
         metadata.childControllers = [];
     }
+    let newArr: Controller[];
     if (childControllers instanceof Array) {
-        metadata.childControllers.push(...(childControllers));
+        newArr = childControllers.slice();
     } else {
-        metadata.childControllers.push(childControllers);
+        newArr = [childControllers];
     }
+    newArr.push(...metadata.childControllers);
+    metadata.childControllers = newArr;
     Reflect.defineMetadata(classMetadataKey, metadata, target);
 }

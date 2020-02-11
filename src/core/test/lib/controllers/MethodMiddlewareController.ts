@@ -125,5 +125,32 @@ export class MethodMiddlewareController {
             status: OK,
         });
     }
+
+
+    @Get('path5')
+    @Middleware(MethodMiddlewareController.middleware0)
+    @Middleware(MethodMiddlewareController.middleware1)
+    @Middleware(MethodMiddlewareController.middleware2)
+    private path5(_: Request, res: Response): Response {
+        return res.status(OK).json({
+            message: 'path5',
+            middlewares: MethodMiddlewareController.middlewares,
+        });
+    }
+
+
+    public static async validateMultipleMiddlewareDecorators(): Promise<void> {
+        await assertRequest('/middleware/path5', HttpVerb.GET, {
+            body: {
+                message: 'path5',
+                middlewares: [
+                    'middleware0',
+                    'middleware1',
+                    'middleware2',
+                ],
+            },
+            status: OK,
+        });
+    }
 }
 

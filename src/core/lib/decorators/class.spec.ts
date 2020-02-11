@@ -1,15 +1,16 @@
+import {assert} from 'chai';
 import * as http from 'http';
 import 'mocha';
 
 import {
     CaseInsensitiveController,
-    CaseSensitiveController,
+    CaseSensitiveController, NonControllerChildController,
     ParentOfArrayOfChildControllers,
     ParentOfArrayOfChildren,
     ParentOfArrayOfSingleChild,
-    ParentOfArrayOfSingleChildController,
+    ParentOfArrayOfSingleChildController, ParentOfMultipleChildControllerDecorators, ParentOfMultipleChildrenDecorators,
     ParentOfSingleChild,
-    ParentOfSingleChildController,
+    ParentOfSingleChildController, UndecoratedClass, UnmarkedClass,
 } from '../../test/lib/controllers';
 import {port} from '../../test/lib/helpers';
 import TestingServer from '../../test/lib/TestingServer';
@@ -18,6 +19,7 @@ let app: TestingServer;
 let server: http.Server;
 
 describe('Class Decorators', () => {
+
     describe('For Class Options', () => {
         beforeEach(() => {
             app = new TestingServer(false);
@@ -63,6 +65,12 @@ describe('Class Decorators', () => {
             await ParentOfArrayOfChildren.validateAll();
         });
 
+        it('should be able to be used multiple times', async () => {
+            app.addControllers([new ParentOfMultipleChildrenDecorators()]);
+            server = app.start(port);
+            await ParentOfMultipleChildrenDecorators.validateAll();
+        });
+
         afterEach(() => {
             server.close();
         });
@@ -89,6 +97,66 @@ describe('Class Decorators', () => {
             app.addControllers([new ParentOfArrayOfChildControllers()]);
             server = app.start(port);
             await ParentOfArrayOfChildControllers.validateAll();
+        });
+
+        it('should be able to be used multiple times', async () => {
+            app.addControllers([new ParentOfMultipleChildControllerDecorators()]);
+            server = app.start(port);
+            await ParentOfMultipleChildControllerDecorators.validateAll();
+        });
+
+        afterEach(() => {
+            server.close();
+        });
+    });
+
+
+
+    describe('Error Handling', () => {
+        beforeEach(() => {
+            app = new TestingServer(false);
+        });
+
+        it('should not error when given non-controllers to add', async () => {
+            app = new TestingServer(false);
+            try {
+                // tslint:disable-next-line:no-empty
+                app.addControllers(['', 1, Symbol(), {}, (): void => {}]);
+            } catch (e) {
+                assert.fail('Threw an error.');
+            }
+            server = app.start(port);
+            server.close();
+        });
+
+        it('should not error when given non-controller children', async () => {
+            try {
+                app.addControllers([new NonControllerChildController()]);
+            } catch (e) {
+                assert.fail('Threw an error.');
+            }
+            server = app.start(port);
+            await NonControllerChildController.validateBadChildren();
+        });
+
+        it('should not error when given a class that does is not decorated with @Controller', async () => {
+            try {
+                app.addControllers([new UndecoratedClass()]);
+            } catch (e) {
+                assert.fail('Threw an error.');
+            }
+            server = app.start(port);
+            await UndecoratedClass.validateUndecoratedClass();
+        });
+
+        it('should not error when given a class that does is not decorated with @Controller but with other class decorators', async () => {
+            try {
+                app.addControllers([new UnmarkedClass()]);
+            } catch (e) {
+                assert.fail('Threw an error.');
+            }
+            server = app.start(port);
+            await UnmarkedClass.validateUnmarkedClass();
         });
 
         afterEach(() => {

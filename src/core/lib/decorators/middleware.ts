@@ -41,11 +41,14 @@ export function addMiddlewareToMetadata(target: Object, metadataKey: any, middle
     if (!metadata.middlewares) {
         metadata.middlewares = [];
     }
+    let newArr: Middleware[];
     if (middlewares instanceof Array) {
-        metadata.middlewares.push(...(middlewares as Middleware[]));
+        newArr = middlewares.slice();
     } else {
-        metadata.middlewares.push(middlewares as Middleware);
+        newArr = [middlewares];
     }
+    newArr.push(...metadata.middlewares);
+    metadata.middlewares = newArr;
     Reflect.defineMetadata(metadataKey, metadata, target);
 }
 
@@ -58,10 +61,13 @@ export function addErrorMiddlewareToMetadata(target: Object, metadataKey: any, e
     if (!metadata.errorMiddlewares) {
         metadata.errorMiddlewares = [];
     }
+    let newArr: ErrorMiddleware[];
     if (errorMiddlewares instanceof Array) {
-        metadata.errorMiddlewares.push(...(errorMiddlewares as ErrorMiddleware[]));
+        newArr = errorMiddlewares.slice();
     } else {
-        metadata.errorMiddlewares.push(errorMiddlewares as ErrorMiddleware);
+        newArr = [errorMiddlewares];
     }
+    newArr.push(...metadata.errorMiddlewares);
+    metadata.errorMiddlewares = newArr;
     Reflect.defineMetadata(metadataKey, metadata, target);
 }

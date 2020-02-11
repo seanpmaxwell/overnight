@@ -38,6 +38,10 @@ describe('Middleware Decorators', () => {
             await MethodMiddlewareController.validateMiddlewareOnProperty();
         });
 
+        it('should be able to be used multiple times', async () => {
+            await MethodMiddlewareController.validateMultipleMiddlewareDecorators();
+        });
+
         after(() => {
             server.close();
         });
@@ -96,6 +100,10 @@ describe('Error Middleware Decorators', () => {
 
         it('should be able to decorate properties that are functions', async () => {
             await MethodErrorMiddlewareController.validateErrorMiddlewareOnProperty();
+        });
+
+        it('should be able to be used multiple times', async () => {
+            await MethodErrorMiddlewareController.validateMultipleErrorMiddlewareDecorators();
         });
 
         after(() => {

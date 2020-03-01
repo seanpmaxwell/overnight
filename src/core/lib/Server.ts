@@ -5,8 +5,18 @@
  */
 
 import * as express from 'express';
-import { Application, Request, Response, Router, NextFunction, ErrorRequestHandler, RequestHandler } from 'express';
 import { ClassKeys } from './decorators';
+
+import {
+    Application,
+    Request,
+    Response,
+    Router,
+    NextFunction,
+    ErrorRequestHandler,
+    RequestHandler,
+} from 'express';
+
 
 
 type Controller = InstanceType<any>;
@@ -47,18 +57,27 @@ export class Server {
      * If controllers === undefined, search the './controllers' directory. If it is a string,
      * search that directory instead. If it is an instance-object or array instance-objects,
      * don't pull in the controllers automatically.
+     *
      * @param controllers
-     * @param customRouterLib
-     * @param showLog
+     * @param routerLib
+     * @param globalMiddlware
      */
-    protected addControllers(controllers: Controller | Controller[], routerLib?: RouterLib): void {
+    protected addControllers(
+        controllers: Controller | Controller[],
+        routerLib?: RouterLib,
+        globalMiddleware?: RequestHandler,
+    ): void {
         controllers = (controllers instanceof Array) ? controllers : [controllers];
         const routerLibrary = routerLib || Router;
         controllers.forEach((controller: Controller) => {
             if (controller) {
                 const { basePath, router } = this.getRouter(routerLibrary, controller);
                 if (basePath && router) {
-                    this.app.use(basePath, router);
+                    if (globalMiddleware) {
+                        this.app.use(basePath, globalMiddleware, router);
+                    } else {
+                        this.app.use(basePath, router);
+                    }
                 }
             }
         });

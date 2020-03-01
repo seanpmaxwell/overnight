@@ -267,7 +267,11 @@ export class SampleServer extends Server {
         userController.setDbConn(dbConnObj);
         // super.addControllers() must be called, and can be passed a single controller or an array of 
         // controllers. Optional router object can also be passed as second argument.
-        super.addControllers([userController, signupController]/*, optional router here*/);
+        super.addControllers(
+            [userController, signupController],
+            /*, optional router here*/,
+            /* middleware that will apply to all controllers here */,
+        );
     }
 
     public start(port: number): void {

@@ -63,17 +63,27 @@ export class Server {
      * If controllers === undefined, search the './controllers' directory. If it is a string,
      * search that directory instead. If it is an instance-object or array instance-objects,
      * don't pull in the controllers automatically.
+     *
      * @param controllers
      * @param routerLib
+     * @param globalMiddleware
      */
-    public addControllers(controllers: Controller | Controller[], routerLib?: RouterLib): void {
+    public addControllers(
+        controllers: Controller | Controller[],
+        routerLib?: RouterLib,
+        globalMiddleware?: RequestHandler,
+    ): void {
         controllers = (controllers instanceof Array) ? controllers : [controllers];
         const routerLibrary: RouterLib = routerLib || Router;
         controllers.forEach((controller: Controller) => {
             if (controller) {
                 const routerAndPath: IRouterAndPath | null = this.getRouter(routerLibrary, controller);
                 if (routerAndPath) {
-                    this.app.use(routerAndPath.basePath, routerAndPath.router);
+                    if (globalMiddleware) {
+                        this.app.use(routerAndPath.basePath, globalMiddleware, routerAndPath.router);
+                    } else {
+                        this.app.use(routerAndPath.basePath, routerAndPath.router);
+                    }
                 }
             }
         });

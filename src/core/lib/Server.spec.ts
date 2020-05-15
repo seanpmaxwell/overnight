@@ -6,6 +6,8 @@ import * as sinon from 'sinon';
 import {AllHttpVerbsController, RegExpController, SimpleController} from '../test/lib/controllers';
 import {port} from '../test/lib/helpers';
 import TestingServer from '../test/lib/TestingServer';
+import {NextFunction, Request, RequestHandler, Response} from 'express';
+import {GlobalMiddlewareController} from '../test/lib/controllers/GlobalMiddlewareController';
 
 let app: TestingServer;
 let server: http.Server;
@@ -77,6 +79,18 @@ describe('Server', () => {
             await Promise.all([
                 SimpleController.validateAll(),
                 RegExpController.validateAll(),
+            ]);
+        });
+
+        it('should be able to add controllers with global middleware', async () => {
+            const globalMiddleware: RequestHandler = (_req: Request, _res: Response, next: NextFunction): void => {
+                GlobalMiddlewareController.middlewares = ['globalMiddleware'];
+                next();
+            };
+            app.addControllers(new GlobalMiddlewareController(), undefined, globalMiddleware);
+            server = app.start(port);
+            await Promise.all([
+                GlobalMiddlewareController.validateGlobalMiddleware(),
             ]);
         });
 

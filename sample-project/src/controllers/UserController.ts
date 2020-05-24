@@ -4,11 +4,11 @@
  * created by Sean Maxwell Aug 26, 2018
  */
 
+import { Request, Response } from 'express';
 import { check, validationResult } from 'express-validator';
 import { OK, BAD_REQUEST } from 'http-status-codes';
 import { Controller, Middleware, Get, Post, Put, Delete } from '@overnightjs/core';
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
-import { Request, Response } from 'express';
 import { Logger } from '@overnightjs/logger';
 
 

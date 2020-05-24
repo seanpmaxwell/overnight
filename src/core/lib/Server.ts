@@ -5,7 +5,10 @@
  */
 
 import 'reflect-metadata';
+
 import * as express from 'express';
+import { PathParams } from 'express-serve-static-core';
+
 import {
     Application,
     IRouter,
@@ -15,7 +18,6 @@ import {
     Response,
     Router,
 } from 'express';
-import {PathParams} from 'express-serve-static-core';
 
 import {
     classMetadataKey,

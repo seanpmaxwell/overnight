@@ -1,6 +1,6 @@
 {
   "name": "@overnightjs/jwt",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "Json Web Token manger for ExpressJS",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -9,14 +9,14 @@
   },
   "dependencies": {
     "express": "^4.16.3",
-    "express-jwt": "^5.3.1",
+    "express-jwt": "^5.3.3",
     "jsonwebtoken": "^8.4.0",
     "randomstring": "^1.1.5",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@types/express": "^4.16.0",
-    "@types/express-jwt": "0.0.40",
+    "@types/express": "^4.17.6",
+    "@types/express-jwt": "0.0.42",
     "@types/jsonwebtoken": "^8.3.0",
     "@types/node": "^13.1.4",
     "@types/randomstring": "^1.1.6",

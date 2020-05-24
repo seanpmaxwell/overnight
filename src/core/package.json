@@ -1,6 +1,6 @@
 {
   "name": "@overnightjs/core",
-  "version": "1.6.15",
+  "version": "1.7.0",
   "description": "TypeScript decorators for the Express web server. Part of the OvernightJS project.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -10,11 +10,11 @@
   "dependencies": {
     "express": "^4.16.3",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^1.9.3"
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.8",
-    "@types/express": "^4.16.0",
+    "@types/express": "^4.17.6",
     "@types/mocha": "^7.0.1",
     "@types/node": "^12.12.17",
     "@types/request": "^2.48.4",

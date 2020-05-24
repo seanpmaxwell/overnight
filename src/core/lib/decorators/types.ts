@@ -12,7 +12,7 @@ export type Middleware = RequestHandler;
 export type ErrorMiddleware = ErrorRequestHandler;
 export type WrapperFunction = ((methodOrProperty: any) => RequestHandler);
 export type Controller = any;
-export type RouterLib = ((options?: RouterOptions) => IRouter);
+export type RouterLib = (options?: RouterOptions) => IRouter;
 
 export interface IMethodMetadata {
     httpRoutes?: IHttpRoute[];

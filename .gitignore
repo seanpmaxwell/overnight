@@ -8,8 +8,6 @@
 
 # Misc
 **/node_modules
-**/package-lock.json
-
 
 # Transpiled files
 **/src/**/*.js

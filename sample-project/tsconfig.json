@@ -1,13 +1,24 @@
 {
-  "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": "./",
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "strict": true,
+    "target": "es6",
+    "types": [
+      "node"
+    ],
     "paths": {
       "@overnightjs/core": ["../src/core"],
       "@overnightjs/jwt": ["../src/jwt"],
       "@overnightjs/logger": ["../src/logger"]
-    },
-    "target": "es6"
+    }
   },
   "include": [
     "./src/**/*"

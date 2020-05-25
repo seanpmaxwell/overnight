@@ -40,7 +40,7 @@ export class Server {
     private readonly _app: Application;
     private _showLogs: boolean = false;
 
-    private readonly LOG_STR: string = 'Setting up controller ';
+    private static readonly LOG_STR: string = 'Setting up controller:';
 
 
     constructor(showLogs?: boolean) {
@@ -139,7 +139,7 @@ export class Server {
         // Show logs
         if (this.showLogs) {
             // tslint:disable-next-line:no-console
-            console.log(this.LOG_STR + controller.constructor.name);
+            console.log(Server.LOG_STR + ` "${controller.constructor.name}"`);
         }
         // Get middleware
         if (classMiddleware) {
@@ -147,8 +147,9 @@ export class Server {
         }
 
         // Add paths/functions to router-object
-        // tslint:disable-next-line:forin
-        for (const member in controller) {
+        let members: any = Object.getOwnPropertyNames(controller);
+        members = members.concat(Object.getOwnPropertyNames(prototype));
+        members.forEach((member: any) => {
             const methodMetadata: IMethodMetadata | undefined = Reflect.getOwnMetadata(member, prototype);
             if (methodMetadata) {
                 const { httpRoutes, middlewares, errorMiddlewares, wrapper }: IMethodMetadata = methodMetadata;
@@ -175,7 +176,7 @@ export class Server {
                     });
                 }
             }
-        }
+        });
 
         // Recursively add child controllers
         if (children) {

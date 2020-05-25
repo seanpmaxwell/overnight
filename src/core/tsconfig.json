@@ -1,7 +1,22 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "rootDir": "./",
     "baseUrl": "./",
+    "outDir": "./",
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "strict": true,
+    "allowJs": true,
+    "noEmit": true,
+    "types": [
+      "node"
+    ],
     "declarationDir": "lib/",
     "lib": [
       "es2015",

@@ -1,7 +1,18 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": "./",
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "strict": true,
+    "types": [
+      "node"
+    ],
     "declarationDir": "lib/",
     "lib": [
       "es2015",
@@ -14,9 +25,8 @@
     ]
   },
   "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "./lib/**/*"
+    "./node_modules",
+    "./test/**/*",
+    "./**/*.spec.ts"
   ]
 }

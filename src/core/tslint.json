@@ -1,11 +1,19 @@
 {
-  "extends": [
-    "../../tslint.base.json"
-  ],
+  "extends": "tslint:recommended",
   "rulesDirectory": [
     "node_modules/tslint-lines-between-class-members"
   ],
   "rules": {
+    "max-line-length": {
+      "options": [120]
+    },
+    "lines-between-class-members": [true, 2],
+    "member-ordering": false,
+    "no-consecutive-blank-lines": false,
+    "ordered-imports": false,
+    "quotemark": [true, "single"],
+    "variable-name": [true, "allow-leading-underscore"],
+    "ban-types": false,
     "typedef": [
       true,
       "call-signature",
@@ -18,5 +26,10 @@
       "object-destructuring",
       "array-destructuring"
     ]
+  },
+  "jsRules": {
+    "max-line-length": {
+      "options": [120]
+    }
   }
 }

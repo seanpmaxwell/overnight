@@ -2,7 +2,6 @@
   "compilerOptions": {
     "rootDir": "./",
     "baseUrl": "./",
-    "outDir": "./",
     "emitDecoratorMetadata": true,
     "declaration": true,
     "experimentalDecorators": true,
@@ -12,8 +11,6 @@
     "noImplicitAny": true,
     "removeComments": true,
     "strict": true,
-    "allowJs": true,
-    "noEmit": true,
     "types": [
       "node"
     ],

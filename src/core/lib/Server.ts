@@ -153,8 +153,8 @@ export class Server {
             const methodMetadata: IMethodMetadata | undefined = Reflect.getOwnMetadata(member, prototype);
             if (methodMetadata) {
                 const { httpRoutes, middlewares, errorMiddlewares, wrapper }: IMethodMetadata = methodMetadata;
-                let callBack: RequestHandler = (req: Request, res: Response, next: NextFunction): any => {
-                    return controller[member](req, res, next);
+                let callBack: (...args: any[]) => any = (...args: any[]): any => {
+                    return controller[member](...args);
                 };
                 if (classWrapper) {
                     callBack = classWrapper(callBack);

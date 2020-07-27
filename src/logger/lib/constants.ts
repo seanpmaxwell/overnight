@@ -31,7 +31,7 @@ export type LoggerModeOptions = LoggerModes.Console | LoggerModes.File | LoggerM
  **********************************************************************************************/
 
 export interface ICustomLogger {
-    sendLog(content: any): void;
+    sendLog(content: any, prefix: string): void;
 }
 
 

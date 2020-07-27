@@ -525,7 +525,8 @@ export class CustomLoggerTool implements ICustomLogger {
     }
 
     // Needs to be implemented
-    public sendLog(content: any): void {
+    public sendLog(content: any, prefix: string): void {
+        // prefix is either: INFO | ERROR | WARNING | IMPORTANT
         this.thirdPartyLoggingApplication.doStuff(content);
     }
 }

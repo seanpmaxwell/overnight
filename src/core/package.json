@@ -38,7 +38,7 @@
   },
   "scripts": {
     "lint": "./node_modules/.bin/tslint **/*.ts --exclude node_modules/**",
-    "test": "./node_modules/.bin/ts-mocha **/*.spec.ts",
+    "test": "./node_modules/.bin/ts-mocha '**/*.spec.ts'",
     "coverage": "./node_modules/.bin/nyc --reporter=text --reporter=html npm run test"
   },
   "repository": {

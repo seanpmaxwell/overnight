@@ -11,6 +11,7 @@ export * from './MethodWrapperController';
 export * from './MultipleVerbDecoratorsController';
 export * from './ParentsAndChildControllers';
 export * from './ParentsAndChildren';
+export * from './PathMatchingController';
 export * from './RegExpController';
 export * from './SimpleController';
 export * from './UnexpectedBehaviorControllers';

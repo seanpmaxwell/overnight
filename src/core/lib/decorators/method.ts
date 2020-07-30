@@ -111,7 +111,7 @@ function helperForRoutes(httpVerb: HttpDecorator, path?: string | RegExp): Metho
         } else if (path instanceof RegExp) {
             newPath = addForwardSlashToFrontOfRegex(path);
         } else { // assert (path instanceof string)
-            newPath = '/' + path;
+            newPath = path.charAt(0) === '/' ? path : '/' + path;
         }
         addHttpVerbToMethodMetadata(target, propertyKey, httpVerb, newPath);
     };

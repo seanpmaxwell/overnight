@@ -6,6 +6,7 @@ import {
     AllVerbController,
     HeadController,
     MultipleVerbDecoratorsController, NonControllerChildController,
+    PathMatchingController,
     RegExpController,
     SimpleController, UndecoratedPropertiesController, UnmarkedMethodController,
 } from '../../test/lib/controllers';
@@ -23,6 +24,7 @@ describe('Method Decorators', () => {
             app.addControllers([
                 new AllHttpVerbsController(),
                 new AllVerbController(),
+                new PathMatchingController(),
                 new HeadController(),
                 new MultipleVerbDecoratorsController(),
                 new SimpleController(),
@@ -53,6 +55,10 @@ describe('Method Decorators', () => {
 
         it('should be able to decorate properties that are functions', async () => {
             await SimpleController.validateWrapperOnProperty();
+        });
+
+        it('should match paths starting with a forward slash', async () => {
+            await PathMatchingController.validateAll();
         });
 
         describe('Regex', () => {

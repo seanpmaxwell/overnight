@@ -10,7 +10,8 @@ import {classMetadataKey, Controller, IClassMetadata} from './types';
 
 export function Controller(path: string): ClassDecorator {
     return <TFunction extends Function>(target: TFunction): void => {
-        addBasePathToClassMetadata(target.prototype, '/' + path);
+        const computedPath: string = path.charAt(0) === '/' ? path : '/' + path;
+        addBasePathToClassMetadata(target.prototype, computedPath);
     };
 }
 

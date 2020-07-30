@@ -19,7 +19,6 @@ export async function assertRequest(path: string, method: HttpVerb, expected: Ob
         assert.fail(`Threw error making request to and parsing body from ${method.toUpperCase()} ${path}.`);
     }
     assert.deepEqual<Object>(
-        // @ts-ignore
         response, // Guaranteed to be initialized because assert.fail(...) always throws an error
         expected,
         `${method.toUpperCase()} ${path} returned unexpected response.`,

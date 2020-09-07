@@ -19,7 +19,7 @@ It also includes a package for managing json-web-tokens and printing logs.
 * Decorators to convert class methods to Express routes (@Get, @Put, @Post, @Delete etc).
 * Method decorators also work with arrow functions set as class properties.
 * @Middleware and @ClassMiddleware decorators.
-* @ErrorMiddleware and @ErrorMiddleware decorators to handle request errors.
+* @ErrorMiddleware and @ClassErrorMiddleware decorators to handle request errors.
 * Add options to controllers the same as you would Express routers with @ClassOptions.
 * Support for child-controllers with @ChildControllers.
 * @Wrapper and @ClassWrapper decorators to wrap functions. 

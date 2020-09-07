@@ -4,9 +4,9 @@
 
 <img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/overnightjs.png' border='0'>
 
-<a href="https://www.npmjs.com/package/@overnightjs/logger" target="_blank"><img src="https://img.shields.io/npm/v/@overnightjs/logger.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/package/@overnightjs/logger" target="_blank"><img src="https://img.shields.io/npm/l/@overnightjs/logger.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/package/@overnightjs/logger" target="_blank"><img src="https://img.shields.io/npm/dm/@overnightjs/logger.svg" alt="NPM Downloads" /></a>
+<a href="https://www.npmjs.com/package/@overnightjs/core" target="_blank"><img src="https://img.shields.io/npm/v/@overnightjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/package/@overnightjs/core" target="_blank"><img src="https://img.shields.io/npm/l/@overnightjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/package/@overnightjs/core" target="_blank"><img src="https://img.shields.io/npm/dm/@overnightjs/core.svg" alt="NPM Downloads" /></a>
  
 
 ## What is it
@@ -110,6 +110,13 @@ export class UserController {
         Logger.Info(req.params, true);
         return res.status(OK).json({
             message: 'delete_called',
+        });
+    }
+
+    @Get(/ane/) // Rexes supported. Matches /lane, /cane, etc.
+    public getAne(req: Request, res: Response): any {
+        return res.status(OK).json({
+            message: '/ane/',
         });
     }
 
@@ -260,7 +267,11 @@ export class SampleServer extends Server {
         userController.setDbConn(dbConnObj);
         // super.addControllers() must be called, and can be passed a single controller or an array of 
         // controllers. Optional router object can also be passed as second argument.
-        super.addControllers([userController, signupController]/*, optional router here*/);
+        super.addControllers(
+            [userController, signupController],
+            /*, optional router here*/,
+            /* middleware that will apply to all controllers here */,
+        );
     }
 
     public start(port: number): void {
@@ -514,7 +525,8 @@ export class CustomLoggerTool implements ICustomLogger {
     }
 
     // Needs to be implemented
-    public sendLog(content: any): void {
+    public sendLog(content: any, prefix: string): void {
+        // prefix is either: INFO | ERROR | WARNING | IMPORTANT
         this.thirdPartyLoggingApplication.doStuff(content);
     }
 }

@@ -272,6 +272,7 @@ export class Logger {
         }
     }
 
+
     /**
      * Write logs a file instead of the console.
      * @param content

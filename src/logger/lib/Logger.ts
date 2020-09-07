@@ -265,7 +265,7 @@ export class Logger {
             Logger.WriteToFile(logType.prefix + content + '\n', filePath);
         } else if (mode === LoggerModes.Custom) {
             if (customLogger) {
-                customLogger.sendLog(content);
+                customLogger.sendLog(content, logType.prefix);
             } else {
                 throw Error(Logger.CUSTOM_LOGGER_ERR);
             }

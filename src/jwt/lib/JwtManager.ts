@@ -76,6 +76,7 @@ export class JwtManager {
         const options = {
             secret,
             userProperty: 'payload',
+            algorithms: ['HS256']
         };
 
         return expressJwt(options);

@@ -62,17 +62,30 @@ export class JwtManager {
     public verify(token: string): boolean{
         return this.decode(token) !== null;
     }    
+    
+    public static verify(token: string): boolean{
+        return JwtManager.decode(token) !== null;
+    }        
+    
 
     /********************************************************************************
      *                            Decode Jwt-Token
      *******************************************************************************/
-    public decode(token: string): boolean{
+    public decode(token: string): any{
+        return JwtManager.decodeJwtToken(token, this.secret);
+    }     
+    
+    public static decode(token: string): any{
+        return JwtManager.decodeJwtToken(token, JwtManager.SECRET);
+    }         
+    
+    private static decodeJwtToken(token: string, secret: string): any{
         try{
-            return jsonwebtoken.verify(token, this.secret);
+            return jsonwebtoken.verify(token, secret);
         }catch(err){
             return null;
-        }        
-    }     
+        }                
+    }
     
 
     /********************************************************************************

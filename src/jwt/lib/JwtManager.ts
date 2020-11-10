@@ -56,6 +56,25 @@ export class JwtManager {
     }
 
 
+    /********************************************************************************
+     *                            Verify Jwt-Token
+     *******************************************************************************/
+    public verify(token: string, secret: string): boolean{
+        return this.decode(token, secret) !== null;
+    }     
+    
+
+    /********************************************************************************
+     *                            Decode Jwt-Token
+     *******************************************************************************/
+    public decode(token: string, secret: string): boolean{
+        try{
+            return jsonwebtoken.verify(token, secret);
+        }catch(err){
+            return null;
+        }        
+    }     
+    
 
     /********************************************************************************
      *                            Get Middleware

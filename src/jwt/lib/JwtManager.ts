@@ -59,17 +59,16 @@ export class JwtManager {
     /********************************************************************************
      *                            Verify Jwt-Token
      *******************************************************************************/
-    public verify(token: string, secret: string): boolean{
-        return this.decode(token, secret) !== null;
-    }     
-    
+    public verify(token: string): boolean{
+        return this.decode(token) !== null;
+    }    
 
     /********************************************************************************
      *                            Decode Jwt-Token
      *******************************************************************************/
-    public decode(token: string, secret: string): boolean{
+    public decode(token: string): boolean{
         try{
-            return jsonwebtoken.verify(token, secret);
+            return jsonwebtoken.verify(token, this.secret);
         }catch(err){
             return null;
         }        

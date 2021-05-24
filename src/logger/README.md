@@ -1,5 +1,7 @@
 # OvernightJS
 
+:warning: __OvernightJS/logger is deprecated. Please use its offshoot jet-logger.__
+
 > TypeScript decorators for the ExpressJS Web Server!
 
 <img alt='overnightjs' src='https://github.com/seanpmaxwell/overnight/raw/master/overnightjs.png' border='0'>

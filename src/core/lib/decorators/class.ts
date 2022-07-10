@@ -8,9 +8,9 @@
 import {RouterOptions} from 'express';
 import {classMetadataKey, Controller, IClassMetadata} from './types';
 
-export function Controller(path: string): ClassDecorator {
+export function Controller(path: string | string[]): ClassDecorator {
     return <TFunction extends Function>(target: TFunction): void => {
-        addBasePathToClassMetadata(target.prototype, '/' + path);
+        addBasePathToClassMetadata(target.prototype, path);
     };
 }
 
@@ -34,12 +34,20 @@ export function ChildControllers(children: Controller | Controller[]): ClassDeco
     };
 }
 
-export function addBasePathToClassMetadata(target: Object, basePath: string): void {
+export function addBasePathToClassMetadata(target: Object, basePath: string | string[]): void {
     let metadata: IClassMetadata | undefined = Reflect.getOwnMetadata(classMetadataKey, target);
     if (!metadata) {
         metadata = {};
     }
-    metadata.basePath = basePath;
+    
+    let pathArr: string[];
+    if (basePath instanceof Array) {
+        pathArr = basePath.slice();
+    } else {
+        pathArr = [basePath];
+    }
+
+    metadata.basePath = pathArr.map(path => '/' + path);
     Reflect.defineMetadata(classMetadataKey, metadata, target);
 }
 

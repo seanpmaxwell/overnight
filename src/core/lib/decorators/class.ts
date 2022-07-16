@@ -40,14 +40,11 @@ export function addBasePathToClassMetadata(target: Object, basePath: string | st
         metadata = {};
     }
     
-    let pathArr: string[];
-    if (basePath instanceof Array) {
-        pathArr = basePath.slice();
-    } else {
-        pathArr = [basePath];
+    if (!(basePath instanceof Array)) {
+        basePath = [basePath];
     }
 
-    metadata.basePath = pathArr.map(path => '/' + path);
+    metadata.basePath = basePath.map(path => '/' + path);
     Reflect.defineMetadata(classMetadataKey, metadata, target);
 }
 

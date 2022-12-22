@@ -10,7 +10,7 @@
   "dependencies": {
     "express": "^4.16.3",
     "express-jwt": "^6.0.0",
-    "jsonwebtoken": "^8.4.0",
+    "jsonwebtoken": "^9.0.0",
     "randomstring": "^1.1.5",
     "tslib": "^1.9.3"
   },

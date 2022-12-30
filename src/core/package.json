@@ -22,7 +22,7 @@
     "@types/sinon": "^7.5.1",
     "chai": "^4.2.0",
     "http-status-codes": "^1.4.0",
-    "mocha": "^7.0.1",
+    "mocha": "^10.2.0",
     "nyc": "^15.0.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.5",
